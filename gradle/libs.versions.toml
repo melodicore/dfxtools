@@ -1,0 +1,13 @@
+[versions]
+# Internal module versions
+configuration = "1.0.0"
+
+# External dependency versions
+kotlin = "2.1.20"
+mavenPublish = "0.30.0"
+dokka = "2.0.0"
+
+[libraries]
+kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+mavenPublishPlugin = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "mavenPublish" }
+dokkaPlugin = { module = "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }

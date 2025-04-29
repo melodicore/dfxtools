@@ -1,0 +1,65 @@
+package me.datafox.dfxtools.configuration
+
+/**
+ * A class for storing arbitrary configuration.
+ *
+ * @constructor Creates an empty configuration.
+ * @author datafox
+ */
+class Configuration() {
+    private val map: MutableMap<ConfigurationKey<*>, ConfigurationValue<*>> = HashMap()
+
+    /**
+     * Creates a configuration with values copied from the [source].
+     *
+     * @param source configuration to copy values from.
+     */
+    constructor(source: Configuration) : this() {
+        append(source)
+    }
+
+    /**
+     * Returns the value associated with the [key].
+     *
+     * @param key [ConfigurationKey] of the configuration value.
+     * @return value associated with the [key], or [key.defaultValue][ConfigurationKey.defaultValue] if no value is
+     * present.
+     */
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T> get(key: ConfigurationKey<T>): T = map[key]?.value() as T ?: key.defaultValue
+
+    /**
+     * Associates the [key] with the [value].
+     *
+     * @param key [ConfigurationKey] for this configuration value.
+     * @param value lambda that returns a value, or `null` if the association with the key should be removed.
+     */
+    operator fun <T> set(key: ConfigurationKey<T>, value: (() -> T)?) {
+        if(value == null) map.remove(key) else map[key] = ConfigurationValue(value)
+    }
+
+    /**
+     * Removes an association with the [key].
+     *
+     * @param key [ConfigurationKey] to be removed.
+     * @return the previous value associated with the [key], or `null` if no value was present.
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <T> remove(key: ConfigurationKey<T>): T? = map.remove(key)?.value() as T
+
+    /**
+     * Copies all values of the [configuration] to this configuration, overriding existing values.
+     *
+     * @param configuration configuration to copy values from.
+     */
+    fun append(configuration: Configuration) {
+        map.putAll(configuration.map)
+    }
+
+    /**
+     * Clears all values from this configuration.
+     */
+    fun clear() {
+        map.clear()
+    }
+}
