@@ -40,6 +40,18 @@ tasks.withType<Test>().configureEach {
     }
 }
 
+tasks.jar {
+    manifest {
+        val moduleName = project.name
+        val moduleVersion = project.version
+        attributes(
+            "Implementation-Title" to moduleName,
+            "Implementation-Version" to moduleVersion,
+            "Automatic-Module-Name" to "dfxtools.$moduleName"
+        )
+    }
+}
+
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
