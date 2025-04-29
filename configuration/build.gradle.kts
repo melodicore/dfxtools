@@ -2,7 +2,7 @@ plugins {
     id("dfxtools.maven-library-convention")
 }
 
-version = libs.versions.configuration
+version = libs.versions.configuration.get()
 
 mavenPublishing {
     coordinates(group.toString(), name, version.toString())
