@@ -7,7 +7,6 @@ plugins {
     `java-library`
     signing
     id("com.vanniktech.maven.publish")
-    id("org.jetbrains.dokka")
 }
 
 group = "me.datafox.dfxtools"

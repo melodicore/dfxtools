@@ -10,4 +10,5 @@ plugins {
 }
 
 rootProject.name = "dfxtools"
-include(":configuration")
+include("configuration")
+include("docs")

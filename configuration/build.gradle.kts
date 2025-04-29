@@ -1,5 +1,6 @@
 plugins {
     id("dfxtools.maven-library-convention")
+    id("dfxtools.dokka-convention")
 }
 
 version = libs.versions.configuration.get()
