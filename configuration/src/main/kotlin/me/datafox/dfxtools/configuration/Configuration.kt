@@ -48,6 +48,15 @@ class Configuration() {
     fun <T> remove(key: ConfigurationKey<T>): T? = map.remove(key)?.value() as T
 
     /**
+     * Removes an association with the [key]. Alias for [remove].
+     *
+     * @param key [ConfigurationKey] to be removed.
+     */
+    operator fun <T> minusAssign(key: ConfigurationKey<T>) {
+        remove(key)
+    }
+
+    /**
      * Copies all values of the [configuration] to this configuration, overriding existing values.
      *
      * @param configuration configuration to copy values from.
@@ -55,6 +64,13 @@ class Configuration() {
     fun append(configuration: Configuration) {
         map.putAll(configuration.map)
     }
+
+    /**
+     * Copies all values of the [configuration] to this configuration, overriding existing values. Alias for [append].
+     *
+     * @param configuration configuration to copy values from.
+     */
+    operator fun plusAssign(configuration: Configuration) = append(configuration)
 
     /**
      * Clears all values from this configuration.

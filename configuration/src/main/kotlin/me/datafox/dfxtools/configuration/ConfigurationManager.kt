@@ -1,5 +1,10 @@
 package me.datafox.dfxtools.configuration
 
+import me.datafox.dfxtools.configuration.ConfigurationManager.append
+import me.datafox.dfxtools.configuration.ConfigurationManager.configuration
+import me.datafox.dfxtools.configuration.ConfigurationManager.remove
+
+
 /**
  * A singleton object that manages a [Configuration].
  *
@@ -45,6 +50,16 @@ object ConfigurationManager {
      */
     fun <T> remove(key: ConfigurationKey<T>): T? = configuration.remove(key)
 
+
+    /**
+     * Removes an association with the [key]. Alias for [remove].
+     *
+     * @param key [ConfigurationKey] to be removed.
+     */
+    operator fun <T> minusAssign(key: ConfigurationKey<T>) {
+        remove(key)
+    }
+
     /**
      * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
      * values.
@@ -55,6 +70,16 @@ object ConfigurationManager {
     fun append(configuration: Configuration): ConfigurationManager {
         this.configuration.append(configuration)
         return this
+    }
+
+    /**
+     * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
+     * values. Alias for [append].
+     *
+     * @param configuration configuration to copy values from.
+     */
+    operator fun plusAssign(configuration: Configuration) {
+        append(configuration)
     }
 
     /**
