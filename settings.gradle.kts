@@ -11,4 +11,6 @@ plugins {
 
 rootProject.name = "dfxtools"
 include("configuration")
+include("handles")
 include("docs")
+include("utils")

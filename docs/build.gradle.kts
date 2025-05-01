@@ -8,4 +8,5 @@ dokka {
 
 dependencies {
     dokka(project(":configuration"))
+    dokka(project(":handles"))
 }
