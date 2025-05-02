@@ -19,23 +19,15 @@ class Group : Handled {
         this.handles = HandleSet(space, ConfigurationManager[orderedGroupHandles])
     }
 
-    operator fun get(id: String): Handle? = handles[id]
+    operator fun get(id: String) = handles[id]
 
-    operator fun plusAssign(handle: Handle) {
-        handles += handle
-    }
+    operator fun plusAssign(handle: Handle) { handles += handle }
 
-    operator fun plusAssign(handles: Iterable<Handle>) {
-        this.handles += handles
-    }
+    operator fun plusAssign(handles: Iterable<Handle>) { this.handles += handles }
 
-    operator fun minusAssign(handle: Handle) {
-        handles -= handle
-    }
+    operator fun minusAssign(handle: Handle) { handles -= handle }
 
-    operator fun minusAssign(handles: Iterable<Handle>) {
-        this.handles -= handles
-    }
+    operator fun minusAssign(handles: Iterable<Handle>) { this.handles -= handles }
 
     operator fun contains(handle: Handle): Boolean = handle in handles
 

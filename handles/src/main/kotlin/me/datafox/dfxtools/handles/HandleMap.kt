@@ -1,11 +1,13 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.handles.internal.Strings
+import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
-import me.datafox.dfxtools.handles.internal.checkHandleIsInSpace
-import me.datafox.dfxtools.handles.internal.checkHandlesAreInSpace
-import me.datafox.dfxtools.utils.logThrow
+import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
+import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
+import me.datafox.dfxtools.utils.DelegatedMap
+import me.datafox.dfxtools.utils.DelegatedMutableMap
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.util.*
 
 /**
@@ -13,22 +15,14 @@ import java.util.*
  */
 private val logger = KotlinLogging.logger {}
 
-class HandleMap<T> : MutableMap<Handle, T> {
+class HandleMap<V> : DelegatedMutableMap<Handle, V> {
     val space: Space
 
-    val immutableView: Map<Handle, T> by lazy { ImmutableView(this) }
+    val immutableView: Map<Handle, V> by lazy { ImmutableView(this) }
 
-    private val delegate: MutableMap<Handle, T>
+    override val delegate: MutableMap<Handle, V>
 
-    override val size get() = delegate.size
-
-    override val keys get() = delegate.keys
-
-    override val values get() = delegate.values
-
-    override val entries get() = delegate.entries
-
-    constructor(space: Space, sorted: Boolean = false, entries: Map<Handle, T> = emptyMap()) {
+    constructor(space: Space, sorted: Boolean = false, entries: Map<Handle, V> = emptyMap()) {
         if(entries.isNotEmpty()) {
             checkHandles(entries.keys)
         }
@@ -36,16 +30,16 @@ class HandleMap<T> : MutableMap<Handle, T> {
         delegate = if(sorted) TreeMap(entries) else HashMap(entries)
     }
 
-    constructor(sorted: Boolean = false, entries: Map<Handle, T>) {
+    constructor(sorted: Boolean = false, entries: Map<Handle, V>) {
         if(entries.isEmpty()) {
-            logThrow(logger, Strings.MAP_SPACE_INFER) { IllegalArgumentException(it) }
+            logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this.space = entries.keys.first().space
         checkHandles(entries.keys)
         delegate = if(sorted) TreeMap(entries) else HashMap(entries)
     }
 
-    fun remove(id: String): T? {
+    fun remove(id: String): V? {
         val handle = keys[id] ?: return null
         return remove(handle)
     }
@@ -60,29 +54,15 @@ class HandleMap<T> : MutableMap<Handle, T> {
         return removed
     }
 
-    override fun isEmpty(): Boolean = delegate.isEmpty()
-
-    override fun containsKey(key: Handle): Boolean = delegate.containsKey(key)
-
-    override fun containsValue(value: T): Boolean = delegate.containsValue(value)
-
-    override fun get(key: Handle): T? = delegate[key]
-
-    override fun put(key: Handle, value: T): T? {
+    override fun put(key: Handle, value: V): V? {
         checkHandle(key)
         return delegate.put(key, value)
     }
 
-    override fun remove(key: Handle): T? = delegate.remove(key)
-
-    override fun remove(key: Handle, value: T): Boolean = delegate.remove(key, value)
-
-    override fun putAll(from: Map<out Handle, T>) {
+    override fun putAll(from: Map<out Handle, V>) {
         checkHandles(from.keys)
         return delegate.putAll(from)
     }
-
-    override fun clear() = delegate.clear()
 
     private fun checkHandle(handle: Handle) {
         val handle = checkHandleIsInSpace(space, handle)
@@ -102,40 +82,20 @@ class HandleMap<T> : MutableMap<Handle, T> {
         }
     }
 
-    private class ImmutableView<T>(val owner: HandleMap<T>) : Map<Handle, T> {
-        override val size by owner::size
-
-        override val keys by owner::keys
-
-        override val values by owner::values
-
-        override val entries by owner::entries
-
-        override fun isEmpty(): Boolean = owner.isEmpty()
-
-        override fun containsKey(key: Handle): Boolean = owner.containsKey(key)
-
-        override fun containsValue(value: T): Boolean = owner.containsValue(value)
-
-        override operator fun get(key: Handle): T? = owner[key]
-    }
+    private class ImmutableView<V>(override val delegate: HandleMap<V>) : DelegatedMap<Handle, V>()
 }
 
-fun <T : Handled> HandleMap<T>.putHandled(element: T): T? {
-    return this.put(element.handle, element)
-}
+fun <V : Handled> HandleMap<V>.putHandled(element: V): V? = this.put(element.handle, element)
 
-operator fun <T> Map<Handle, T>.get(id: String): T? {
-    return get(keys[id] ?: return null)
-}
+operator fun <V> Map<Handle, V>.get(id: String): V? { return get(keys[id] ?: return null) }
 
-operator fun <T> Map<Handle, T>.contains(id: String): Boolean = id in keys
+operator fun <V> Map<Handle, V>.contains(id: String): Boolean = id in keys
 
-fun <T> Map<Handle, T>.containsAll(ids: Iterable<String>): Boolean = keys.containsAll(ids)
+fun <V> Map<Handle, V>.containsAll(ids: Iterable<String>): Boolean = keys.containsAll(ids)
 
-fun <T> Map<Handle, T>.getByTag(tag: Handle): List<T> = mapNotNull { if(it.key.tags.contains(tag)) it.value else null }
+fun <V> Map<Handle, V>.getByTag(tag: Handle): List<V> = mapNotNull { if(it.key.tags.contains(tag)) it.value else null }
 
-fun <T> Map<Handle, T>.getByTags(tags: Iterable<Handle>): List<T> {
+fun <V> Map<Handle, V>.getByTags(tags: Iterable<Handle>): List<V> {
     val set = tags.toSet()
     return mapNotNull { if(it.key.tags.containsAll(set)) it.value else null }
 }

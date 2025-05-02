@@ -4,7 +4,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.handles.internal.Strings.ALREADY_INITIALIZED
-import me.datafox.dfxtools.utils.logThrow
+import me.datafox.dfxtools.handles.internal.Strings.invalidQualifiedHandleId
+import me.datafox.dfxtools.handles.internal.Strings.qualifiedHandleNoSpace
+import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
  * @author datafox
@@ -60,6 +63,22 @@ object HandleManager {
     }
 
     fun getOrCreateSpace(id: String): Space = spaces[id] ?: createSpace(id)
+
+    fun getOrCreateQualifiedHandle(id: String): Handle {
+        if(checkHandleId(id, true)) {
+            logThrow(logger, invalidQualifiedHandleId(id)) { IllegalArgumentException(it) }
+        }
+        if('@' !in id) {
+            logThrow(logger, qualifiedHandleNoSpace(id)) { IllegalArgumentException(it) }
+        }
+        val split = id.split('@')
+        val space = getOrCreateSpace(split[1])
+        if(':' in split[0]) {
+            val split = split[0].split(':')
+            return space.getOrCreateHandle(split[0]).getOrCreateSubhandle(split[1])
+        }
+        return space.getOrCreateHandle(split[0])
+    }
 
     fun purge() {
         _spaces.iterator().apply { while(hasNext()) if(next().value != spaceSpace) remove() }

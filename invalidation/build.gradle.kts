@@ -6,13 +6,13 @@ plugins {
 version = libs.versions.handles.get()
 
 dependencies {
-    implementation(libs.logging)
+    implementation(project(":utils"))
 }
 
 mavenPublishing {
     coordinates(group.toString(), name, version.toString())
     pom {
-        name = "DFXTools Utils"
-        description = "Utilities used by other DFXTools modules"
+        name = "DFXTools Invalidation"
+        description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
     }
 }

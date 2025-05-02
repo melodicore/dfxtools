@@ -56,9 +56,7 @@ object ConfigurationManager {
      *
      * @param key [ConfigurationKey] to be removed.
      */
-    operator fun <T> minusAssign(key: ConfigurationKey<T>) {
-        remove(key)
-    }
+    operator fun <T> minusAssign(key: ConfigurationKey<T>) { remove(key) }
 
     /**
      * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
@@ -78,9 +76,7 @@ object ConfigurationManager {
      *
      * @param configuration configuration to copy values from.
      */
-    operator fun plusAssign(configuration: Configuration) {
-        append(configuration)
-    }
+    operator fun plusAssign(configuration: Configuration) { append(configuration) }
 
     /**
      * Replaces the [Configuration] associated with this manager with the [configuration].

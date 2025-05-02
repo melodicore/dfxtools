@@ -1,11 +1,13 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.handles.internal.Strings
+import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
-import me.datafox.dfxtools.handles.internal.checkHandleIsInSpace
-import me.datafox.dfxtools.handles.internal.checkHandlesAreInSpace
-import me.datafox.dfxtools.utils.logThrow
+import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
+import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
+import me.datafox.dfxtools.utils.DelegatedMutableSet
+import me.datafox.dfxtools.utils.DelegatedSet
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.util.*
 
 /**
@@ -13,14 +15,12 @@ import java.util.*
  */
 private val logger = KotlinLogging.logger {}
 
-class HandleSet : MutableSet<Handle> {
+class HandleSet : DelegatedMutableSet<Handle> {
     val space: Space
 
     val immutableView: Set<Handle> by lazy { ImmutableView(this) }
 
-    private val delegate: MutableSet<Handle>
-
-    override val size get() = delegate.size
+    override val delegate: MutableSet<Handle>
 
     constructor(space: Space, sorted: Boolean = false, elements: Collection<Handle> = emptySet()) {
         if(elements.isNotEmpty()) {
@@ -32,7 +32,7 @@ class HandleSet : MutableSet<Handle> {
 
     constructor(sorted: Boolean = false, elements: Collection<Handle>) {
         if(elements.isEmpty()) {
-            logThrow(logger, Strings.SET_SPACE_INFER) { IllegalArgumentException(it) }
+            logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this.space = elements.first().space
         checkHandles(elements)
@@ -73,14 +73,6 @@ class HandleSet : MutableSet<Handle> {
 
     operator fun Set<Handle>.contains(id: String): Boolean = this.contains(id)
 
-    override fun isEmpty(): Boolean = delegate.isEmpty()
-
-    override fun contains(element: Handle): Boolean = delegate.contains(element)
-
-    override fun iterator(): MutableIterator<Handle> = delegate.iterator()
-
-    override fun containsAll(elements: Collection<Handle>): Boolean = delegate.containsAll(elements)
-
     override fun add(element: Handle): Boolean {
         checkHandle(element)
         return delegate.add(element)
@@ -90,14 +82,6 @@ class HandleSet : MutableSet<Handle> {
         checkHandles(elements)
         return delegate.addAll(elements)
     }
-
-    override fun remove(element: Handle): Boolean = delegate.remove(element)
-
-    override fun removeAll(elements: Collection<Handle>): Boolean = delegate.removeAll(elements)
-
-    override fun retainAll(elements: Collection<Handle>): Boolean = delegate.retainAll(elements)
-
-    override fun clear() = delegate.clear()
 
     private fun checkHandle(handle: Handle) {
         val handle = checkHandleIsInSpace(space, handle)
@@ -117,17 +101,7 @@ class HandleSet : MutableSet<Handle> {
         }
     }
 
-    private class ImmutableView(val owner: HandleSet) : Set<Handle> {
-        override val size by owner::size
-
-        override fun isEmpty(): Boolean = owner.isEmpty()
-
-        override fun contains(element: Handle): Boolean = owner.contains(element)
-
-        override fun iterator(): Iterator<Handle> = owner.iterator()
-
-        override fun containsAll(elements: Collection<Handle>): Boolean = owner.containsAll(elements)
-    }
+    private class ImmutableView(override val delegate: HandleSet) : DelegatedSet<Handle>()
 }
 
 operator fun Set<Handle>.get(id: String): Handle? = find { it.id == id }

@@ -14,9 +14,7 @@ class Configuration() {
      *
      * @param source configuration to copy values from.
      */
-    constructor(source: Configuration) : this() {
-        append(source)
-    }
+    constructor(source: Configuration) : this() { append(source) }
 
     /**
      * Returns the value associated with the [key].
@@ -45,25 +43,21 @@ class Configuration() {
      * @return the previous value associated with the [key], or `null` if no value was present.
      */
     @Suppress("UNCHECKED_CAST")
-    fun <T> remove(key: ConfigurationKey<T>): T? = map.remove(key)?.value() as T
+    fun <T> remove(key: ConfigurationKey<T>): T? = map.remove(key)?.value() as T?
 
     /**
      * Removes an association with the [key]. Alias for [remove].
      *
      * @param key [ConfigurationKey] to be removed.
      */
-    operator fun <T> minusAssign(key: ConfigurationKey<T>) {
-        remove(key)
-    }
+    operator fun <T> minusAssign(key: ConfigurationKey<T>) { remove(key) }
 
     /**
      * Copies all values of the [configuration] to this configuration, overriding existing values.
      *
      * @param configuration configuration to copy values from.
      */
-    fun append(configuration: Configuration) {
-        map.putAll(configuration.map)
-    }
+    fun append(configuration: Configuration) { map.putAll(configuration.map) }
 
     /**
      * Copies all values of the [configuration] to this configuration, overriding existing values. Alias for [append].

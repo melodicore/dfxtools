@@ -9,8 +9,8 @@ import me.datafox.dfxtools.handles.internal.Strings.SPACE_SUBHANDLE_CREATION
 import me.datafox.dfxtools.handles.internal.Strings.SUBHANDLE_SUBHANDLE_CREATION
 import me.datafox.dfxtools.handles.internal.Strings.handleIdExists
 import me.datafox.dfxtools.handles.internal.Strings.invalidHandleId
-import me.datafox.dfxtools.handles.internal.checkHandleId
-import me.datafox.dfxtools.utils.logThrow
+import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
  * @author datafox
@@ -63,21 +63,13 @@ class Handle : Comparable<Handle> {
         return _subhandles?.get(id)
     }
 
-    operator fun plusAssign(handle: Handle) {
-        tags += handle
-    }
+    operator fun plusAssign(handle: Handle) { tags += handle }
 
-    operator fun plusAssign(handles: Iterable<Handle>) {
-        tags += handles
-    }
+    operator fun plusAssign(handles: Iterable<Handle>) { tags += handles }
 
-    operator fun minusAssign(handle: Handle) {
-        tags -= handle
-    }
+    operator fun minusAssign(handle: Handle) { tags -= handle }
 
-    operator fun minusAssign(handles: Iterable<Handle>) {
-        tags -= handles
-    }
+    operator fun minusAssign(handles: Iterable<Handle>) { tags -= handles }
 
     operator fun contains(handle: Handle): Boolean = handle in tags
 

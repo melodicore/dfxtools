@@ -7,8 +7,8 @@ import me.datafox.dfxtools.handles.HandleManager.orderedSpaceHandles
 import me.datafox.dfxtools.handles.internal.Strings.SPACE_SPACE_HANDLE_CREATION
 import me.datafox.dfxtools.handles.internal.Strings.handleIdExists
 import me.datafox.dfxtools.handles.internal.Strings.invalidHandleId
-import me.datafox.dfxtools.handles.internal.checkHandleId
-import me.datafox.dfxtools.utils.logThrow
+import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
  * @author datafox
@@ -30,9 +30,7 @@ class Space : Handled {
 
     private val permitExternalHandleCreation: Boolean
 
-    internal constructor(spaceSpace: Boolean) {
-        permitExternalHandleCreation = !spaceSpace
-    }
+    internal constructor(spaceSpace: Boolean) { permitExternalHandleCreation = !spaceSpace }
 
     internal constructor(id: Handle) {
         _handle = id
@@ -55,9 +53,17 @@ class Space : Handled {
         return createHandleInternal(id)
     }
 
-    fun getOrCreateHandle(id: String): Handle = handles[id] ?: createHandle(id)
+    fun getOrCreateHandle(id: String): Handle {
+        if(!id.contains(':')) return handles[id] ?: createHandle(id)
+        val split = id.split(':')
+        val handle = getOrCreateHandle(split[0])
+        return handle.getOrCreateSubhandle(split[1])
+    }
 
-    fun getGroup(id: String): Group? = groups[id]
+    fun getGroup(id: String): Group? {
+        if(id.contains(':')) return groups[id]
+        return groups["${handle.id}:$id"]
+    }
 
     fun createGroup(id: String): Group {
         val handle = handle.createSubhandleInternal(id)
