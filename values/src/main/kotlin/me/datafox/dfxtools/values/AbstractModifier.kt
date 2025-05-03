@@ -6,6 +6,6 @@ import me.datafox.dfxtools.invalidation.ObservableListProperty
 /**
  * @author datafox
  */
-abstract class AbstractModifier(params: List<Value> = emptyList()) : Modifier, AbstractObservableObserver() {
-    protected val params: MutableList<Value> by ObservableListProperty(params.toMutableList())
+abstract class AbstractModifier(vararg params: Value) : Modifier, AbstractObservableObserver() {
+    protected val params: MutableList<Value> by ObservableListProperty(*params)
 }
