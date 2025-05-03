@@ -5,8 +5,8 @@ import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
-import me.datafox.dfxtools.utils.DelegatedMutableSet
-import me.datafox.dfxtools.utils.DelegatedSet
+import me.datafox.dfxtools.utils.delegated.DelegatedMutableSet
+import me.datafox.dfxtools.utils.delegated.ImmutableSetView
 import me.datafox.dfxtools.utils.Logging.logThrow
 import java.util.*
 
@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 class HandleSet : DelegatedMutableSet<Handle> {
     val space: Space
 
-    val immutableView: Set<Handle> by lazy { ImmutableView(this) }
+    val immutableView: Set<Handle> by lazy { ImmutableSetView(this) }
 
     override val delegate: MutableSet<Handle>
 
@@ -100,8 +100,6 @@ class HandleSet : DelegatedMutableSet<Handle> {
             }
         }
     }
-
-    private class ImmutableView(override val delegate: HandleSet) : DelegatedSet<Handle>()
 }
 
 operator fun Set<Handle>.get(id: String): Handle? = find { it.id == id }

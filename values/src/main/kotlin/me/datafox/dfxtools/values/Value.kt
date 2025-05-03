@@ -1,0 +1,11 @@
+package me.datafox.dfxtools.values
+
+import me.datafox.dfxtools.invalidation.Observable
+import java.math.BigDecimal
+
+/**
+ * @author datafox
+ */
+interface Value : Observable {
+    val value: BigDecimal
+}

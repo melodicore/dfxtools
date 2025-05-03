@@ -5,9 +5,9 @@ import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
-import me.datafox.dfxtools.utils.DelegatedMap
-import me.datafox.dfxtools.utils.DelegatedMutableMap
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.delegated.DelegatedMutableMap
+import me.datafox.dfxtools.utils.delegated.ImmutableMapView
 import java.util.*
 
 /**
@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 class HandleMap<V> : DelegatedMutableMap<Handle, V> {
     val space: Space
 
-    val immutableView: Map<Handle, V> by lazy { ImmutableView(this) }
+    val immutableView: Map<Handle, V> by lazy { ImmutableMapView(this) }
 
     override val delegate: MutableMap<Handle, V>
 
@@ -81,8 +81,6 @@ class HandleMap<V> : DelegatedMutableMap<Handle, V> {
             }
         }
     }
-
-    private class ImmutableView<V>(override val delegate: HandleMap<V>) : DelegatedMap<Handle, V>()
 }
 
 fun <V : Handled> HandleMap<V>.putHandled(element: V): V? = this.put(element.handle, element)

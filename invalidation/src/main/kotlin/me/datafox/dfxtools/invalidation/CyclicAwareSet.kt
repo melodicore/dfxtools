@@ -1,6 +1,6 @@
 package me.datafox.dfxtools.invalidation
 
-import me.datafox.dfxtools.utils.DelegatedMutableSet
+import me.datafox.dfxtools.utils.delegated.DelegatedMutableSet
 
 /**
  * A set for [Observer] values owned by an [Observable] that checks for cyclic dependencies. The detection only works
@@ -16,7 +16,7 @@ class CyclicAwareSet(
 ): DelegatedMutableSet<Observer>() {
     override fun add(element: Observer): Boolean {
         Utils.checkCyclic(element, owner)
-        return delegate.add(element)
+        return super.add(element)
     }
 
     override fun addAll(elements: Collection<Observer>): Boolean = elements.any { add(it) }

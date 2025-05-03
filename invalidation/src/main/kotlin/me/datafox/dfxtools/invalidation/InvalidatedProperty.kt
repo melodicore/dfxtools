@@ -1,18 +1,17 @@
 package me.datafox.dfxtools.invalidation
 
-import kotlin.properties.ReadWriteProperty
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * A property that can be invalidated and recalculated. Must be used with [Observer.invalidatedProperties].
+ * A property that can be invalidated and recalculated.
  *
- * @property value initial value for this property. If `null`, [calculation] will be called for the initial value.
+ * @param value initial value for this property. If `null`, [calculation] will be called for the initial value.
  * @param calculation lambda that returns a new value for this property. Called when the property is requested if it has
  * been invalidated.
- * @property invalidated invalidated flag.
  * @constructor creates a new invalidated property.
  */
-class InvalidatedProperty<T> internal constructor(value: T? = null, val calculation: () -> T) : ReadWriteProperty<Observer, T> {
+class InvalidatedProperty<V>(value: V? = null, private val calculation: () -> V) : ReadOnlyProperty<Observer, V> {
     private var value = value ?: calculation()
 
     private var invalidated = false
@@ -22,7 +21,7 @@ class InvalidatedProperty<T> internal constructor(value: T? = null, val calculat
      */
     fun invalidate() { invalidated = true }
 
-    override fun getValue(thisRef: Observer, property: KProperty<*>): T {
+    override fun getValue(thisRef: Observer, property: KProperty<*>): V {
         if(invalidated) {
             value = calculation()
             invalidated = false
@@ -30,8 +29,16 @@ class InvalidatedProperty<T> internal constructor(value: T? = null, val calculat
         return value
     }
 
-    override fun setValue(thisRef: Observer, property: KProperty<*>, value: T) {
-        this.value = value
-        invalidated = false
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, V> {
+        thisRef.propertyHandler.add(this)
+        return this
+    }
+
+    class Handler() {
+        private val invalidatedProperties: MutableSet<InvalidatedProperty<*>> = mutableSetOf()
+
+        internal fun add(property: InvalidatedProperty<*>) { invalidatedProperties += property }
+
+        fun invalidate() = invalidatedProperties.forEach { it.invalidate() }
     }
 }

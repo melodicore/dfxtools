@@ -18,3 +18,4 @@ dokkaPlugin = { module = "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin"
 logging = { module = "io.github.oshai:kotlin-logging", version.ref = "logging" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 log4j = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
