@@ -6,9 +6,9 @@ import kotlin.reflect.KProperty
 /**
  * @author datafox
  */
-class ObservableListProperty<E : Observable>(
-    private val backingList: MutableList<E> = mutableListOf()
-) : ReadOnlyProperty<Observer, MutableList<E>> {
+class ObservableListProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableList<E>> {
+    private val backingList: MutableList<E> = values.toMutableList()
+
     private lateinit var list: ObservableList<E>
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableList<E> = list

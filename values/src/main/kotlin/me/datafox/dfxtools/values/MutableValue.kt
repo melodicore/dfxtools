@@ -7,6 +7,6 @@ import java.math.BigDecimal
 /**
  * @author datafox
  */
-class MutableSimpleValue(value: BigDecimal) : Value, AbstractObservable() {
+class MutableValue(value: BigDecimal) : Value, AbstractObservable() {
     override var value: BigDecimal by InvalidatorProperty(value)
 }
