@@ -1,9 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     `kotlin-dsl`
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(24)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_22
+    }
 }
 
 dependencies {

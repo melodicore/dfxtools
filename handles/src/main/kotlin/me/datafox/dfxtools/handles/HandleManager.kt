@@ -39,8 +39,10 @@ object HandleManager {
 
     val spaces: Map<Handle, Space> by lazy { _spaces.immutableView }
 
+    val initialized: Boolean get() = this::_spaceSpace.isInitialized
+
     fun init() {
-        if(this::_spaceSpace.isInitialized) {
+        if(initialized) {
             logThrow(logger, ALREADY_INITIALIZED) {
                 IllegalStateException(it)
             }

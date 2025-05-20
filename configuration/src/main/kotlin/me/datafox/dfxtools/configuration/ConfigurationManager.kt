@@ -22,6 +22,14 @@ object ConfigurationManager {
     fun get(): Configuration = Configuration(configuration)
 
     /**
+     * Returns a *copy* of the [Configuration] associated with this manager and appends [configuration] to it.
+     *
+     * @param configuration [Configuration] to be appended
+     * @return copy of the [Configuration] associated with this manager with [configuration] appended to it.
+     */
+    operator fun get(configuration: Configuration?): Configuration = get().apply { if(configuration != null) append(configuration) }
+
+    /**
      * Returns the value associated with the [key].
      *
      * @param key [ConfigurationKey] of the configuration value.

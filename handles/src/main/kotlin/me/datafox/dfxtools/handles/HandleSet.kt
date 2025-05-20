@@ -5,8 +5,8 @@ import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
-import me.datafox.dfxtools.utils.delegated.DelegatedMutableSet
-import me.datafox.dfxtools.utils.delegated.ImmutableSetView
+import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
+import me.datafox.dfxtools.utils.collection.ImmutableSetView
 import me.datafox.dfxtools.utils.Logging.logThrow
 import java.util.*
 

@@ -1,6 +1,5 @@
 
-import me.datafox.dfxtools.invalidation.InvalidatedProperty
-import me.datafox.dfxtools.invalidation.ObservableObserver
+import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
@@ -18,11 +17,7 @@ class InvalidationTest {
         assertThrows<IllegalArgumentException> { third.observers.add(first) }
     }
 
-    private class BasicObservableObserver : ObservableObserver {
-        override val observers = observers()
-
-        override val invalidatedProperties: MutableSet<InvalidatedProperty<*>> = mutableSetOf()
-
+    private class BasicObservableObserver : AbstractObservableObserver() {
         override fun onInvalidated() { /* no-op */ }
     }
 }

@@ -1,5 +1,7 @@
 package me.datafox.dfxtools.invalidation
 
+import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
+
 /**
  * An interface for classes that may be invalidated by other classes that it depends on. [onInvalidated] will be called
  * when this class gets invalidated, but keep in mind that this function may be called an arbitrary number of times, so

@@ -6,8 +6,8 @@ import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.delegated.DelegatedMutableMap
-import me.datafox.dfxtools.utils.delegated.ImmutableMapView
+import me.datafox.dfxtools.utils.collection.DelegatedMutableMap
+import me.datafox.dfxtools.utils.collection.ImmutableMapView
 import java.util.*
 
 /**

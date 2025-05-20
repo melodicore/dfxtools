@@ -1,5 +1,7 @@
 package me.datafox.dfxtools.invalidation
 
+import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
+
 /**
  * @author datafox
  */

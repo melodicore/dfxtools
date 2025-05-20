@@ -3,9 +3,9 @@ package me.datafox.dfxtools.values
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
-import me.datafox.dfxtools.invalidation.InvalidatedProperty
-import me.datafox.dfxtools.invalidation.InvalidatorProperty
-import me.datafox.dfxtools.invalidation.ObservableSetProperty
+import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
+import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
+import me.datafox.dfxtools.invalidation.property.ObservableSortedSetProperty
 import java.math.BigDecimal
 
 /**
@@ -22,7 +22,7 @@ class ModifiableValue(
 
     override val value: BigDecimal by InvalidatedProperty { calculate() }
 
-    val modifiers: MutableSet<Modifier> by ObservableSetProperty(*modifiers)
+    val modifiers: MutableSet<Modifier> by ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
 
     private fun calculate(): BigDecimal {
         var temp = base

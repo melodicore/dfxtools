@@ -3,7 +3,7 @@ plugins {
     id("dfxtools.dokka-convention")
 }
 
-version = libs.versions.handles.get()
+version = libs.versions.invalidation.get()
 
 dependencies {
     implementation(project(":utils"))
