@@ -8,6 +8,6 @@ dokka {
     moduleName = project.name.capitalized()
 
     dokkaSourceSets.all {
-        includes.from("dokka.md")
+        includes.from("README.md")
     }
 }
