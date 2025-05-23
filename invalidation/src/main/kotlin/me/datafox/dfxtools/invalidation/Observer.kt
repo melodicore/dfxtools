@@ -10,7 +10,6 @@ import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
  * [invalidate].
  *
  * @property propertyHandler handler for properties delegated with [InvalidatedProperty].
- *
  * @author datafox
  */
 interface Observer {

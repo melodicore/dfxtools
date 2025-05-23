@@ -7,6 +7,10 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
+ * Property wrapper for [ObservableList], may only be owned by [Observer].
+ *
+ * @param values values to initialize the list with.
+ *
  * @author datafox
  */
 class ObservableListProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableList<E>> {

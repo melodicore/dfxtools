@@ -4,13 +4,19 @@ import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
 
-class ObservableSet<E : Observable> : DelegatedMutableSet<E> {
-    override val delegate: MutableSet<E>
+/**
+ * A mutable set for [Observable] values owned by an [Observer] that adds values to [Observable.observers] when they are
+ * added to this set. Note that the values are *not* removed from observers when they are removed from this set.
+ *
+ * @property delegate underlying set implementation.
+ * @property owner owner of this set.
+ * @constructor Creates a new observable set.
+ */
+class ObservableSet<E : Observable>(
+    override val delegate: MutableSet<E>,
     private val owner: Observer
-
-    constructor(delegate: MutableSet<E>, owner: Observer) {
-        this.delegate = delegate
-        this.owner = owner
+) : DelegatedMutableSet<E>() {
+    init {
         forEach { it.observers.add(owner) }
     }
 
@@ -22,27 +28,5 @@ class ObservableSet<E : Observable> : DelegatedMutableSet<E> {
     override fun addAll(elements: Collection<E>): Boolean {
         elements.forEach { it.observers.add(owner) }
         return super.addAll(elements)
-    }
-
-    override fun remove(element: E): Boolean {
-        element.observers.remove(owner)
-        return super.remove(element)
-    }
-
-    override fun removeAll(elements: Collection<E>): Boolean {
-        elements.forEach { it.observers.remove(owner) }
-        return super.removeAll(elements)
-    }
-
-    override fun retainAll(elements: Collection<E>): Boolean {
-        filter { it !in elements }.forEach { it.observers.remove(owner) }
-        return super.retainAll(elements)
-    }
-
-    override fun iterator() = ObservableIterator(super.iterator(), owner)
-
-    override fun clear() {
-        forEach { it.observers.remove(owner) }
-        super.clear()
     }
 }

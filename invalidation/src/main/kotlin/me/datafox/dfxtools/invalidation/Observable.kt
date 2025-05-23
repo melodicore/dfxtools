@@ -11,7 +11,6 @@ import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
  * @property observers set of observers. Uses [CyclicAwareSet] to detect cyclic dependencies. Cyclic dependency
  * detection only works when classes in the dependency chain implement both this interface and [Observer], preferably by
  * implementing [ObservableObserver].
- *
  * @author datafox
  */
 interface Observable {

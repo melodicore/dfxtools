@@ -7,6 +7,11 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
+ * Property wrapper for [ObservableSet], may only be owned by [Observer]. The resulting set will be sorted.
+ *
+ * @param values values to initialize the set with.
+ * @param comparator comparator to sort the set with.
+ *
  * @author datafox
  */
 class ObservableSortedSetProperty<E : Observable>(vararg values: E, comparator: (E, E) -> Int) : ReadOnlyProperty<Observer, MutableSet<E>> {

@@ -7,6 +7,10 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
+ * Property wrapper for [ObservableSet], may only be owned by [Observer].
+ *
+ * @param values values to initialize the set with.
+ *
  * @author datafox
  */
 class ObservableSetProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableSet<E>> {

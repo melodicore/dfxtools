@@ -4,6 +4,8 @@ import me.datafox.dfxtools.invalidation.collection.CyclicAwareSet
 import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
 
 /**
+ * Abstract implementation of [Observable] that populates [observers] and [propertyHandler] automatically.
+ *
  * @author datafox
  */
 abstract class AbstractObservableObserver : ObservableObserver {

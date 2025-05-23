@@ -4,13 +4,19 @@ import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.utils.collection.DelegatedMutableList
 
-class ObservableList<E : Observable> : DelegatedMutableList<E> {
-    override val delegate: MutableList<E>
+/**
+ * A mutable list for [Observable] values owned by an [Observer] that adds values to [Observable.observers] when they
+ * are added to this list. Note that the values are *not* removed from observers when they are removed from this list.
+ *
+ * @property delegate underlying list implementation.
+ * @property owner owner of this list.
+ * @constructor Creates a new observable list.
+ */
+class ObservableList<E : Observable>(
+    override val delegate: MutableList<E>,
     private val owner: Observer
-
-    constructor(delegate: MutableList<E>, owner: Observer) {
-        this.delegate = delegate
-        this.owner = owner
+) : DelegatedMutableList<E>() {
+    init {
         forEach { it.observers.add(owner) }
     }
 
@@ -34,42 +40,6 @@ class ObservableList<E : Observable> : DelegatedMutableList<E> {
         return super.addAll(index, elements)
     }
 
-    override fun remove(element: E): Boolean {
-        element.observers.remove(owner)
-        return super.remove(element)
-    }
-
-    override fun removeAll(elements: Collection<E>): Boolean {
-        elements.forEach { it.observers.remove(owner) }
-        return super.removeAll(elements)
-    }
-
-    override fun set(index: Int, element: E): E {
-        element.observers.add(owner)
-        return super.set(index, element).apply { observers.remove(owner) }
-    }
-
-    override fun removeAt(index: Int): E {
-        return super.removeAt(index).apply { observers.remove(owner) }
-    }
-
-    override fun clear() {
-        forEach { it.observers.remove(owner) }
-        super.clear()
-    }
-
-    override fun retainAll(elements: Collection<E>): Boolean {
-        filter { it !in elements }.forEach { it.observers.remove(owner) }
-        return super.retainAll(elements)
-    }
-
-    override fun iterator(): MutableIterator<E> = ObservableIterator(super.iterator(), owner)
-
     override fun subList(fromIndex: Int, toIndex: Int): MutableList<E> =
         ObservableList(super.subList(fromIndex, toIndex), owner)
-
-    override fun listIterator(): MutableListIterator<E> = ObservableListIterator(super.listIterator(), owner)
-
-    override fun listIterator(index: Int): MutableListIterator<E> =
-        ObservableListIterator(super.listIterator(index), owner)
 }

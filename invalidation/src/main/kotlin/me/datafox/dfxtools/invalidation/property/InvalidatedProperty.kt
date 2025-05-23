@@ -8,8 +8,8 @@ import kotlin.reflect.KProperty
  * A property that can be invalidated and recalculated.
  *
  * @param value initial value for this property. If `null`, [calculation] will be called for the initial value.
- * @param calculation lambda that returns a new value for this property. Called when the property is requested if it has
- * been invalidated.
+ * @property calculation lambda that returns a new value for this property. Called when the property is requested if it
+ * has been invalidated.
  * @constructor creates a new invalidated property.
  */
 class InvalidatedProperty<V>(value: V? = null, private val calculation: () -> V) : ReadOnlyProperty<Observer, V> {
