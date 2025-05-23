@@ -19,9 +19,9 @@ called it first invalidates all invalidated properties through the property hand
 which is the abstract function that should be overridden for custom invalidation logic. `AbstractObserver` is an
 abstract implementation of this interface that populates `propertyHandler`.
 
-When writing custom invalidation logic, please keep in mind that `invalidate()` (and thus, `onInvalidate`) may be called
-an arbitrary number of times. Due to this, it is recommended to only set an invalidated flag in the function and lazily
-recalculate dependent values if the flag is set. This is also how `InvalidatedProperty` works internally.
+When writing custom invalidation logic, please keep in mind that `invalidate()` (and thus, `onInvalidate()`) may be 
+called an arbitrary number of times. Due to this, it is recommended to only set an invalidated flag in the function and 
+lazily recalculate dependent values if the flag is set. This is also how `InvalidatedProperty` works internally.
 
 ## ObservableObserver
 
