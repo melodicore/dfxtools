@@ -1,6 +1,6 @@
 # Module Handles
 
-Handles contains an identification system.
+An identification and categorising system.
 
 ## Handle
 
