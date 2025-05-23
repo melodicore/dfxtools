@@ -12,6 +12,8 @@ dependencies {
     testRuntimeClasspath(libs.log4j)
 }
 
+dokkaExtraSources(project(":utils"))
+
 mavenPublishing {
     coordinates(group.toString(), name, version.toString())
     pom {
