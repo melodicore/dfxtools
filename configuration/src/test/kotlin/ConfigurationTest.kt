@@ -10,10 +10,10 @@ import kotlin.test.assertNull
 class ConfigurationTest {
     val string = "default"
     val string2 = "something"
-    var int = 42
+    val int = 42
     val int2 = 419
     val int3 = 68
-    var boolean = false
+    val boolean = false
     val boolean2 = true
     val stringKey = ConfigurationKey(string)
     val intKey = ConfigurationKey(int)
