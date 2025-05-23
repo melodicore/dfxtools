@@ -1,10 +1,12 @@
 package me.datafox.dfxtools.handles
 
 /**
+ * Interface for a class that is identified by a [Handle].
+ *
+ * @property handle identifying [Handle] of this class.
+ *
  * @author datafox
  */
-interface Handled : Comparable<Handled> {
+interface Handled {
     val handle: Handle
-
-    override fun compareTo(other: Handled): Int = handle.compareTo(other.handle)
 }

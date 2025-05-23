@@ -6,7 +6,6 @@ plugins {
 version = libs.versions.handles.get()
 
 dependencies {
-    implementation(project(":configuration"))
     implementation(project(":utils"))
     implementation(libs.logging)
     implementation(libs.slf4j.api)

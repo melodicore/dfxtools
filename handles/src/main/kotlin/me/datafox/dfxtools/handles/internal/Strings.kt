@@ -19,8 +19,6 @@ internal object Strings {
 
     const val SUBHANDLE_SUBHANDLE_CREATION = "Creating subhandles for subhandles is not permitted."
 
-    const val ALREADY_INITIALIZED = "Handle manager has already been initialized."
-
     fun invalidHandleId(id: String) = "Id \"$id\" is invalid, colons (:) and at signs (@) are not permitted."
 
     fun handleIdExists(id: String) = "A handle with id \"$id\" already exists in this space."

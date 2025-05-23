@@ -1,6 +1,9 @@
 
 import me.datafox.dfxtools.handles.*
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertSame
@@ -10,12 +13,6 @@ import kotlin.test.assertTrue
  * @author datafox
  */
 class HandlesTest {
-    companion object {
-        @JvmStatic
-        @BeforeAll
-        fun init() = HandleManager.init()
-    }
-
     lateinit var space: Space
     lateinit var handle: Handle
     lateinit var subhandle: Handle
@@ -27,6 +24,7 @@ class HandlesTest {
         subhandle = handle.createSubhandle("subhandle")
     }
 
+    @OptIn(Purge::class)
     @AfterEach
     fun cleanup() {
         HandleManager.purge()
@@ -95,14 +93,5 @@ class HandlesTest {
         assertFalse(handle in immutable)
         assertFalse(subhandle in immutable)
         assertThrows<IllegalArgumentException> { set += space.handle }
-    }
-
-     @Test
-     fun test2() {
-         println(HandleManager)
-     }
-
-    @Test
-    fun test3() {
     }
 }
