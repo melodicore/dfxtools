@@ -4,7 +4,6 @@ import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.ObservableObserver
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.invalidation.Utils
-import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
 
 /**
  * A set for [Observer] values owned by an [Observable] that checks for cyclic dependencies. The detection only works
@@ -14,14 +13,18 @@ import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
  * @property delegate underlying set implementation, defaults to [mutableSetOf].
  * @constructor Creates a new cyclic-aware set.
  */
+@Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class CyclicAwareSet(
     private val owner: Observable,
-    override val delegate: MutableSet<Observer> = mutableSetOf()
-): DelegatedMutableSet<Observer>() {
+    private val delegate: MutableSet<Observer> = mutableSetOf()
+): MutableSet<Observer> by delegate {
     override fun add(element: Observer): Boolean {
         Utils.checkCyclic(element, owner)
-        return super.add(element)
+        return delegate.add(element)
     }
 
-    override fun addAll(elements: Collection<Observer>): Boolean = elements.any { add(it) }
+    override fun addAll(elements: Collection<Observer>): Boolean {
+        elements.forEach { Utils.checkCyclic(it, owner) }
+        return delegate.addAll(elements)
+    }
 }

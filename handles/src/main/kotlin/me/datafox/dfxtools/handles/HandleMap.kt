@@ -6,7 +6,6 @@ import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.DelegatedMutableMap
 import me.datafox.dfxtools.utils.collection.ImmutableMapView
 import java.util.*
 
@@ -21,12 +20,16 @@ private val logger = KotlinLogging.logger {}
  *
  * @author datafox
  */
-class HandleMap<V> : DelegatedMutableMap<Handle, V> {
-    val space: Space
+class HandleMap<V> internal constructor(
+    private val delegate: MutableMap<Handle, V> = TreeMap(),
+    //JVM signature clash prevention
+    ignored: Any = Any()
+) : MutableMap<Handle, V> by delegate {
+    private lateinit var _space: Space
+
+    val space: Space get() = _space
 
     val immutableView: Map<Handle, V> by lazy { ImmutableMapView(this) }
-
-    override val delegate: MutableMap<Handle, V>
 
     /**
      * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to the space.
@@ -34,12 +37,11 @@ class HandleMap<V> : DelegatedMutableMap<Handle, V> {
      * @param space [Space] for this map.
      * @param entries entries for this map.
      */
-    constructor(space: Space, entries: Map<Handle, V> = emptyMap()) {
+    constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this() {
+        this._space = space
         if(entries.isNotEmpty()) {
             checkHandles(entries.keys)
         }
-        this.space = space
-        delegate = TreeMap(entries)
     }
 
     /**
@@ -47,13 +49,12 @@ class HandleMap<V> : DelegatedMutableMap<Handle, V> {
      *
      * @param entries entries for this map, must not be empty.
      */
-    constructor(entries: Map<Handle, V>) {
+    constructor(entries: Map<Handle, V>) : this() {
         if(entries.isEmpty()) {
             logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
         }
-        this.space = entries.keys.first().space
+        this._space = entries.keys.first().space
         checkHandles(entries.keys)
-        delegate = TreeMap(entries)
     }
 
     override fun put(key: Handle, value: V): V? {

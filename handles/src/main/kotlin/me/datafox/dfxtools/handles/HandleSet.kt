@@ -6,7 +6,6 @@ import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
 import me.datafox.dfxtools.utils.collection.ImmutableSetView
 import java.util.*
 
@@ -21,12 +20,17 @@ private val logger = KotlinLogging.logger {}
  *
  * @author datafox
  */
-class HandleSet : DelegatedMutableSet<Handle> {
-    val space: Space
+@Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
+class HandleSet internal constructor(
+    private val delegate: MutableSet<Handle> = TreeSet(),
+    //JVM signature clash prevention
+    ignored: Any = Any()
+): MutableSet<Handle> by delegate {
+    private lateinit var _space: Space
+
+    val space: Space get() = _space
 
     val immutableView: Set<Handle> by lazy { ImmutableSetView(this) }
-
-    override val delegate: MutableSet<Handle>
 
     /**
      * Creates a new set with [space] and [elements]. Elements must belong to the space.
@@ -34,12 +38,11 @@ class HandleSet : DelegatedMutableSet<Handle> {
      * @param space [Space] for this set.
      * @param elements elements for this set.
      */
-    constructor(space: Space, elements: Collection<Handle> = emptySet()) {
+    constructor(space: Space, elements: Collection<Handle> = emptySet()) : this() {
+        this._space = space
         if(elements.isNotEmpty()) {
             checkHandles(elements)
         }
-        this.space = space
-        delegate = TreeSet(elements)
     }
 
     /**
@@ -47,13 +50,12 @@ class HandleSet : DelegatedMutableSet<Handle> {
      *
      * @param elements elements for this set, must not be empty.
      */
-    constructor(elements: Collection<Handle>) {
+    constructor(elements: Collection<Handle>) : this() {
         if(elements.isEmpty()) {
             logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
         }
-        this.space = elements.first().space
+        this._space = elements.first().space
         checkHandles(elements)
-        delegate = TreeSet(elements)
     }
 
     /**

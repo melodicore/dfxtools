@@ -9,4 +9,5 @@ dokka {
 dependencies {
     dokka(project(":configuration"))
     dokka(project(":handles"))
+    dokka(project(":utils"))
 }

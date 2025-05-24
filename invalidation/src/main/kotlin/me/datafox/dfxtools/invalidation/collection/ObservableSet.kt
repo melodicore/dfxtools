@@ -2,7 +2,6 @@ package me.datafox.dfxtools.invalidation.collection
 
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
-import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
 
 /**
  * A mutable set for [Observable] values owned by an [Observer] that adds values to [Observable.observers] when they are
@@ -12,21 +11,22 @@ import me.datafox.dfxtools.utils.collection.DelegatedMutableSet
  * @property owner owner of this set.
  * @constructor Creates a new observable set.
  */
+@Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class ObservableSet<E : Observable>(
-    override val delegate: MutableSet<E>,
+    private val delegate: MutableSet<E>,
     private val owner: Observer
-) : DelegatedMutableSet<E>() {
+) : MutableSet<E> by delegate {
     init {
         forEach { it.observers.add(owner) }
     }
 
     override fun add(element: E): Boolean {
         element.observers.add(owner)
-        return super.add(element)
+        return delegate.add(element)
     }
 
     override fun addAll(elements: Collection<E>): Boolean {
         elements.forEach { it.observers.add(owner) }
-        return super.addAll(elements)
+        return delegate.addAll(elements)
     }
 }
