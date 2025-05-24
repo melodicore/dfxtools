@@ -1,10 +1,11 @@
-package me.datafox.dfxtools.text
+package me.datafox.dfxtools.text.formatting
 
 import ch.obermuhlner.math.big.BigDecimalMath
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.TextManager
 import me.datafox.dfxtools.utils.Logging
 import java.math.BigDecimal
 
@@ -55,7 +56,7 @@ object NamedSuffixFormatter : NumberSuffixFormatter {
         val index = Math.floorDiv(exponent, interval)
         val suffixes = configuration[suffixes]
         if(number.abs() < BigDecimal.ONE || index < 0 || index >= suffixes.size) {
-            return TextManager.defaultNumberSuffixFormatter.format(number, configuration)
+            return TextManager.fallbackNumberSuffixFormatter.format(number, configuration)
         }
         val shift = Math.floorMod(exponent, interval)
         var mantissa = BigDecimalMath.mantissa(number)

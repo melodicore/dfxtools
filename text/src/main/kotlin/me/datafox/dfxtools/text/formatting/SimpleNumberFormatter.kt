@@ -1,10 +1,11 @@
-package me.datafox.dfxtools.text
+package me.datafox.dfxtools.text.formatting
 
 import ch.obermuhlner.math.big.BigDecimalMath
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.TextManager
 import me.datafox.dfxtools.utils.Logging
 import java.math.BigDecimal
 import java.math.MathContext
@@ -36,8 +37,8 @@ object SimpleNumberFormatter : NumberFormatter {
         var number = number
         var suffix = ""
         if(abs(BigDecimalMath.exponent(number)) >= minExponent) {
-            number = output.first
-            suffix = output.second
+            number = output.scaled
+            suffix = output.suffix
         }
         if(configuration[stripZeros]) {
             number = number.stripTrailingZeros()

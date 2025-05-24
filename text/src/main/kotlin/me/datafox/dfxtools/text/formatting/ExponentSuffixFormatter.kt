@@ -1,4 +1,4 @@
-package me.datafox.dfxtools.text
+package me.datafox.dfxtools.text.formatting
 
 import ch.obermuhlner.math.big.BigDecimalMath
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -24,23 +24,23 @@ object ExponentSuffixFormatter : NumberSuffixFormatter {
     override fun format(number: BigDecimal, configuration: Configuration?): Output {
         val configuration = ConfigurationManager[configuration]
         val interval = configuration[interval]
-        validateConfiguration(interval);
-        var shift = 0;
-        var exponent = BigDecimalMath.exponent(number);
+        validateConfiguration(interval)
+        var shift = 0
+        var exponent = BigDecimalMath.exponent(number)
         if(abs(exponent) < interval) {
-            return Output(number, "");
+            return Output(number, "")
         }
         if(interval != 1) {
-            shift = Math.floorMod(exponent, interval);
-            exponent = Math.floorDiv(exponent, interval) * interval;
+            shift = Math.floorMod(exponent, interval)
+            exponent = Math.floorDiv(exponent, interval) * interval
         }
-        var mantissa = BigDecimalMath.mantissa(number);
+        var mantissa = BigDecimalMath.mantissa(number)
         if(shift != 0) {
-            mantissa = mantissa.movePointRight(shift);
+            mantissa = mantissa.movePointRight(shift)
         }
-        var plus = "";
+        var plus = ""
         if(configuration[exponentPlus] && exponent >= 0) {
-            plus = "+";
+            plus = "+"
         }
         return Output(mantissa, "e$plus$exponent")
     }

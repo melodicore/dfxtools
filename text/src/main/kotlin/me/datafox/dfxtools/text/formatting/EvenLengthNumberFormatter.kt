@@ -1,10 +1,11 @@
-package me.datafox.dfxtools.text
+package me.datafox.dfxtools.text.formatting
 
 import ch.obermuhlner.math.big.BigDecimalMath
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.TextManager
 import me.datafox.dfxtools.utils.Logging
 import java.math.BigDecimal
 import java.math.MathContext
@@ -28,44 +29,44 @@ object EvenLengthNumberFormatter : NumberFormatter {
         configuration: Configuration?
     ): String {
         val configuration = ConfigurationManager[configuration]
-        val actualLength = configuration[length];
-        var length = actualLength;
-        val minExponent = configuration[minExponent];
-        validateConfiguration(length, minExponent);
-        val suffixFormatter = configuration[TextManager.numberSuffixFormatter];
-        val exponent = BigDecimalMath.exponent(number);
-        val absExponent = abs(exponent);
+        val actualLength = configuration[length]
+        var length = actualLength
+        val minExponent = configuration[minExponent]
+        validateConfiguration(length, minExponent)
+        val suffixFormatter = configuration[TextManager.numberSuffixFormatter]
+        val exponent = BigDecimalMath.exponent(number)
+        val absExponent = abs(exponent)
         lateinit var out: String
-        var suffix = "";
+        var suffix = ""
         if(number.signum() == -1) {
-            length--;
+            length--
         }
         if(exponent == length - 1 && length == minExponent) {
-            out = getNumberString(number, length, actualLength);
+            out = getNumberString(number, length, actualLength)
         } else if(absExponent >= minExponent) {
-            val output = suffixFormatter.format(number, configuration);
-            suffix = output.second;
-            val exp = abs(BigDecimalMath.exponent(output.first));
+            val output = suffixFormatter.format(number, configuration)
+            suffix = output.suffix
+            val exp = abs(BigDecimalMath.exponent(output.scaled))
             out = if(exp == length - suffix.length - 1) {
-                getNumberString(output.first, number, length - suffix.length, actualLength);
+                getNumberString(output.scaled, number, length - suffix.length, actualLength)
             } else {
-                getNumberString(output.first, number, length - suffix.length - 1, actualLength);
+                getNumberString(output.scaled, number, length - suffix.length - 1, actualLength)
             }
         } else if(exponent < 0) {
-            out = getNumberString(number, length - 1 + exponent, actualLength);
+            out = getNumberString(number, length - 1 + exponent, actualLength)
         } else {
-            out = getNumberString(number, length - 1, actualLength);
+            out = getNumberString(number, length - 1, actualLength)
         }
         if(configuration[padZeros]) {
             if(out.length + suffix.length < actualLength) {
                 out += if(out.contains(".")) {
-                    "0".repeat(actualLength - (out.length + suffix.length));
+                    "0".repeat(actualLength - (out.length + suffix.length))
                 } else {
-                    "." + "0".repeat(actualLength - (out.length + suffix.length) - 1);
+                    "." + "0".repeat(actualLength - (out.length + suffix.length) - 1)
                 }
             }
         }
-        return out + suffix;
+        return out + suffix
     }
 
     private fun validateConfiguration(length: Int, minExponent: Int) {
