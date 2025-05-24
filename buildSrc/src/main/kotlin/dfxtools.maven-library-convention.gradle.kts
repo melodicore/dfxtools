@@ -67,6 +67,14 @@ tasks.jar {
     }
 }
 
+tasks.register("copyLicense", Copy::class) {
+    from(rootDir) {
+        include("LICENSE")
+        rename { "$it.txt" }
+    }
+    into(projectDir.resolve("src/main/resources/META-INF"))
+}
+
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()
