@@ -1,7 +1,7 @@
 package me.datafox.dfxtools.handles.internal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 
 internal object Strings {

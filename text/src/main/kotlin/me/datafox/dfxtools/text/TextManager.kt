@@ -28,7 +28,7 @@ import me.datafox.dfxtools.utils.property.ConditionalReadWriteProperty
  * @property fallbackNumberSuffixFormatter fallback [NumberSuffixFormatter] used by other suffix formatters when the
  * formatted value is beyond their limit. Must have [NumberSuffixFormatter.infinite] be `true`.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 object TextManager {
     val delimiter: ConfigurationKey<String> = ConfigurationKey(" ")

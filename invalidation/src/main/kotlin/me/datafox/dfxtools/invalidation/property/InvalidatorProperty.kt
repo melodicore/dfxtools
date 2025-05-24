@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
  * @property onInvalidate extra logic that is run when this property is set, before [Observable.onChanged] is called.
  * @constructor creates a new invalidator property.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class InvalidatorProperty<V>(private var value: V, private val onInvalidate: () -> Unit = {}) : ReadWriteProperty<Observable, V> {
     override fun getValue(thisRef: Observable, property: KProperty<*>) = value

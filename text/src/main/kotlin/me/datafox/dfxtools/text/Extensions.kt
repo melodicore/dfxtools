@@ -3,7 +3,7 @@ package me.datafox.dfxtools.text
 import me.datafox.dfxtools.configuration.Configuration
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 
 fun String.isZero(): Boolean = matches(Regex("0|0\\.0*"))

@@ -5,7 +5,7 @@ import me.datafox.dfxtools.invalidation.collection.CyclicAwareSet
 /**
  * Utilities for the Invalidation module.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 object Utils {
     /**

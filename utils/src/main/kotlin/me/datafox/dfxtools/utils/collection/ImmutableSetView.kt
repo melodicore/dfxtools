@@ -5,7 +5,7 @@ package me.datafox.dfxtools.utils.collection
  *
  * @property delegate delegated set.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class ImmutableSetView<out E>(val delegate: MutableSet<@UnsafeVariance E>) : Set<E> by delegate

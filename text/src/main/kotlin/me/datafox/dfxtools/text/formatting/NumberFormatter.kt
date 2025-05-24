@@ -7,7 +7,7 @@ import java.math.BigDecimal
 /**
  * Interface for formatting [BigDecimal] numbers.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 interface NumberFormatter {
     /**

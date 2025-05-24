@@ -5,7 +5,7 @@ import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
 import java.math.BigDecimal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class MutableValue(value: BigDecimal) : Value, AbstractObservable() {
     override var value: BigDecimal by InvalidatorProperty(value)

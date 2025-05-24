@@ -11,7 +11,7 @@ package me.datafox.dfxtools.handles
  * @property space [Space] that this group belongs to.
  * @property handles backing [HandleSet]. Handles can be added to and removed from this set normally.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class Group : ComparableHandled {
     override val handle: Handle

@@ -10,7 +10,7 @@ import java.math.BigDecimal
 import kotlin.math.abs
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 private val logger = KotlinLogging.logger {}
 

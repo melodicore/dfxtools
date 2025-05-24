@@ -10,7 +10,7 @@ import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
  * [invalidate].
  *
  * @property propertyHandler handler for properties delegated with [InvalidatedProperty].
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 interface Observer {
     val propertyHandler: InvalidatedProperty.Handler

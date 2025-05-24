@@ -5,7 +5,7 @@ import io.github.oshai.kotlinlogging.KLogger
 /**
  * Tools for logging with [KLogger].
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 
 object Logging {

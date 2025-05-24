@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
  * @property space [Space] of this set.
  * @property immutableView immutable view of this set.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class HandleSet internal constructor(

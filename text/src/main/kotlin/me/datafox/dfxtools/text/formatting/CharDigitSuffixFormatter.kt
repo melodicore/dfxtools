@@ -12,7 +12,7 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 object CharDigitSuffixFormatter : NumberSuffixFormatter {
     val alphabet: Array<Char> = arrayOf(
@@ -38,7 +38,6 @@ object CharDigitSuffixFormatter : NumberSuffixFormatter {
         validateConfiguration(interval, characters)
         var shift = 0
         val exponent = BigDecimalMath.exponent(number)
-        val negativeExponent = exponent < 0;
         var index = exponent;
         if(interval != 1) {
             shift = Math.floorMod(exponent, interval)
@@ -60,13 +59,12 @@ object CharDigitSuffixFormatter : NumberSuffixFormatter {
             }
             index = (index - 1) / characters.size
         }
-        if(negativeExponent) {
+        if(exponent < 0) {
             sb.insert(0, '-')
         } else if(configuration[exponentPlus]) {
             sb.insert(0, '+')
         }
         return Output(mantissa, sb.toString())
-
     }
 
     private fun validateConfiguration(interval: Int, characters: Array<Char>) {

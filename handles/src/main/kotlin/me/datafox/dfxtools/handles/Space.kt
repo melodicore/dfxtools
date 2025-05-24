@@ -17,7 +17,7 @@ private val logger = KotlinLogging.logger {}
  * @property handles [Handles][Handle] of this space.
  * @property groups [Groups][Group] of this space.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class Space : ComparableHandled {
     private lateinit var _handle: Handle

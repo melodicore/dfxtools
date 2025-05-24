@@ -4,7 +4,7 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 interface Text {
     val configuration: Configuration?

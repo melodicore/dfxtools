@@ -28,7 +28,7 @@ private val logger = KotlinLogging.logger {}
  * @property subhandles subhandles of this handle, or `null` if this handle is a subhandle.
  * @property tags mutable set of tags for this handle.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class Handle : Comparable<Handle> {
     val space: Space

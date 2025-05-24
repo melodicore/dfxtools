@@ -4,7 +4,7 @@ import me.datafox.dfxtools.invalidation.Observable
 import java.math.BigDecimal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 interface Value : Observable {
     val value: BigDecimal

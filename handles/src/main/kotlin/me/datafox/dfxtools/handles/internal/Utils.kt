@@ -4,7 +4,7 @@ import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.Space
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 internal object Utils {
     fun checkHandleIsInSpace(space: Space, handle: Handle): Handle? = if(handle.space != space) handle else null

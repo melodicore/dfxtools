@@ -12,7 +12,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 private val logger = KotlinLogging.logger {}
 

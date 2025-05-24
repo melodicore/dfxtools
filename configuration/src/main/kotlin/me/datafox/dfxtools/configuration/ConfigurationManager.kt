@@ -9,7 +9,7 @@ import me.datafox.dfxtools.configuration.ConfigurationManager.remove
  * A singleton object that manages a [Configuration].
  *
  * @property configuration [Configuration] associated with this manager.
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 object ConfigurationManager {
     val configuration: Configuration = Configuration()

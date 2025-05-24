@@ -6,6 +6,6 @@ package me.datafox.dfxtools.configuration
  * @param T type of the value.
  * @property value lambda wrapper for the value.
  * @constructor Creates a configuration value.
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 internal class ConfigurationValue<out T>(val value: () -> T)

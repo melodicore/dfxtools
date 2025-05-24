@@ -13,7 +13,7 @@ import kotlin.math.abs
 
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 private val logger = KotlinLogging.logger {}
 
@@ -33,9 +33,7 @@ object EvenLengthNumberFormatter : NumberFormatter {
         var length = actualLength
         val minExponent = configuration[minExponent]
         validateConfiguration(length, minExponent)
-        val suffixFormatter = configuration[TextManager.numberSuffixFormatter]
         val exponent = BigDecimalMath.exponent(number)
-        val absExponent = abs(exponent)
         lateinit var out: String
         var suffix = ""
         if(number.signum() == -1) {
@@ -43,8 +41,8 @@ object EvenLengthNumberFormatter : NumberFormatter {
         }
         if(exponent == length - 1 && length == minExponent) {
             out = getNumberString(number, length, actualLength)
-        } else if(absExponent >= minExponent) {
-            val output = suffixFormatter.format(number, configuration)
+        } else if(abs(exponent) >= minExponent) {
+            val output = configuration[TextManager.numberSuffixFormatter].format(number, configuration)
             suffix = output.suffix
             val exp = abs(BigDecimalMath.exponent(output.scaled))
             out = if(exp == length - suffix.length - 1) {

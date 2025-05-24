@@ -5,7 +5,7 @@ import me.datafox.dfxtools.text.TextManager.numberFormatter
 import java.math.BigDecimal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class NumberText(override val configuration: Configuration? = null, val number: () -> BigDecimal) : Text {
     override fun generate(configuration: Configuration?) =

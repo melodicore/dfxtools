@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
  * @property space [Space] of this map.
  * @property immutableView immutable view of this map.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class HandleMap<V> internal constructor(
     private val delegate: MutableMap<Handle, V> = TreeMap(),

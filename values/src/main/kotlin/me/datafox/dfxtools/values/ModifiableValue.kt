@@ -9,7 +9,7 @@ import me.datafox.dfxtools.invalidation.property.ObservableSortedSetProperty
 import java.math.BigDecimal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ModifiableValue(
     override val handle: Handle,

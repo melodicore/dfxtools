@@ -4,7 +4,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class InvalidationTest {
     @Test

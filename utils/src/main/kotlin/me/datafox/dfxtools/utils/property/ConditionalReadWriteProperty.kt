@@ -19,7 +19,7 @@ private val logger = KotlinLogging.logger {}
  * [message] is `null`.
  * @property predicate predicate that should return `true` if the passed value is valid.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ConditionalReadWriteProperty<T>(
     var value: T,

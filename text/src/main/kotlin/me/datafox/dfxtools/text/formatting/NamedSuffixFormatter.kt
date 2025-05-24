@@ -10,7 +10,7 @@ import me.datafox.dfxtools.utils.Logging
 import java.math.BigDecimal
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 private val logger = KotlinLogging.logger {}
 

@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
  *
  * @param values values to initialize the list with.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ObservableListProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableList<E>> {
     private val backingList: MutableList<E> = values.toMutableList()

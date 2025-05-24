@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
  *
  * @property value [Observable] value.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ObservableProperty(val value: Observable) : ReadOnlyProperty<Observer, Observable> {
     override fun getValue(thisRef: Observer, property: KProperty<*>): Observable = value

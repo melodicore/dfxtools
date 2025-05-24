@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ConfigurationTest {
     val string = "default"

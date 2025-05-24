@@ -4,7 +4,7 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ConfigurationText<T>(
     val key: ConfigurationKey<T>,

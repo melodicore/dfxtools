@@ -20,7 +20,7 @@ class Output(val scaled: BigDecimal, val suffix: String)
  *
  * @property infinite `true` if this formatter can format any number, `false` otherwise.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 interface NumberSuffixFormatter {
     val infinite: Boolean

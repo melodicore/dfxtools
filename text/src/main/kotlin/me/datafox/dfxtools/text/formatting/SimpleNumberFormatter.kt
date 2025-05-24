@@ -13,7 +13,7 @@ import kotlin.math.abs
 
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 private val logger = KotlinLogging.logger {}
 
@@ -32,11 +32,10 @@ object SimpleNumberFormatter : NumberFormatter {
         val precision = configuration[precision]
         val minExponent = configuration[minExponent]
         validateConfiguration(precision, minExponent)
-        val suffixFormatter = configuration[TextManager.numberSuffixFormatter]
-        val output = suffixFormatter.format(number, configuration)
         var number = number
         var suffix = ""
         if(abs(BigDecimalMath.exponent(number)) >= minExponent) {
+            val output = configuration[TextManager.numberSuffixFormatter].format(number, configuration)
             number = output.scaled
             suffix = output.suffix
         }

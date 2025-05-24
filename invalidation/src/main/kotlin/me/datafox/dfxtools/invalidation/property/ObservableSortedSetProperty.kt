@@ -12,7 +12,7 @@ import kotlin.reflect.KProperty
  * @param values values to initialize the set with.
  * @param comparator comparator to sort the set with.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ObservableSortedSetProperty<E : Observable>(vararg values: E, comparator: (E, E) -> Int) : ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toSortedSet(comparator)

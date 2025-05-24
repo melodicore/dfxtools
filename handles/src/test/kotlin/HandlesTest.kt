@@ -10,7 +10,7 @@ import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 /**
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class HandlesTest {
     lateinit var space: Space

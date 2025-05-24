@@ -24,7 +24,7 @@ private val logger = KotlinLogging.logger {}
  * @property tagSpace [Space] that contains all tag [Handles][Handle].
  * @property spaces [Map] that contains all [Spaces][Space] and their identifying [Handles][Handle].
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 object HandleManager {
     private var _spaceSpace: Space = Space(true)

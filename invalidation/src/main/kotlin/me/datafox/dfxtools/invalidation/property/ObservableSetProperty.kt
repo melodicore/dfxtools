@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
  *
  * @param values values to initialize the set with.
  *
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class ObservableSetProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toMutableSet()

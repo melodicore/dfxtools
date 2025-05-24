@@ -4,7 +4,7 @@ package me.datafox.dfxtools.configuration
  * A class for storing arbitrary configuration.
  *
  * @constructor Creates an empty configuration.
- * @author datafox
+ * @author Lauri "datafox" Heino
  */
 class Configuration() {
     private val map: MutableMap<ConfigurationKey<*>, ConfigurationValue<*>> = HashMap()
