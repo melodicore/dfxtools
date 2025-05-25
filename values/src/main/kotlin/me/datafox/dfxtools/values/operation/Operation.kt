@@ -40,6 +40,7 @@ interface Operation {
         val pow = SingleParameterOperation { a, b -> BigDecimalMath.pow(a, b, context) }
         val powInv = SingleParameterOperation { a, b -> BigDecimalMath.pow(b, a, context) }
         val abs = SourceOperation { it.abs(context) }
+        val inv = SourceOperation { it.negate(context) }
         val sqrt = SourceOperation { it.sqrt(context) }
         val cbrt = SourceOperation { BigDecimalMath.root(it, BigDecimal(3), context) }
         val root = SingleParameterOperation { a, b -> BigDecimalMath.root(a, b, context) }
