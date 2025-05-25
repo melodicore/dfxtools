@@ -104,6 +104,20 @@ class HandleSet internal constructor(
      */
     operator fun plusAssign(ids: Iterable<String>) { addAll(ids) }
 
+    /**
+     * Removes a [Handle] with [id].
+     *
+     * @param id id of a [Handle].
+     */
+    operator fun minusAssign(id: String) { remove(id) }
+
+    /**
+     * Removes all [Handles][Handle] with [ids].
+     *
+     * @param ids ids of [Handles][Handle].
+     */
+    operator fun minusAssign(ids: Iterable<String>) { removeAll(ids) }
+
     override fun add(element: Handle): Boolean {
         checkHandle(element)
         return delegate.add(element)

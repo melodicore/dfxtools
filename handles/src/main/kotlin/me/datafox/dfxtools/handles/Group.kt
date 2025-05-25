@@ -62,7 +62,7 @@ class Group : ComparableHandled {
      *
      * @param id id of the [Handle] to be added.
      */
-    operator fun plusAssign(id: String) { handles += handle }
+    operator fun plusAssign(id: String) { handles += id }
 
     /**
      * Adds [handles] to this group.

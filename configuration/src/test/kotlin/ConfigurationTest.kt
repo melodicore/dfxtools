@@ -21,6 +21,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 /**
+ * Just a very simple [`configuration test`] case since the module is tiny and barebones, leveraging [HashMap] for
+ * functionality.
+ *
  * @author Lauri "datafox" Heino
  */
 class ConfigurationTest {

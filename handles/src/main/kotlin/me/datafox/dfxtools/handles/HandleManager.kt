@@ -98,7 +98,7 @@ object HandleManager {
      * @return [Handle] or subhandle with the fully qualified [id].
      */
     fun getOrCreateQualifiedHandle(id: String): Handle {
-        if(checkHandleId(id, true)) {
+        if(!checkHandleId(id, true)) {
             logThrow(logger, invalidQualifiedHandleId(id)) { IllegalArgumentException(it) }
         }
         if('@' !in id) {
