@@ -5,16 +5,16 @@ DFXTools is a collection of game dev -oriented general purpose libraries. It is 
 
 ## Modules
 
-| Module                         | Description                                           | Status                   |
-|--------------------------------|-------------------------------------------------------|--------------------------|
-| [Configuration](configuration) | Cascading configuration with arbitrarily typed values | Done                     |
-| [Handles](handles)             | Categorizable identification                          | Done, insufficient tests |
-| [Invalidation](invalidation)   | Invalidation of values that depend on other values    | Done, no tests           |
-| [Text](text)                   | Number formatting and text handling                   | Under construction       |
-| [Utils](utils)                 | Utilities used by other modules                       | Under construction       |
-| [Values](values)               | Mutable and dynamically modifiable numbers            | Under construction       |
-| Nodes                          | Node system for visual programming                    | Not started yet          |
-| Entities                       | Entity-Component system based on nodes                | Not started yet          |
+| Module                         | Description                                           | Status             |
+|--------------------------------|-------------------------------------------------------|--------------------|
+| [Configuration](configuration) | Cascading configuration with arbitrarily typed values | Done               |
+| [Handles](handles)             | Categorizable identification                          | Done               |
+| [Invalidation](invalidation)   | Invalidation of values that depend on other values    | Done, no tests     |
+| [Text](text)                   | Number formatting and text handling                   | Under construction |
+| [Utils](utils)                 | Utilities used by other modules                       | Under construction |
+| [Values](values)               | Mutable and dynamically modifiable numbers            | Under construction |
+| Nodes                          | Node system for visual programming                    | Not started yet    |
+| Entities                       | Entity-Component system based on nodes                | Not started yet    |
 
 ## Differences to DFXEngine
 
