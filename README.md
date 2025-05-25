@@ -5,6 +5,9 @@ DFXTools is a collection of game dev -oriented general purpose libraries. It is 
 
 ## Modules
 
+This project is still under active development and everything (including things marked as Done) may change without 
+warning!
+
 | Module                         | Description                                           | Status             |
 |--------------------------------|-------------------------------------------------------|--------------------|
 | [Configuration](configuration) | Cascading configuration with arbitrarily typed values | Done               |
