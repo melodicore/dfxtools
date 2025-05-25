@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.values
+package me.datafox.dfxtools.values.modifier
 
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.property.ObservableListProperty
+import me.datafox.dfxtools.values.Value
 
 /**
  * @author Lauri "datafox" Heino

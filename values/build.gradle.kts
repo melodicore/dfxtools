@@ -27,6 +27,8 @@ dependencies {
     implementation(project(":utils"))
     implementation(libs.logging)
     implementation(libs.slf4j.api)
+    implementation(libs.bigmath)
+    implementation(libs.bigmath.kotlin)
     compileClasspath(libs.kotlin.reflect)
     testRuntimeClasspath(libs.log4j)
 }

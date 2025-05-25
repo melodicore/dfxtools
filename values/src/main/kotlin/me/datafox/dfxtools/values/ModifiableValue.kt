@@ -22,6 +22,7 @@ import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
 import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
 import me.datafox.dfxtools.invalidation.property.ObservableSortedSetProperty
+import me.datafox.dfxtools.values.modifier.Modifier
 import java.math.BigDecimal
 
 /**

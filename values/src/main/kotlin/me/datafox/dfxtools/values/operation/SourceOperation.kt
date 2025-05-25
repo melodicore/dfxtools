@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.values
+package me.datafox.dfxtools.values.operation
 
-import me.datafox.dfxtools.invalidation.ObservableObserver
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.math.BigDecimal
 
-interface Modifier : ObservableObserver, Comparable<Modifier> {
-    val priority: Int
+private val logger = KotlinLogging.logger {}
 
-    fun apply(value: BigDecimal): BigDecimal
+/**
+ * @author Lauri "datafox" Heino
+ */
+fun interface SourceOperation : Operation {
+    override val parameterCount: Int get() = 0
 
-    override fun compareTo(other: Modifier): Int = priority.compareTo(other.priority)
+    override fun apply(source: BigDecimal, vararg params: BigDecimal): BigDecimal {
+        if(params.isNotEmpty()) {
+            logger.warn { "Parameters given to $this, they will be ignored" }
+        }
+        return apply(source)
+    }
+
+    fun apply(source: BigDecimal): BigDecimal
 }
