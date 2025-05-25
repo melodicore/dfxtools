@@ -24,12 +24,12 @@ import kotlin.reflect.KProperty
  * A property that can be invalidated and recalculated.
  *
  * @param value initial value for this property. If `null`, [calculation] will be called for the initial value.
- * @property calculation lambda that returns a new value for this property. Called when the property is requested if it
- * has been invalidated.
+ * @property calculation lambda that returns a new [value] for this property. Called when the property is requested if
+ * it has been invalidated. Current [value] is given as a parameter, or `null` when initialized with a null value.
  * @constructor creates a new invalidated property.
  */
-class InvalidatedProperty<V>(value: V? = null, private val calculation: () -> V) : ReadOnlyProperty<Observer, V> {
-    private var value = value ?: calculation()
+class InvalidatedProperty<V>(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProperty<Observer, V> {
+    private var value = value ?: calculation(null)
 
     private var invalidated = false
 
@@ -40,7 +40,7 @@ class InvalidatedProperty<V>(value: V? = null, private val calculation: () -> V)
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): V {
         if(invalidated) {
-            value = calculation()
+            value = calculation(value)
             invalidated = false
         }
         return value

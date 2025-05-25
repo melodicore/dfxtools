@@ -16,7 +16,9 @@
 
 package me.datafox.dfxtools.invalidation
 
+import io.github.oshai.kotlinlogging.KLogger
 import me.datafox.dfxtools.invalidation.collection.CyclicAwareSet
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
  * Utilities for the Invalidation module.
@@ -33,16 +35,25 @@ object Utils {
      *
      * @param element element
      */
-    fun checkCyclic(element: Observer, owner: Observable) {
-        if(element !is Observable || owner !is Observer) return
-        checkCyclicRecursive(owner, element)
+    fun checkCyclic(element: Observer, owner: Observable, logger: KLogger) {
+        if(element == owner) {
+            logThrow(logger, "Self dependency") { IllegalArgumentException(it) }
+        }
+        if(element !is Observable || owner !is Observer) {
+            return
+        }
+        checkCyclicRecursive(owner, element, logger)
     }
 
-    private fun checkCyclicRecursive(element: Observer, current: Observable) {
-        if(element in current.observers) throw IllegalArgumentException("Cyclic dependency")
+    private fun checkCyclicRecursive(element: Observer, current: Observable, logger: KLogger) {
+        if(element in current.observers) {
+            logThrow(logger, "Cyclic dependency") { IllegalArgumentException(it) }
+        }
         current.observers.forEach {
-            if(it !is Observable) return@forEach
-            checkCyclicRecursive(element, it)
+            if(it !is Observable) {
+                return@forEach
+            }
+            checkCyclicRecursive(element, it, logger)
         }
     }
 }

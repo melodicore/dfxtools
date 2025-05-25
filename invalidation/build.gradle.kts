@@ -23,6 +23,9 @@ version = libs.versions.invalidation.get()
 
 dependencies {
     implementation(project(":utils"))
+    implementation(libs.logging)
+    implementation(libs.slf4j.api)
+    testRuntimeClasspath(libs.log4j)
 }
 
 mavenPublishing {

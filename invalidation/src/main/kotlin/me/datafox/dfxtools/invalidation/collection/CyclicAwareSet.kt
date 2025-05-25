@@ -16,10 +16,13 @@
 
 package me.datafox.dfxtools.invalidation.collection
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.ObservableObserver
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.invalidation.Utils
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * A set for [Observer] values owned by an [Observable] that checks for cyclic dependencies. The detection only works
@@ -35,12 +38,12 @@ class CyclicAwareSet(
     private val delegate: MutableSet<Observer> = mutableSetOf()
 ): MutableSet<Observer> by delegate {
     override fun add(element: Observer): Boolean {
-        Utils.checkCyclic(element, owner)
+        Utils.checkCyclic(element, owner, logger)
         return delegate.add(element)
     }
 
     override fun addAll(elements: Collection<Observer>): Boolean {
-        elements.forEach { Utils.checkCyclic(it, owner) }
+        elements.forEach { Utils.checkCyclic(it, owner, logger) }
         return delegate.addAll(elements)
     }
 }

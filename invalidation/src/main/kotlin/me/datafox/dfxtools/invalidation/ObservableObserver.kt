@@ -21,9 +21,4 @@ package me.datafox.dfxtools.invalidation
  *
  * @author Lauri "datafox" Heino
  */
-interface ObservableObserver : Observable, Observer {
-    override fun invalidate() {
-        super.invalidate()
-        onChanged()
-    }
-}
+interface ObservableObserver : Observable, Observer
