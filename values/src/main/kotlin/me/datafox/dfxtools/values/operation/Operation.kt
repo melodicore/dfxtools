@@ -47,8 +47,16 @@ interface Operation {
         val log = SourceOperation { BigDecimalMath.log(it, context) }
         val log2 = SourceOperation { BigDecimalMath.log2(it, context) }
         val log10 = SourceOperation { BigDecimalMath.log10(it, context) }
-        val logN = SingleParameterOperation { a, b -> BigDecimalMath.log(a, context).divide(BigDecimalMath.log(b, context), context) }
-        val logNInv = SingleParameterOperation { a, b -> BigDecimalMath.log(b, context).divide(BigDecimalMath.log(a, context), context) }
+        val logN = SingleParameterOperation { a, b ->
+            val logA = BigDecimalMath.log(a, context)
+            val logB = BigDecimalMath.log(b, context)
+            logA.divide(logB, context)
+        }
+        val logNInv = SingleParameterOperation { a, b ->
+            val logA = BigDecimalMath.log(a, context)
+            val logB = BigDecimalMath.log(b, context)
+            logB.divide(logA, context)
+        }
         val lerp = DualParameterOperation { a, b, c ->
             val oneMinusA = BigDecimal.ONE.subtract(a, context)
             val scaledB = b.multiply(oneMinusA, context)
