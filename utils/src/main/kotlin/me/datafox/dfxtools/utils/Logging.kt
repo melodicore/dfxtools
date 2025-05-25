@@ -26,15 +26,14 @@ import io.github.oshai.kotlinlogging.KLogger
 
 object Logging {
     /**
-     * Logs an exception with [KLogger.error] and throws it.
+     * Logs a message to [KLogger.error] and throws an exception.
      *
      * @param logger [KLogger] to be used.
-     * @param message message to be logged and thrown
+     * @param message message to be logged.
      * @param throwable lambda that returns a [Throwable] to be thrown. [message] is always given to it as a parameter.
      */
     fun logThrow(logger: KLogger, message: String, throwable: (String) -> Throwable): Nothing {
-        val thrown = throwable(message)
-        logger.error(thrown) { message }
-        throw thrown
+        logger.error { message }
+        throw throwable(message)
     }
 }
