@@ -4,11 +4,11 @@ System for invalidating values that depend on other values.
 
 ## Observable
 
-`Observable` is an interface for classes that may invalidate `Observer` classes. It contains a `CyclicAwareSet` called 
-`observers` and a function `onChanged()` which calls `invalidate()` on all observers in the set. `onChanged()` should be
-called whenever a value in the observable changes in a way that could affect any of the observers. `InvalidatorProperty` 
-may be used as a property delegate to do these calls automatically. `AbstractObservable` is an abstract implementation 
-of this interface that populates `observers`.
+`Observable` is an interface for classes that may invalidate `Observer` classes. It contains a `CyclicAwareCollection` 
+called `observers` and a function `onChanged()` which calls `invalidate()` on all observers in the set. `onChanged()` 
+should be called whenever a value in the observable changes in a way that could affect any of the observers. 
+`InvalidatorProperty` may be used as a property delegate to do these calls automatically. `AbstractObservable` is an 
+abstract implementation of this interface that populates `observers`.
 
 ## Observer
 
@@ -25,15 +25,15 @@ lazily recalculate dependent values if the flag is set. This is also how `Invali
 
 ## ObservableObserver
 
-`ObservableObserver` is an interface that extends both `Observable` and `Observer`. `CyclicAwareSet` can only detect
-cyclic dependencies when all the elements in the cycle implement both interfaces, so this is the interface that should
-be implemented whenever a class is both observable and an observer. `AbstractObservableObserver` is an abstract 
-implementation of this interface that populates both `observers` and `propertyHandler`.
+`ObservableObserver` is an interface that extends both `Observable` and `Observer` and overrides `onInvalidate()` to 
+call `onChanged()`. `CyclicAwareCollection` can only detect cyclic dependencies when all the elements in the cycle 
+implement both interfaces, so this is the interface that should be implemented whenever a class is both observable and 
+an observer. `AbstractObservableObserver` is an abstract implementation of this interface that populates both 
+`observers` and `propertyHandler`.
 
 ## Observable Properties
 
 `ObservableProperty`, `ObservableListProperty`, `ObservableSetProperty` and `ObservableSortedSetProperty` are property
-delegates for `Observer` that wrap or contain `Observable` classes. All of them add their observer owner to their 
-contained observables' observers set. Please note that the collection properties do not remove their owner from the set
-when an observable is removed from them, as this could cause issues when the same observer is added to an observable 
-from multiple of these properties. The collection properties are backed by `ObservableList` and `ObservableSet`.
+delegates for `Observer` that wrap or contain `Observable` classes. All of them add and remove their observer owner and 
+their unique identifier to their contained observables' `CyclicAwareCollection` when they are modified. The collection 
+properties are backed by `ObservableList` and `ObservableSet`.
