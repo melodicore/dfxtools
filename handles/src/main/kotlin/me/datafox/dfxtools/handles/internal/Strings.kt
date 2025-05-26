@@ -35,6 +35,9 @@ internal object Strings {
 
     const val SUBHANDLE_SUBHANDLE_CREATION = "Creating subhandles for subhandles is not permitted."
 
+    const val PURGE_MESSAGE = "Purge is a dangerous function, make sure that no references " +
+            "to existing Handles, Spaces and Groups are used after calling it."
+
     fun invalidHandleId(id: String) = "Id \"$id\" is invalid, colons (:) and at signs (@) are not permitted."
 
     fun handleIdExists(id: String) = "A handle with id \"$id\" already exists in this space."

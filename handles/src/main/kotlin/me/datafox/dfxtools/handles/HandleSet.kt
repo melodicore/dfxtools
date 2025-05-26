@@ -32,7 +32,7 @@ private val logger = KotlinLogging.logger {}
  * functions for generic sets that contain handles. This set is backed by a [TreeSet].
  *
  * @property space [Space] of this set.
- * @property immutableView immutable view of this set.
+ * @property immutableView Immutable view of this set.
  *
  * @author Lauri "datafox" Heino
  */
@@ -40,7 +40,7 @@ private val logger = KotlinLogging.logger {}
 class HandleSet internal constructor(
     private val delegate: MutableSet<Handle> = TreeSet(),
     //JVM signature clash prevention
-    ignored: Any = Any()
+    @Suppress("unused") ignored: Any = Any()
 ): MutableSet<Handle> by delegate {
     private lateinit var _space: Space
 
@@ -52,7 +52,7 @@ class HandleSet internal constructor(
      * Creates a new set with [space] and [elements]. Elements must belong to the space.
      *
      * @param space [Space] for this set.
-     * @param elements elements for this set.
+     * @param elements [Handles][Handle] for this set.
      */
     constructor(space: Space, elements: Collection<Handle> = emptySet()) : this() {
         this._space = space
@@ -64,7 +64,7 @@ class HandleSet internal constructor(
     /**
      * Creates a new set with [elements]. Elements must contain at least one element to infer [space].
      *
-     * @param elements elements for this set, must not be empty.
+     * @param elements [Handles][Handle] for this set, must not be empty.
      */
     constructor(elements: Collection<Handle>) : this() {
         if(elements.isEmpty()) {
@@ -77,7 +77,7 @@ class HandleSet internal constructor(
     /**
      * Adds a [Handle] with id to this set, creating a new handle if necessary and permitted.
      *
-     * @param id id of the [Handle] to be added.
+     * @param id Id of the [Handle] to be added.
      * @return `true` if this set changed as a result of this operation.
      */
     fun add(id: String): Boolean = add(space.getOrCreateHandle(id))
@@ -85,7 +85,7 @@ class HandleSet internal constructor(
     /**
      * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and permitted.
      *
-     * @param ids ids of the [Handles][Handle] to be added.
+     * @param ids Ids of the [Handles][Handle] to be added.
      * @return `true` if this set changed as a result of this operation.
      */
     fun addAll(ids: Iterable<String>): Boolean = addAll(space.getOrCreateHandles(ids))
@@ -93,28 +93,28 @@ class HandleSet internal constructor(
     /**
      * Adds a [Handle] with id to this set, creating a new handle if necessary and permitted.
      *
-     * @param id id of the [Handle] to be added.
+     * @param id Id of the [Handle] to be added.
      */
     operator fun plusAssign(id: String) { add(id) }
 
     /**
      * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and permitted.
      *
-     * @param ids ids of the [Handles][Handle] to be added.
+     * @param ids Ids of the [Handles][Handle] to be added.
      */
     operator fun plusAssign(ids: Iterable<String>) { addAll(ids) }
 
     /**
      * Removes a [Handle] with [id].
      *
-     * @param id id of a [Handle].
+     * @param id Id of a [Handle] to be removed.
      */
     operator fun minusAssign(id: String) { remove(id) }
 
     /**
      * Removes all [Handles][Handle] with [ids].
      *
-     * @param ids ids of [Handles][Handle].
+     * @param ids Ids of [Handles][Handle] to be removed.
      */
     operator fun minusAssign(ids: Iterable<String>) { removeAll(ids) }
 
@@ -150,7 +150,7 @@ class HandleSet internal constructor(
 /**
  * Returns a [Handle] with [id], or `null` of no handle with the id is present.
  *
- * @param id id of a [Handle].
+ * @param id Id of a [Handle].
  * @return [Handle] with [id], or `null` of no handle with the id is present.
  */
 operator fun Set<Handle>.get(id: String): Handle? = find { it.id == id }
@@ -158,8 +158,8 @@ operator fun Set<Handle>.get(id: String): Handle? = find { it.id == id }
 /**
  * Returns all [Handles][Handle] with [ids].
  *
- * @param ids ids of [Handles][Handle].
- * @return set of [Handles][Handle] with [ids].
+ * @param ids Ids of [Handles][Handle].
+ * @return Set of [Handles][Handle] with [ids].
  */
 fun Set<Handle>.getAll(ids: Iterable<String>): Set<Handle> {
     val set = ids as? Set ?: ids.toSet()
@@ -169,8 +169,8 @@ fun Set<Handle>.getAll(ids: Iterable<String>): Set<Handle> {
 /**
  * Removes a [Handle] with [id].
  *
- * @param id id of a [Handle].
- * @return removed [Handle], or `null` if no handle with [id] was present.
+ * @param id Id of a [Handle] to be removed.
+ * @return Removed [Handle], or `null` if no handle with [id] was present.
  */
 fun MutableSet<Handle>.remove(id: String): Handle? {
     val handle = this[id] ?: return null
@@ -181,7 +181,7 @@ fun MutableSet<Handle>.remove(id: String): Handle? {
 /**
  * Removes all [Handles][Handle] with [ids].
  *
- * @param ids ids of [Handles][Handle].
+ * @param ids Ids of [Handles][Handle] to be removed.
  * @return `true` if this set changed as a result of this operation.
  */
 fun MutableSet<Handle>.removeAll(ids: Iterable<String>): Boolean {
@@ -201,21 +201,21 @@ fun MutableSet<Handle>.removeAll(ids: Iterable<String>): Boolean {
 /**
  * Removes a [Handle] with [id].
  *
- * @param id id of a [Handle].
+ * @param id Id of a [Handle] to be removed.
  */
 operator fun MutableSet<Handle>.minusAssign(id: String) { remove(id) }
 
 /**
  * Removes all [Handles][Handle] with [ids].
  *
- * @param ids ids of [Handles][Handle].
+ * @param ids Ids of [Handles][Handle] to be removed.
  */
 operator fun MutableSet<Handle>.minusAssign(ids: Iterable<String>) { removeAll(ids) }
 
 /**
  * Returns `true` if this set contains a [Handle] with [id].
  *
- * @param id id to be checked.
+ * @param id Id to be checked.
  * @return `true` if this set contains a [Handle] with [id].
  */
 operator fun Set<Handle>.contains(id: String): Boolean = this[id] != null
@@ -223,7 +223,7 @@ operator fun Set<Handle>.contains(id: String): Boolean = this[id] != null
 /**
  * Returns `true` if this set contains all [Handles][Handle] with [ids].
  *
- * @param ids ids to be checked.
+ * @param ids Ids to be checked.
  * @return `true` if this set contains all [Handles][Handle] with [ids].
  */
 fun Set<Handle>.containsAll(ids: Iterable<String>): Boolean {
@@ -239,24 +239,24 @@ fun Set<Handle>.containsAll(ids: Iterable<String>): Boolean {
 /**
  * Returns all [Handles][Handle] in this set that have [tag].
  *
- * @param tag tag to be queried.
- * @return all [Handles][Handle] in this set that have [tag].
+ * @param tag Tag to be queried.
+ * @return All [Handles][Handle] in this set that have [tag].
  */
 fun Set<Handle>.getByTag(tag: Handle): Set<Handle> = mapNotNull { if(it.tags.contains(tag)) it else null }.toSet()
 
 /**
  * Returns all [Handles][Handle] in this set that have a tag with [id].
  *
- * @param id id of the tag to be queried.
- * @return all [Handles][Handle] in this set that have a tag with [id].
+ * @param id Id of the tag to be queried.
+ * @return All [Handles][Handle] in this set that have a tag with [id].
  */
 fun Set<Handle>.getByTag(id: String): Set<Handle> = mapNotNull { if(it.tags.contains(id)) it else null }.toSet()
 
 /**
  * Returns all [Handles][Handle] in this set that have all [tags].
  *
- * @param tags tags to be queried.
- * @return all [Handles][Handle] in this set that have all [tags].
+ * @param tags Tags to be queried.
+ * @return All [Handles][Handle] in this set that have all [tags].
  */
 fun Set<Handle>.getByTags(tags: Iterable<Handle>): Set<Handle> {
     val set = tags.toSet()

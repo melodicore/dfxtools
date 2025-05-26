@@ -23,6 +23,7 @@ import me.datafox.dfxtools.handles.HandleManager.getOrCreateSpace
 import me.datafox.dfxtools.handles.HandleManager.spaceSpace
 import me.datafox.dfxtools.handles.HandleManager.spaces
 import me.datafox.dfxtools.handles.HandleManager.tagSpace
+import me.datafox.dfxtools.handles.internal.Strings.PURGE_MESSAGE
 import me.datafox.dfxtools.handles.internal.Strings.invalidQualifiedHandleId
 import me.datafox.dfxtools.handles.internal.Strings.qualifiedHandleNoSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
@@ -38,7 +39,7 @@ private val logger = KotlinLogging.logger {}
  * This is a special space that does not allow manual handle creation, use [createSpace], [getOrCreateSpace] or
  * [getOrCreateQualifiedHandle] instead.
  * @property tagSpace [Space] that contains all tag [Handles][Handle].
- * @property spaces [Map] that contains all [Spaces][Space] and their identifying [Handles][Handle].
+ * @property spaces Map that contains all [Spaces][Space] and their identifying [Handles][Handle].
  *
  * @author Lauri "datafox" Heino
  */
@@ -68,8 +69,8 @@ object HandleManager {
      * Creates a new [Space] with [id]. Throws an [IllegalArgumentException] if the id is not valid (contains colons or
      * at symbols) or if a space with the id already exists.
      *
-     * @param id id of the space to be created.
-     * @return created space.
+     * @param id Id of the [Space] to be created.
+     * @return Created [Space].
      * @see getOrCreateSpace
      */
     fun createSpace(id: String): Space {
@@ -83,8 +84,8 @@ object HandleManager {
      * Creates a new [Space] or returns an existing space if one with [id] already exists. Throws an
      * [IllegalArgumentException] if the id is not valid (contains colons or at symbols).
      *
-     * @param id id of the space to be created or retrieved.
-     * @return space with [id].
+     * @param id Id of the [Space] to be created or retrieved.
+     * @return [Space] with [id].
      * @see createSpace
      */
     fun getOrCreateSpace(id: String): Space = spaces[id] ?: createSpace(id)
@@ -94,7 +95,7 @@ object HandleManager {
      * them do not exist. A fully qualified handle is in the format `handle@space`, or `handle:subhandle@space` in case
      * of a subhandle. This is the same format that [Handle.toString] returns.
      *
-     * @param id fully qualified id of a [Handle] or a subhandle.
+     * @param id Fully qualified id of a [Handle] or a subhandle.
      * @return [Handle] or subhandle with the fully qualified [id].
      */
     fun getOrCreateQualifiedHandle(id: String): Handle {
@@ -170,7 +171,7 @@ object HandleManager {
 /**
  * Marker to use with [OptIn] to enable use of [HandleManager.purge].
  */
-@RequiresOptIn("Purge is a dangerous function, make sure that no references to existing Handles, Spaces and Groups are used after calling it.")
+@RequiresOptIn(PURGE_MESSAGE)
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
 @MustBeDocumented

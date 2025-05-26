@@ -25,7 +25,7 @@ package me.datafox.dfxtools.handles
  * backed by a handle set ([handles]), and handles may be added to it like you would to a handle set.
  *
  * @property space [Space] that this group belongs to.
- * @property handles backing [HandleSet]. Handles can be added to and removed from this set normally.
+ * @property handles Backing [HandleSet]. Handles can be added to and removed from this set normally.
  *
  * @author Lauri "datafox" Heino
  */
@@ -45,7 +45,7 @@ class Group : ComparableHandled {
     /**
      * Returns a [Handle] with [id], or `null` if the handle does not exist in this group.
      *
-     * @param id id of the [Handle] to be returned.
+     * @param id Id of the [Handle] to be returned.
      * @return [Handle] with [id], or `null` if the handle does not exist in this group.
      */
     operator fun get(id: String) = handles[id]
@@ -60,7 +60,7 @@ class Group : ComparableHandled {
     /**
      * Adds a [Handle] with [id] to this group, creating a new handle if necessary and permitted.
      *
-     * @param id id of the [Handle] to be added.
+     * @param id Id of the [Handle] to be added.
      */
     operator fun plusAssign(id: String) { handles += id }
 
@@ -81,7 +81,7 @@ class Group : ComparableHandled {
     /**
      * Removes a [Handle] with [id] from this group.
      *
-     * @param id id of the [Handle] to be removed.
+     * @param id Id of the [Handle] to be removed.
      */
     operator fun minusAssign(id: String) { handles -= id }
 
@@ -103,7 +103,7 @@ class Group : ComparableHandled {
     /**
      * Returns `true` if this group contains a [Handle] with [id].
      *
-     * @param id id to be checked.
+     * @param id Id to be checked.
      * @return `true` if this group contains a [Handle] with [id].
      */
     operator fun contains(id: String): Boolean = id in handles

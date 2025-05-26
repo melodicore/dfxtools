@@ -35,14 +35,14 @@ private val logger = KotlinLogging.logger {}
  * contain handles with extension functions such as [Set.getByTag] and [Map.getByTags].
  *
  * @property space [Space] that contains this handle.
- * @property [id] string id of this handle, unique to the [space].
- * @property index integer index of this handle, reflecting creation order within the [space]. This is the same for a
+ * @property [id] String id of this handle, unique to the [space].
+ * @property index Integer index of this handle, reflecting creation order within the [space]. This is the same for a
  * parent handle and all its subhandles.
- * @property subindex integer index for subhandles, reflecting creation order within the [parent], or `-1` if this
+ * @property subindex Integer index for subhandles, reflecting creation order within the [parent], or `-1` if this
  * handle is not a subhandle.
- * @property parent parent handle of this subhandle, or `null` if this handle is not a subhandle.
- * @property subhandles subhandles of this handle, or `null` if this handle is a subhandle.
- * @property tags mutable set of tags for this handle.
+ * @property parent Parent handle of this subhandle, or `null` if this handle is not a subhandle.
+ * @property subhandles Subhandles of this handle, or `null` if this handle is a subhandle.
+ * @property tags Mutable set of tags for this handle.
  *
  * @author Lauri "datafox" Heino
  */
@@ -92,8 +92,8 @@ class Handle : Comparable<Handle> {
      * may be provided with or without this handle's id (`handle:subhandle` and `subhandle` are both valid), but only
      * subhandles of this handle can be returned.
      *
-     * @param id id of the subhandle to be returned.
-     * @return subhandle with [id], or `null` if no subhandle with that id exists or if this handle is a subhandle.
+     * @param id Id of the subhandle to be returned.
+     * @return Subhandle with [id], or `null` if no subhandle with that id exists or if this handle is a subhandle.
      */
     operator fun get(id: String): Handle? {
         val id = if(id.startsWith("${this.id}:")) id else "${this.id}:$id"
@@ -103,42 +103,42 @@ class Handle : Comparable<Handle> {
     /**
      * Adds [tag] to this handle.
      *
-     * @param tag tag to be added.
+     * @param tag Tag to be added.
      */
     operator fun plusAssign(tag: Handle) { tags += tag }
 
     /**
      * Adds a tag with [id] to this handle, creating a new tag if necessary and permitted.
      *
-     * @param id id of the tag to be added.
+     * @param id Id of the tag to be added.
      */
     operator fun plusAssign(id: String) { tags += id }
 
     /**
      * Adds [tags] to this handle.
      *
-     * @param tags tags to be added.
+     * @param tags Tags to be added.
      */
     operator fun plusAssign(tags: Iterable<Handle>) { this@Handle.tags += tags }
 
     /**
      * Removes [tag] from this handle.
      *
-     * @param tag tag to be removed.
+     * @param tag Tag to be removed.
      */
     operator fun minusAssign(tag: Handle) { tags -= tag }
 
     /**
      * Removes a tag with [id] from this handle.
      *
-     * @param id id of the tag to be removed.
+     * @param id Id of the tag to be removed.
      */
     operator fun minusAssign(id: String) { tags -= id }
 
     /**
      * Removes [tags] from this handle.
      *
-     * @param tags tags to be removed.
+     * @param tags Tags to be removed.
      */
     operator fun minusAssign(tags: Iterable<Handle>) { this@Handle.tags -= tags }
 
@@ -162,8 +162,8 @@ class Handle : Comparable<Handle> {
      * [HandleManager.spaceSpace] or is a subhandle), if the id is not valid (contains colons or at symbols) or if a
      * subhandle with the id already exists.
      *
-     * @param id id of the subhandle to be created.
-     * @return created subhandle.
+     * @param id Id of the subhandle to be created.
+     * @return Created subhandle.
      * @see getOrCreateSubhandle
      */
     fun createSubhandle(id: String): Handle {
@@ -180,8 +180,8 @@ class Handle : Comparable<Handle> {
      * is not permitted (this handle is in [HandleManager.spaceSpace] or is a subhandle) or if the id is not valid
      * (contains colons or at symbols).
      *
-     * @param id of the subhandle to be created or retrieved.
-     * @return subhandle with [id].
+     * @param id Id of the subhandle to be created or retrieved.
+     * @return Subhandle with [id].
      * @see createSubhandle
      */
     fun getOrCreateSubhandle(id: String): Handle = subhandles?.get(id) ?: createSubhandle(id)

@@ -60,7 +60,7 @@ class Space : ComparableHandled {
     /**
      * Returns a [Handle] with [id], or `null` if no handle with the id is present.
      *
-     * @param id id of a [Handle].
+     * @param id Id of a [Handle].
      * @return [Handle] with [id], or `null` if no handle with the id is present.
      */
     operator fun get(id: String): Handle? {
@@ -78,8 +78,8 @@ class Space : ComparableHandled {
      * (this space in [HandleManager.spaceSpace]), if the id is not valid (contains colons or at symbols) or if a handle
      * with the id already exists.
      *
-     * @param id id of the [Handle] to be created.
-     * @return created [Handle].
+     * @param id Id of the [Handle] to be created.
+     * @return Created [Handle].
      * @see getOrCreateHandle
      */
     fun createHandle(id: String): Handle {
@@ -95,8 +95,8 @@ class Space : ComparableHandled {
      * (this space in [HandleManager.spaceSpace]), if any of the ids is not valid (contains colons or at symbols) or if
      * a handle with any of the ids already exists.
      *
-     * @param ids ids of the [Handles][Handle] to be created.
-     * @return created [Handles][Handle].
+     * @param ids Ids of the [Handles][Handle] to be created.
+     * @return Created [Handles][Handle].
      * @see getOrCreateHandles
      */
     fun createHandles(ids: Iterable<String>): List<Handle> {
@@ -115,7 +115,7 @@ class Space : ComparableHandled {
      * if handle creation is not permitted (this space in [HandleManager.spaceSpace]) or if the id is not valid
      * (contains more than one colon or at symbols).
      *
-     * @param id id of the [Handle] to be created or retrieved.
+     * @param id Id of the [Handle] to be created or retrieved.
      * @return [Handle] with [id].
      * @see createHandle
      */
@@ -132,7 +132,7 @@ class Space : ComparableHandled {
      * [IllegalArgumentException] if handle creation is not permitted (this space in [HandleManager.spaceSpace]) or if
      * any of the ids is not valid (contains more than one colon or at symbols).
      *
-     * @param ids ids of the [Handles][Handle] to be created or retrieved.
+     * @param ids Ids of the [Handles][Handle] to be created or retrieved.
      * @return [Handles][Handle] with [ids].
      * @see createHandles
      */
@@ -141,7 +141,7 @@ class Space : ComparableHandled {
     /**
      * Returns a [Group] with [id], or `null` if no group with the id is present.
      *
-     * @param id id of a [Group].
+     * @param id Id of a [Group].
      * @return [Group] with [id], or `null` if no group with the id is present.
      */
     fun getGroup(id: String): Group? {
@@ -153,8 +153,8 @@ class Space : ComparableHandled {
      * Creates a new [Group] with [id]. Throws an [IllegalArgumentException] if the id is not valid (contains colons or
      * at symbols) or if a group with the id already exists.
      *
-     * @param id id of the [Group] to be created.
-     * @return created [Group].
+     * @param id Id of the [Group] to be created.
+     * @return Created [Group].
      * @see getOrCreateGroup
      */
     fun createGroup(id: String): Group {
@@ -168,7 +168,7 @@ class Space : ComparableHandled {
      * Creates a new [Group], or returns an existing group if one with [id] already exists. Throws an
      * [IllegalArgumentException] if the id is not valid (contains colons or at symbols).
      *
-     * @param id id of the [Group] to be created or retrieved.
+     * @param id Id of the [Group] to be created or retrieved.
      * @return [Group] with [id].
      * @see createGroup
      */
