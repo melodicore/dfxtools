@@ -21,10 +21,18 @@ import me.datafox.dfxtools.invalidation.Observer
 import java.util.function.Predicate
 
 /**
+ * Foundation for [ObservableList] and [ObservableSet].
+ *
+ * @property delegate Underlying set implementation.
+ * @property observer [Observer] owner of this set.
+ * @property invalidateObserver If `true`, modifications to this set call [Observer.invalidate].
+ * @property uniqueIdentifier Identifier to be used with [CyclicAwareCollection].
+ * @constructor Creates a new observable collection.
+ *
  * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
-abstract class ObservableCollection<E : Observable> protected constructor(
+sealed class ObservableCollection<E : Observable> protected constructor(
     protected val delegate: MutableCollection<E>,
     protected val observer: Observer,
     protected val invalidateObserver: Boolean,
@@ -112,7 +120,7 @@ abstract class ObservableCollection<E : Observable> protected constructor(
 
     override fun iterator(): MutableIterator<E> = ObservableIterator(this)
 
-    private class ObservableIterator<E: Observable>(private val owner: ObservableCollection<E>) : MutableIterator<E> {
+    private class ObservableIterator<E : Observable>(private val owner: ObservableCollection<E>) : MutableIterator<E> {
         private val delegate = owner.delegate.iterator()
         private lateinit var current: E
 

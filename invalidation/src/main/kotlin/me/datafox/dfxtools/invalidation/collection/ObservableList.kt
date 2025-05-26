@@ -21,11 +21,10 @@ import me.datafox.dfxtools.invalidation.Observer
 
 /**
  * A mutable list for [Observable] values owned by an [Observer] that adds values to [Observable.observers] when they
- * are added to this list. Note that the values are *not* removed from observers when they are removed from this list.
+ * are added to or removed from this list. It can also optionally invalidate the [observer] when elements are added,
+ * determined by [invalidateObserver].
  *
- * @property delegate underlying list implementation.
- * @property observer owner of this list.
- * @constructor Creates a new observable list.
+ * @author Lauri "datafox" Heino
  */
 class ObservableList<E : Observable> private constructor(
     private val _delegate: MutableList<E>,
@@ -33,8 +32,15 @@ class ObservableList<E : Observable> private constructor(
     invalidateObserver: Boolean = true,
     uniqueIdentifier: Any = Any()
 ) : ObservableCollection<E>(_delegate, observer, invalidateObserver, uniqueIdentifier), MutableList<E> {
-    constructor(delegate: MutableList<E>, owner: Observer, invalidateObserver: Boolean) :
-            this(delegate, owner, invalidateObserver, Any())
+    /**
+     * Creates a new observable list.
+     *
+     * @param delegate Underlying list implementation.
+     * @param observer [Observer] owner of this list.
+     * @param invalidateObserver If `true`, modifications to this list call [Observer.invalidate].
+     */
+    constructor(delegate: MutableList<E>, observer: Observer, invalidateObserver: Boolean) :
+            this(delegate, observer, invalidateObserver, Any())
 
     override fun remove(element: E): Boolean {
         if(isOnlyElement(element)) {

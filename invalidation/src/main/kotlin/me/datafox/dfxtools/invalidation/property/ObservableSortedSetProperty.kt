@@ -25,8 +25,9 @@ import kotlin.reflect.KProperty
 /**
  * Property wrapper for [ObservableSet], may only be owned by [Observer]. The resulting set will be sorted.
  *
- * @param values values to initialize the set with.
- * @param comparator comparator to sort the set with.
+ * @param values Values to initialize the set with.
+ * @property invalidateOwner If `true`, modifications to the set call [Observer.invalidate].
+ * @param comparator Comparator to sort the set with.
  *
  * @author Lauri "datafox" Heino
  */

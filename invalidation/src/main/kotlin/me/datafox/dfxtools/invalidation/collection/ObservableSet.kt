@@ -21,12 +21,15 @@ import me.datafox.dfxtools.invalidation.Observer
 
 /**
  * A mutable set for [Observable] values owned by an [Observer] that adds elements to [Observable.observers] when they
- * are added to this set. Note that the elements are *not* removed from observers when they are removed from this set.
- * It can also optionally invalidate the [observer] when elements are added, determined by [invalidateObserver].
+ * are added to this set. It can also optionally invalidate the [observer] when elements are added, determined by
+ * [invalidateObserver].
  *
- * @property delegate underlying set implementation.
- * @property observer owner of this set.
+ * @param delegate Underlying set implementation.
+ * @param observer [Observer] owner of this set.
+ * @param invalidateObserver If `true`, modifications to this set call [Observer.invalidate].
  * @constructor Creates a new observable set.
+ *
+ * @author Lauri "datafox" Heino
  */
 class ObservableSet<E : Observable>(
     delegate: MutableSet<E>,

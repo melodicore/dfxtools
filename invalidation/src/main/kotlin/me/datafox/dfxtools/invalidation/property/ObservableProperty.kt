@@ -25,6 +25,7 @@ import kotlin.reflect.KProperty
  * Property that automatically adds its owner to its value's [Observable.observers].
  *
  * @property value [Observable] value.
+ * @property invalidateOwner If `true`, setting the value calls [Observer.invalidate].
  *
  * @author Lauri "datafox" Heino
  */

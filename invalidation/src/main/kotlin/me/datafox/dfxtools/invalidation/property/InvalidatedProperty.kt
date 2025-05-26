@@ -23,10 +23,10 @@ import kotlin.reflect.KProperty
 /**
  * A property that can be invalidated and recalculated.
  *
- * @param value initial value for this property. If `null`, [calculation] will be called for the initial value.
- * @property calculation lambda that returns a new [value] for this property. Called when the property is requested if
- * it has been invalidated. Current [value] is given as a parameter, or `null` when initialized with a null value.
- * @constructor creates a new invalidated property.
+ * @param value Initial value for this property. If `null`, [calculation] will be called for the initial value.
+ * @property calculation Lambda that returns a new [value] for this property. Called when the property is requested if
+ * it has been invalidated. Current [value] is given as a parameter, or `null` when initialized with a `null` value.
+ * @constructor Creates a new invalidated property.
  *
  * @author Lauri "datafox" Heino
  */

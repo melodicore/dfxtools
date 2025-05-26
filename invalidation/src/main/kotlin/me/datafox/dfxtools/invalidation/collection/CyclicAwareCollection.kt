@@ -32,9 +32,11 @@ private val logger = KotlinLogging.logger {}
  * between instances, like with collections. An observer is only removed if all identifiers associated with that
  * observer are removed.
  *
- * @property owner owner of this collection.
- * @property delegate underlying map implementation, defaults to [mutableMapOf].
+ * @property owner Owner of this collection.
+ * @property delegate Underlying map implementation, defaults to [mutableMapOf].
  * @constructor Creates a new cyclic-aware collection.
+ *
+ * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class CyclicAwareCollection(

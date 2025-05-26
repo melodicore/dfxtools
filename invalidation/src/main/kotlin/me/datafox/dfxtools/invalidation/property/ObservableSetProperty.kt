@@ -25,7 +25,8 @@ import kotlin.reflect.KProperty
 /**
  * Property wrapper for [ObservableSet], may only be owned by [Observer].
  *
- * @param values values to initialize the set with.
+ * @param values Values to initialize the set with.
+ * @property invalidateOwner If `true`, modifications to the set call [Observer.invalidate].
  *
  * @author Lauri "datafox" Heino
  */

@@ -23,9 +23,9 @@ import kotlin.reflect.KProperty
 /**
  * A property that will call [Observable.onChanged] when set.
  *
- * @property value initial value for this property.
- * @property onInvalidate extra logic that is run when this property is set, before [Observable.onChanged] is called.
- * @constructor creates a new invalidator property.
+ * @property value Initial value for this property.
+ * @property onInvalidate Extra logic that is run when this property is set, before [Observable.onChanged] is called.
+ * @constructor Creates a new invalidator property.
  *
  * @author Lauri "datafox" Heino
  */

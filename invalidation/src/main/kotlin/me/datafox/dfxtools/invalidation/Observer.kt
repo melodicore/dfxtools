@@ -25,7 +25,7 @@ import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
  * delegated with [InvalidatedProperty], which does this automatically. To invalidate this class manually, call
  * [invalidate].
  *
- * @property propertyHandler handler for properties delegated with [InvalidatedProperty].
+ * @property propertyHandler [Handler][InvalidatedProperty.Handler] for properties delegated with [InvalidatedProperty].
  * @author Lauri "datafox" Heino
  */
 interface Observer {
