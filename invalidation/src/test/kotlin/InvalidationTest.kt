@@ -32,12 +32,12 @@ class InvalidationTest {
         val third = TestOO()
         val fourth = TestOO()
         val fifth = TestOO()
-        first.observers.add(second)
-        second.observers.add(third)
-        second.observers.add(fourth)
-        third.observers.add(fifth)
-        third.observers.add(fourth)
-        fourth.observers.add(fifth)
+        first.observers.add(second, this)
+        second.observers.add(third, this)
+        second.observers.add(fourth, this)
+        third.observers.add(fifth, this)
+        third.observers.add(fourth, this)
+        fourth.observers.add(fifth, this)
         first.invalidate()
         assertEquals(1, first.counter)
         assertEquals(1, second.counter)
@@ -73,12 +73,12 @@ class InvalidationTest {
     @Test
     fun `cyclic dependency detection test`() {
         val first = TestOO()
-        assertThrows<IllegalArgumentException> { first.observers.add(first) }
+        assertThrows<IllegalArgumentException> { first.observers.add(first, this) }
         val second = TestOO()
         val third = TestOO()
-        first.observers.add(second)
-        second.observers.add(third)
-        assertThrows<IllegalArgumentException> { third.observers.add(first) }
+        first.observers.add(second, this)
+        second.observers.add(third, this)
+        assertThrows<IllegalArgumentException> { third.observers.add(first, this) }
     }
 
     private class TestOO : AbstractObservableObserver() {

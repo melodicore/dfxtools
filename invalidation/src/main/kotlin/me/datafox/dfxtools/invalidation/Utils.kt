@@ -17,7 +17,7 @@
 package me.datafox.dfxtools.invalidation
 
 import io.github.oshai.kotlinlogging.KLogger
-import me.datafox.dfxtools.invalidation.collection.CyclicAwareSet
+import me.datafox.dfxtools.invalidation.collection.CyclicAwareCollection
 import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
@@ -30,10 +30,12 @@ object Utils {
      * Checks for cyclic dependencies between [Observer] and [Observable] classes, and throws an
      * [IllegalArgumentException] if any are found. Cyclic dependencies are only detected on classes that implement both
      * [Observable] and [Observer], preferably by implementing [ObservableObserver]. This function is called
-     * automatically by [CyclicAwareSet]. If called manually, do it before adding the [element] to
+     * automatically by [CyclicAwareCollection]. If called manually, do it before adding the [element] to
      * [Observable.observers].
      *
-     * @param element element
+     * @param element [Observer] to be added.
+     * @param owner [Observable] that [element] is to be added to.
+     * @param logger [KLogger] used if a cyclic dependency is detected.
      */
     fun checkCyclic(element: Observer, owner: Observable, logger: KLogger) {
         if(element == owner) {

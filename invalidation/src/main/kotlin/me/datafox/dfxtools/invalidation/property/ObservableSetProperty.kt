@@ -29,7 +29,10 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableSetProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableSet<E>> {
+class ObservableSetProperty<E : Observable>(
+    vararg values: E,
+    private val invalidateOwner: Boolean = true
+) : ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toMutableSet()
 
     private lateinit var set: ObservableSet<E>
@@ -37,7 +40,7 @@ class ObservableSetProperty<E : Observable>(vararg values: E) : ReadOnlyProperty
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableSet<E> = set
 
     operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableSet<E>> {
-        set = ObservableSet(backingSet, thisRef)
+        set = ObservableSet(backingSet, thisRef, invalidateOwner)
         return this
     }
 }

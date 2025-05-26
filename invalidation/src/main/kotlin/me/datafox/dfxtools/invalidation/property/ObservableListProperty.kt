@@ -29,7 +29,10 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableListProperty<E : Observable>(vararg values: E) : ReadOnlyProperty<Observer, MutableList<E>> {
+class ObservableListProperty<E : Observable>(
+    vararg values: E,
+    private val invalidateOwner: Boolean = true
+) : ReadOnlyProperty<Observer, MutableList<E>> {
     private val backingList: MutableList<E> = values.toMutableList()
 
     private lateinit var list: ObservableList<E>
@@ -37,7 +40,7 @@ class ObservableListProperty<E : Observable>(vararg values: E) : ReadOnlyPropert
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableList<E> = list
 
     operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableList<E>> {
-        list = ObservableList(backingList, thisRef)
+        list = ObservableList(backingList, thisRef, invalidateOwner)
         return this
     }
 }

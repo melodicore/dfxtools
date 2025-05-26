@@ -18,7 +18,7 @@ package me.datafox.dfxtools.invalidation.property
 
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
-import kotlin.properties.ReadOnlyProperty
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -28,11 +28,31 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableProperty(val value: Observable) : ReadOnlyProperty<Observer, Observable> {
+class ObservableProperty(
+    var value: Observable,
+    private val invalidateOwner: Boolean = true
+) : ReadWriteProperty<Observer, Observable> {
+    private val identifier = Any()
+
     override fun getValue(thisRef: Observer, property: KProperty<*>): Observable = value
 
-    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, Observable> {
-        value.observers.add(thisRef)
+    override fun setValue(thisRef: Observer, property: KProperty<*>, value: Observable) {
+        if(value === this.value) {
+            return
+        }
+        this.value.observers.remove(thisRef, identifier)
+        value.observers.add(thisRef, identifier)
+        this.value = value
+        if(invalidateOwner) {
+            thisRef.invalidate()
+        }
+    }
+
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadWriteProperty<Observer, Observable> {
+        value.observers.add(thisRef, identifier)
+        if(invalidateOwner) {
+            thisRef.invalidate()
+        }
         return this
     }
 }

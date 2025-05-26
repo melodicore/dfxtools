@@ -30,7 +30,11 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableSortedSetProperty<E : Observable>(vararg values: E, comparator: (E, E) -> Int) : ReadOnlyProperty<Observer, MutableSet<E>> {
+class ObservableSortedSetProperty<E : Observable>(
+    vararg values: E,
+    private val invalidateOwner: Boolean = true,
+    comparator: (E, E) -> Int
+) : ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toSortedSet(comparator)
 
     private lateinit var set: ObservableSet<E>
@@ -38,7 +42,7 @@ class ObservableSortedSetProperty<E : Observable>(vararg values: E, comparator: 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableSet<E> = set
 
     operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableSet<E>> {
-        set = ObservableSet(backingSet, thisRef)
+        set = ObservableSet(backingSet, thisRef, invalidateOwner)
         return this
     }
 }

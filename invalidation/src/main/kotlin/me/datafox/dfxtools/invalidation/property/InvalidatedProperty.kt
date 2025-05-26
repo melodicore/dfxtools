@@ -27,6 +27,8 @@ import kotlin.reflect.KProperty
  * @property calculation lambda that returns a new [value] for this property. Called when the property is requested if
  * it has been invalidated. Current [value] is given as a parameter, or `null` when initialized with a null value.
  * @constructor creates a new invalidated property.
+ *
+ * @author Lauri "datafox" Heino
  */
 class InvalidatedProperty<V>(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProperty<Observer, V> {
     private var value = value ?: calculation(null)

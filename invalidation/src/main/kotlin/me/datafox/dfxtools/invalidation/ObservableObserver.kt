@@ -17,8 +17,13 @@
 package me.datafox.dfxtools.invalidation
 
 /**
- * A helper interface for classes that extend both [Observable] and [Observer].
+ * A helper interface for classes that extend both [Observable] and [Observer]. Overrides [onInvalidated] to call
+ * [onChanged].
  *
  * @author Lauri "datafox" Heino
  */
-interface ObservableObserver : Observable, Observer
+interface ObservableObserver : Observable, Observer {
+    override fun onInvalidated() {
+        onChanged()
+    }
+}

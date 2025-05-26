@@ -19,7 +19,7 @@ package me.datafox.dfxtools.invalidation
 import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
 
 /**
- * Abstract implementation of [Observable] that populates [propertyHandler] automatically.
+ * Abstract implementation of [Observable] that populates [propertyHandler].
  *
  * @author Lauri "datafox" Heino
  */

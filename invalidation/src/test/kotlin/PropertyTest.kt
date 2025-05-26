@@ -46,7 +46,7 @@ class PropertyTest {
     fun `invalidator property test`() {
         val test = TestInvalidatorProperty()
         val observer = TestObserver()
-        test.observers.add(observer)
+        test.observers.add(observer, this)
         assertEquals(0, test.counter)
         assertEquals(0, observer.counter)
         test.counter++
@@ -61,9 +61,9 @@ class PropertyTest {
     fun `observable property test`() {
         val observable = TestObservable()
         val test = TestObservableProperty(observable)
-        assertEquals(0, test.counter)
-        observable.onChanged()
         assertEquals(1, test.counter)
+        observable.onChanged()
+        assertEquals(2, test.counter)
     }
 
     @Test
@@ -72,18 +72,18 @@ class PropertyTest {
         val observable2 = TestObservable()
         val test = TestObservableListProperty()
         test.observables.add(observable1)
-        assertEquals(0, test.counter)
-        observable1.onChanged()
-        assertEquals(1, test.counter)
-        observable2.onChanged()
-        assertEquals(1, test.counter)
-        test.observables.addAll(listOf(observable1, observable2))
-        assertEquals(3, test.observables.size)
         assertEquals(1, test.counter)
         observable1.onChanged()
         assertEquals(2, test.counter)
         observable2.onChanged()
+        assertEquals(2, test.counter)
+        test.observables.addAll(listOf(observable1, observable2))
+        assertEquals(3, test.observables.size)
         assertEquals(3, test.counter)
+        observable1.onChanged()
+        assertEquals(4, test.counter)
+        observable2.onChanged()
+        assertEquals(5, test.counter)
     }
 
     @Test
@@ -92,18 +92,18 @@ class PropertyTest {
         val observable2 = TestObservable()
         val test = TestObservableSetProperty()
         test.observables.add(observable1)
-        assertEquals(0, test.counter)
-        observable1.onChanged()
-        assertEquals(1, test.counter)
-        observable2.onChanged()
-        assertEquals(1, test.counter)
-        test.observables.addAll(listOf(observable1, observable2))
-        assertEquals(2, test.observables.size)
         assertEquals(1, test.counter)
         observable1.onChanged()
         assertEquals(2, test.counter)
         observable2.onChanged()
+        assertEquals(2, test.counter)
+        test.observables.addAll(listOf(observable1, observable2))
+        assertEquals(2, test.observables.size)
         assertEquals(3, test.counter)
+        observable1.onChanged()
+        assertEquals(4, test.counter)
+        observable2.onChanged()
+        assertEquals(5, test.counter)
     }
 
     @Test
@@ -112,21 +112,21 @@ class PropertyTest {
         val observable2 = TestComparableObservable(-2)
         val test = TestObservableSortedSetProperty()
         test.observables.add(observable1)
-        assertEquals(0, test.counter)
+        assertEquals(1, test.counter)
         observable1.onChanged()
-        assertEquals(1, test.counter)
+        assertEquals(2, test.counter)
         observable2.onChanged()
-        assertEquals(1, test.counter)
+        assertEquals(2, test.counter)
         test.observables.addAll(listOf(observable1, observable2))
         assertEquals(2, test.observables.size)
         val it = test.observables.iterator()
         assertEquals(observable2, it.next())
         assertEquals(observable1, it.next())
-        assertEquals(1, test.counter)
-        observable1.onChanged()
-        assertEquals(2, test.counter)
-        observable2.onChanged()
         assertEquals(3, test.counter)
+        observable1.onChanged()
+        assertEquals(4, test.counter)
+        observable2.onChanged()
+        assertEquals(5, test.counter)
     }
 
 
