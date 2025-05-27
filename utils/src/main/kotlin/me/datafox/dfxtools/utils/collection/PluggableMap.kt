@@ -84,6 +84,14 @@ class PluggableMap<K, V>(
         return removed
     }
 
+    override fun remove(key: K, value: V): Boolean {
+        if(delegate[key] != value) {
+            return false
+        }
+        remove(key)
+        return true
+    }
+
     override fun putAll(from: Map<out K, V>) {
         if(from.isEmpty()) {
             return
@@ -120,6 +128,23 @@ class PluggableMap<K, V>(
         its.keys.forEach { delegate.remove(it) }
         its.forEach { afterRemove(it.key, it.value) }
         return true
+    }
+
+    fun removeAll(entries: Map<out K, V>): Boolean {
+        val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
+        if(its.isEmpty()) {
+            return false
+        }
+        return removeAll(its)
+    }
+
+    fun retainAll(entries: Map<out K, V>): Boolean {
+        val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
+        val reverse = delegate.filter { it.key !in its }
+        if(reverse.isEmpty()) {
+            return false
+        }
+        return removeAll(reverse)
     }
 
     private class PluggableMapKeys<K, V>(private val parent: PluggableMap<K, V>) : MutableSet<K> {
@@ -187,7 +212,7 @@ class PluggableMap<K, V>(
             return true
         }
 
-        override fun remove(element: MutableMap.MutableEntry<K, V>): Boolean = parent.remove(element.key) != null
+        override fun remove(element: MutableMap.MutableEntry<K, V>): Boolean = parent.remove(element.key, element.value)
 
         override fun addAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean {
             parent.putAll(elements.associate { it.key to it.value })
@@ -195,15 +220,14 @@ class PluggableMap<K, V>(
         }
 
         override fun removeAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean =
-            parent.removeAll(elements.map { it.key })
+            parent.removeAll(elements.associate { it.key to it.value })
 
         override fun retainAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean =
-            parent.removeAll(elements.map { it.key }.filter { it !in parent.delegate })
+            parent.retainAll(elements.associate { it.key to it.value })
 
         override fun clear() = parent.clear()
 
-        override fun iterator(): MutableIterator<MutableMap.MutableEntry<K, V>> =
-            PluggableIterator(parent.delegate.entries.iterator(), parent.spec.toCollectionSpec())
+        override fun iterator(): MutableIterator<MutableMap.MutableEntry<K, V>> = UnsupportedRemoveIterator(parent.delegate.entries.iterator())
 
         override fun isEmpty(): Boolean = parent.isEmpty()
 
