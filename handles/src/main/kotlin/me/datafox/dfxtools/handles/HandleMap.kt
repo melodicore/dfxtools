@@ -20,12 +20,23 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
-import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableMapView
+import me.datafox.dfxtools.utils.collection.LateDelegatedMap
+import me.datafox.dfxtools.utils.collection.PluggableMap
+import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
+
+fun <V> handleMapSpec(space: Space): PluggableMapSpec<Handle, V> = PluggableMapSpec(beforeAdd = { k, _ ->
+    val handle = checkHandleIsInSpace(space, k)
+    if(handle != null) {
+        logThrow(logger, mapHandleNotInSpace(space.handle.id, handle.toString())) {
+            IllegalArgumentException(it)
+        }
+    }
+})
 
 /**
  * A sorted mutable map with [Handle] keys that may only contain keys from a single [Space]. This file also contains
@@ -37,10 +48,8 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class HandleMap<V> internal constructor(
-    private val delegate: MutableMap<Handle, V> = TreeMap(),
-    //JVM signature clash prevention
-    @Suppress("unused") ignored: Any = Any()
-) : MutableMap<Handle, V> by delegate {
+    private val map: LateDelegatedMap<Handle, V> = LateDelegatedMap()
+) : MutableMap<Handle, V> by map {
     private lateinit var _space: Space
 
     val space: Space get() = _space
@@ -55,8 +64,9 @@ class HandleMap<V> internal constructor(
      */
     constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this() {
         this._space = space
+        map.delegate = PluggableMap(TreeMap(), handleMapSpec(space))
         if(entries.isNotEmpty()) {
-            checkHandles(entries.keys)
+            putAll(entries)
         }
     }
 
@@ -70,35 +80,8 @@ class HandleMap<V> internal constructor(
             logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this._space = entries.keys.first().space
-        checkHandles(entries.keys)
-    }
-
-    override fun put(key: Handle, value: V): V? {
-        checkHandle(key)
-        return delegate.put(key, value)
-    }
-
-    override fun putAll(from: Map<out Handle, V>) {
-        checkHandles(from.keys)
-        return delegate.putAll(from)
-    }
-
-    private fun checkHandle(handle: Handle) {
-        val handle = checkHandleIsInSpace(space, handle)
-        if(handle != null) {
-            logThrow(logger, mapHandleNotInSpace(space.handle.id, handle.id)) {
-                IllegalArgumentException(it)
-            }
-        }
-    }
-
-    private fun checkHandles(handles: Collection<Handle>) {
-        val handle = checkHandlesAreInSpace(space, handles)
-        if(handle != null) {
-            logThrow(logger, mapHandleNotInSpace(space.handle.id, handle.id)) {
-                IllegalArgumentException(it)
-            }
-        }
+        map.delegate = PluggableMap(TreeMap(), handleMapSpec(space))
+        putAll(entries)
     }
 }
 

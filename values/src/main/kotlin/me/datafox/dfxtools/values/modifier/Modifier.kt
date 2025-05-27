@@ -24,9 +24,5 @@ interface Modifier : ObservableObserver, Comparable<Modifier> {
 
     fun apply(value: BigDecimal): BigDecimal
 
-    override fun onInvalidated() {
-        onChanged()
-    }
-
     override fun compareTo(other: Modifier): Int = priority.compareTo(other.priority)
 }

@@ -17,12 +17,15 @@
 package me.datafox.dfxtools.values
 
 import me.datafox.dfxtools.handles.Handle
-import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
 import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
 import me.datafox.dfxtools.invalidation.property.ObservableSortedSetProperty
 import me.datafox.dfxtools.values.modifier.Modifier
+import me.datafox.dfxtools.values.operation.DualParameterOperation
+import me.datafox.dfxtools.values.operation.Operation
+import me.datafox.dfxtools.values.operation.SingleParameterOperation
+import me.datafox.dfxtools.values.operation.SourceOperation
 import java.math.BigDecimal
 
 /**
@@ -32,7 +35,7 @@ class ModifiableValue(
     override val handle: Handle,
     value: BigDecimal = BigDecimal.ZERO,
     vararg modifiers: Modifier,
-) : AbstractObservableObserver(), Handled, Value {
+) : AbstractObservableObserver(), HandledValue {
     var base: BigDecimal by InvalidatorProperty(value) {
         (this::value.getDelegate() as InvalidatedProperty<*>).invalidate()
     }
@@ -41,11 +44,25 @@ class ModifiableValue(
 
     val modifiers: MutableSet<Modifier> by ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
 
+    fun apply(operation: Operation, useValue: Boolean = false, vararg params: BigDecimal) {
+        base = operation.apply(if(useValue) value else base, *params)
+    }
+
+    fun apply(operation: SourceOperation, useValue: Boolean = false) {
+        base = operation.apply(if(useValue) value else base)
+    }
+
+    fun apply(operation: SingleParameterOperation, useValue: Boolean = false, parameter: BigDecimal) {
+        base = operation.apply(if(useValue) value else base, parameter)
+    }
+
+    fun apply(operation: DualParameterOperation, useValue: Boolean = false, parameter1: BigDecimal, parameter2: BigDecimal) {
+        base = operation.apply(if(useValue) value else base, parameter1, parameter2)
+    }
+
     private fun calculate(): BigDecimal {
         var temp = base
         modifiers.forEach { temp = it.apply(temp) }
         return base
     }
-
-    override fun onInvalidated() { /* no-op */ }
 }

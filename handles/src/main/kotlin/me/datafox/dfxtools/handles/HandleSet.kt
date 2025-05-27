@@ -20,12 +20,23 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
-import me.datafox.dfxtools.handles.internal.Utils.checkHandlesAreInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableSetView
+import me.datafox.dfxtools.utils.collection.LateDelegatedSet
+import me.datafox.dfxtools.utils.collection.PluggableSet
+import me.datafox.dfxtools.utils.collection.PluggableSpec
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
+
+fun handleSetSpec(space: Space): PluggableSpec<Handle> = PluggableSpec(beforeAdd = {
+    val handle = checkHandleIsInSpace(space, it)
+    if(handle != null) {
+        logThrow(logger, setHandleNotInSpace(space.handle.id, handle.toString())) {
+            IllegalArgumentException(it)
+        }
+    }
+})
 
 /**
  * A sorted mutable set that may only contain [Handles][Handle] from a single [Space]. This file also contains extension
@@ -36,12 +47,9 @@ private val logger = KotlinLogging.logger {}
  *
  * @author Lauri "datafox" Heino
  */
-@Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class HandleSet internal constructor(
-    private val delegate: MutableSet<Handle> = TreeSet(),
-    //JVM signature clash prevention
-    @Suppress("unused") ignored: Any = Any()
-): MutableSet<Handle> by delegate {
+    private val set: LateDelegatedSet<Handle> = LateDelegatedSet()
+) : MutableSet<Handle> by set {
     private lateinit var _space: Space
 
     val space: Space get() = _space
@@ -56,9 +64,8 @@ class HandleSet internal constructor(
      */
     constructor(space: Space, elements: Collection<Handle> = emptySet()) : this() {
         this._space = space
-        if(elements.isNotEmpty()) {
-            checkHandles(elements)
-        }
+        set.delegate = PluggableSet<Handle>(TreeSet(), handleSetSpec(space))
+        addAll(elements)
     }
 
     /**
@@ -71,7 +78,8 @@ class HandleSet internal constructor(
             logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this._space = elements.first().space
-        checkHandles(elements)
+        set.delegate = PluggableSet<Handle>(TreeSet(), handleSetSpec(space))
+        addAll(elements)
     }
 
     /**
@@ -117,34 +125,6 @@ class HandleSet internal constructor(
      * @param ids Ids of [Handles][Handle] to be removed.
      */
     operator fun minusAssign(ids: Iterable<String>) { removeAll(ids) }
-
-    override fun add(element: Handle): Boolean {
-        checkHandle(element)
-        return delegate.add(element)
-    }
-
-    override fun addAll(elements: Collection<Handle>): Boolean {
-        checkHandles(elements)
-        return delegate.addAll(elements)
-    }
-
-    private fun checkHandle(handle: Handle) {
-        val handle = checkHandleIsInSpace(space, handle)
-        if(handle != null) {
-            logThrow(logger, setHandleNotInSpace(space.handle.id, handle.toString())) {
-                IllegalArgumentException(it)
-            }
-        }
-    }
-
-    private fun checkHandles(handles: Collection<Handle>) {
-        val handle = checkHandlesAreInSpace(space, handles)
-        if(handle != null) {
-            logThrow(logger, setHandleNotInSpace(space.handle.id, handle.toString())) {
-                IllegalArgumentException(it)
-            }
-        }
-    }
 }
 
 /**

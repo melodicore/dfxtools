@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.values
+package me.datafox.dfxtools.handles
 
-import me.datafox.dfxtools.handles.Handle
-import me.datafox.dfxtools.invalidation.AbstractObservable
-import java.math.BigDecimal
-
-/**
- * @author Lauri "datafox" Heino
- */
-class SimpleValue(
-    override val handle: Handle,
-    override val value: BigDecimal
-) : HandledValue, AbstractObservable()
+import me.datafox.dfxtools.utils.collection.PluggableSet

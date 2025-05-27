@@ -18,15 +18,18 @@ package me.datafox.dfxtools.invalidation.collection
 
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
+import me.datafox.dfxtools.utils.collection.PluggableSet
 
 /**
- * A mutable set for [Observable] values owned by an [Observer] that adds elements to [Observable.observers] when they
- * are added to this set. It can also optionally invalidate the [observer] when elements are added, determined by
- * [invalidateObserver].
+ * A mutable set for [Observable] elements owned by an [observer] that is added to and removed from
+ * [element.observers][Observable.observers] when an element is added to or removed from this set. It can also
+ * optionally invalidate the [observer] when elements are added, determined by [invalidateObserver].
  *
  * @param delegate Underlying set implementation.
  * @param observer [Observer] owner of this set.
  * @param invalidateObserver If `true`, modifications to this set call [Observer.invalidate].
+ * @param callInitialElements If `true`, [observer] will be added to all initial values of [delegate].
+ * @param identifier Identifier for this set to be used with [CyclicAwareCollection].
  * @constructor Creates a new observable set.
  *
  * @author Lauri "datafox" Heino
@@ -34,5 +37,15 @@ import me.datafox.dfxtools.invalidation.Observer
 class ObservableSet<E : Observable>(
     delegate: MutableSet<E>,
     observer: Observer,
-    invalidateObserver: Boolean
-) : ObservableCollection<E>(delegate, observer, invalidateObserver), MutableSet<E>
+    invalidateObserver: Boolean = true,
+    callInitialElements: Boolean = true,
+    identifier: Any = Any(),
+    set: PluggableSet<E> = PluggableSet(
+        delegate = delegate,
+        spec = observableSpec(observer, invalidateObserver, identifier)
+    )
+) : MutableSet<E> by set {
+    init {
+        if(callInitialElements) set.callInitialElements()
+    }
+}

@@ -16,14 +16,10 @@
 
 package me.datafox.dfxtools.values
 
-import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.invalidation.AbstractObservable
 import java.math.BigDecimal
 
 /**
  * @author Lauri "datafox" Heino
  */
-class SimpleValue(
-    override val handle: Handle,
-    override val value: BigDecimal
-) : HandledValue, AbstractObservable()
+class StaticValue(override val value: BigDecimal) : Value, AbstractObservable()

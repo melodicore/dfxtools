@@ -119,7 +119,7 @@ class Handle : Comparable<Handle> {
      *
      * @param tags Tags to be added.
      */
-    operator fun plusAssign(tags: Iterable<Handle>) { this@Handle.tags += tags }
+    operator fun plusAssign(tags: Iterable<Handle>) { this.tags += tags }
 
     /**
      * Removes [tag] from this handle.
@@ -140,7 +140,7 @@ class Handle : Comparable<Handle> {
      *
      * @param tags Tags to be removed.
      */
-    operator fun minusAssign(tags: Iterable<Handle>) { this@Handle.tags -= tags }
+    operator fun minusAssign(tags: Iterable<Handle>) { this.tags -= tags }
 
     /**
      * Returns `true` if this handle contains [tag].

@@ -18,171 +18,34 @@ package me.datafox.dfxtools.invalidation.collection
 
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
+import me.datafox.dfxtools.utils.collection.PluggableList
 
 /**
- * A mutable list for [Observable] values owned by an [Observer] that adds values to [Observable.observers] when they
- * are added to or removed from this list. It can also optionally invalidate the [observer] when elements are added,
- * determined by [invalidateObserver].
+ * A mutable list for [Observable] elements owned by an [observer] that is added to and removed from
+ * [element.observers][Observable.observers] when an element is added to or removed from this list. It can also
+ * optionally invalidate the [observer] when elements are added, determined by [invalidateObserver].
+ *
+ * @param delegate Underlying list implementation.
+ * @param observer [Observer] owner of this list.
+ * @param invalidateObserver If `true`, modifications to this list call [Observer.invalidate].
+ * @param callInitialElements If `true`, [observer] will be added to all initial values of [delegate].
+ * @param identifier Identifier for this list to be used with [CyclicAwareCollection].
+ * @constructor Creates a new observable list.
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableList<E : Observable> private constructor(
-    private val _delegate: MutableList<E>,
+class ObservableList<E : Observable>(
+    delegate: MutableList<E>,
     observer: Observer,
     invalidateObserver: Boolean = true,
-    uniqueIdentifier: Any = Any()
-) : ObservableCollection<E>(_delegate, observer, invalidateObserver, uniqueIdentifier), MutableList<E> {
-    /**
-     * Creates a new observable list.
-     *
-     * @param delegate Underlying list implementation.
-     * @param observer [Observer] owner of this list.
-     * @param invalidateObserver If `true`, modifications to this list call [Observer.invalidate].
-     */
-    constructor(delegate: MutableList<E>, observer: Observer, invalidateObserver: Boolean) :
-            this(delegate, observer, invalidateObserver, Any())
-
-    override fun remove(element: E): Boolean {
-        if(isOnlyElement(element)) {
-            element.observers.remove(observer, uniqueIdentifier)
-        }
-        if(_delegate.remove(element)) {
-            if(invalidateObserver) {
-                observer.invalidate()
-            }
-            return true
-        }
-        return false
-    }
-
-    override fun removeAll(elements: Collection<E>): Boolean {
-        elements.filter { isOnlyElement(it) }.forEach { it.observers.remove(observer, uniqueIdentifier) }
-        if(_delegate.removeAll(elements)) {
-            if(invalidateObserver) {
-                observer.invalidate()
-            }
-            return true
-        }
-        return false
-    }
-
-    override fun addAll(index: Int, elements: Collection<E>): Boolean {
-        elements.forEach { it.observers.add(observer, uniqueIdentifier) }
-        if(_delegate.addAll(index, elements)) {
-            if(invalidateObserver) {
-                observer.invalidate()
-            }
-            return true
-        }
-        return false
-    }
-
-    override fun set(index: Int, element: E): E {
-        val removed = _delegate[index]
-        if(removed !== element) {
-            if(isOnlyElement(removed)) {
-                removed.observers.remove(observer, uniqueIdentifier)
-            }
-            element.observers.add(observer, uniqueIdentifier)
-            _delegate[index] = element
-            if(invalidateObserver) {
-                observer.invalidate()
-            }
-        }
-        return removed
-    }
-
-    override fun add(index: Int, element: E) {
-        element.observers.add(observer, uniqueIdentifier)
-        _delegate.add(index, element)
-        if(invalidateObserver) {
-            observer.invalidate()
-        }
-    }
-
-    override fun removeAt(index: Int): E {
-        val removed = _delegate[index]
-        if(isOnlyElement(removed)) {
-            removed.observers.remove(observer, uniqueIdentifier)
-        }
-        _delegate.removeAt(index)
-        if(invalidateObserver) {
-            observer.invalidate()
-        }
-        return removed
-    }
-
-    override fun get(index: Int): E = _delegate[index]
-
-    override fun indexOf(element: E): Int = _delegate.indexOf(element)
-
-    override fun lastIndexOf(element: E): Int = _delegate.lastIndexOf(element)
-
-    override fun iterator(): MutableIterator<E> = ObservableListIterator(this)
-
-    override fun listIterator(): MutableListIterator<E> = ObservableListIterator(this)
-
-    override fun listIterator(index: Int): MutableListIterator<E> = ObservableListIterator(this, index)
-
-    override fun subList(fromIndex: Int, toIndex: Int): MutableList<E> =
-        ObservableList(_delegate.subList(fromIndex, toIndex),
-            observer, invalidateObserver, uniqueIdentifier)
-
-    private fun isOnlyElement(element: E): Boolean {
-        return _delegate.indexOf(element) == _delegate.lastIndexOf(element)
-    }
-
-    private class ObservableListIterator<E: Observable>(private val owner: ObservableList<E>, index: Int = 0) : MutableListIterator<E> {
-        private val delegate = owner._delegate.listIterator(index)
-        private lateinit var current: E
-
-        override fun next(): E {
-            current = delegate.next()
-            return current
-        }
-
-        override fun hasNext(): Boolean = delegate.hasNext()
-
-        override fun remove() {
-            if(owner.isOnlyElement(current)) {
-                current.observers.remove(owner.observer, owner.uniqueIdentifier)
-            }
-            delegate.remove()
-            if(owner.invalidateObserver) {
-                owner.observer.invalidate()
-            }
-        }
-
-        override fun set(element: E) {
-            if(current !== element) {
-                if(owner.isOnlyElement(current)) {
-                    current.observers.remove(owner.observer, owner.uniqueIdentifier)
-                }
-                element.observers.add(owner.observer, owner.uniqueIdentifier)
-                delegate.set(element)
-                if(owner.invalidateObserver) {
-                    owner.observer.invalidate()
-                }
-            }
-        }
-
-        override fun add(element: E) {
-            element.observers.add(owner.observer, owner.uniqueIdentifier)
-            delegate.add(element)
-            if(owner.invalidateObserver) {
-                owner.observer.invalidate()
-            }
-        }
-
-        override fun hasPrevious(): Boolean = delegate.hasNext()
-
-        override fun previous(): E {
-            current = delegate.previous()
-            return current
-        }
-
-        override fun nextIndex(): Int = delegate.nextIndex()
-
-        override fun previousIndex(): Int = delegate.previousIndex()
+    callInitialElements: Boolean = true,
+    identifier: Any = Any(),
+    list: PluggableList<E> = PluggableList(
+        delegate = delegate,
+        spec = observableSpec(observer, invalidateObserver, identifier)
+    )
+) : MutableList<E> by list {
+    init {
+        if(callInitialElements) list.callInitialElements()
     }
 }
