@@ -32,7 +32,6 @@ private val logger = KotlinLogging.logger {}
 
 object NamedSuffixFormatter : NumberSuffixFormatter {
     val si: Array<String> = arrayOf("", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q")
-
     val short: Array<String> = arrayOf(
         "",   "k",   "M",   "B",   "T",    "Qa",   "Qi",   "Sx",   "Sp",  "Oc", "No",
         "Dc", "UDc", "DDc", "TDc", "QaDc", "QiDc", "SxDc", "SpDc", "ODc", "NDc",
@@ -44,7 +43,6 @@ object NamedSuffixFormatter : NumberSuffixFormatter {
         "St", "USt", "DSt", "TSt", "QaSt", "QiSt", "SxSt", "SpSt", "OSt", "NSt",
         "Og", "UOg", "DOg", "TOg", "QaOg", "QiOg", "SxOg", "SpOg", "OOg", "NOg"
     )
-
     val long: Array<String> = arrayOf(
         "", "k", "M", "Md", "B", "Bd", "T", "Td", "Qa", "Qad",
         "Qi", "Qid", "Sx", "Sxd", "Sp", "Spd", "Oc", "Od", "No", "Nd",
@@ -56,12 +54,8 @@ object NamedSuffixFormatter : NumberSuffixFormatter {
         "QiTg", "QiTD", "SxTg", "SxTD", "SpTg", "SpTD", "OTg", "OTD", "NTg", "NTD",
         "Qd", "QD", "UQd", "UQD", "DQd", "DQD", "TQd", "TQD", "QaQd", "QaQD"
     )
-
-
     val suffixes: ConfigurationKey<Array<String>> = ConfigurationKey(short)
-
     val interval: ConfigurationKey<Int> = ConfigurationKey(3)
-
     override val infinite = false
 
     override fun format(number: BigDecimal, configuration: Configuration?): Output {

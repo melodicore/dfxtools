@@ -19,6 +19,7 @@ package me.datafox.dfxtools.invalidation.collection
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.utils.collection.PluggableMap
+import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 
 /**
  * A mutable map for [Observable] values owned by an [observer] that is added to and removed from
@@ -41,10 +42,15 @@ class ObservableMap<K, V : Observable>(
     identifier: Any = Any(),
     map: PluggableMap<K, V> = PluggableMap(
         delegate = delegate,
-        spec = observableMapSpec(observer, invalidateObserver, identifier)
+        spec = spec(observer, invalidateObserver, identifier)
     ),
 ) : MutableMap<K, V> by map {
     init {
         if(callInitialElements) map.callInitialElements()
+    }
+
+    companion object {
+        fun <K, V : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableMapSpec<K, V> =
+            ObservableSet.spec<V>(observer, invalidateObserver, identifier).toMapValueSpec()
     }
 }

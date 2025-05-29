@@ -44,17 +44,12 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 object HandleManager {
-    private var _spaceSpace: Space = Space(true)
-
     val spaceSpace get() = _spaceSpace
-
-    private var _tagSpace: Space = Space(false)
-
     val tagSpace: Space get() = _tagSpace
-
-    private val _spaces: HandleMap<Space> by lazy { HandleMap(spaceSpace) }
-
     val spaces: Map<Handle, Space> by lazy { _spaces.immutableView }
+    private var _spaceSpace: Space = Space(true)
+    private var _tagSpace: Space = Space(false)
+    private val _spaces: HandleMap<Space> by lazy { HandleMap(spaceSpace) }
 
     init {
         val spacesHandle = spaceSpace.createHandleInternal("spaces")

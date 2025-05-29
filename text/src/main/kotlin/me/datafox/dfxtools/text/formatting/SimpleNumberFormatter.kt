@@ -35,9 +35,7 @@ private val logger = KotlinLogging.logger {}
 
 object SimpleNumberFormatter : NumberFormatter {
     val precision: ConfigurationKey<Int> = ConfigurationKey(6)
-
     val minExponent: ConfigurationKey<Int> = ConfigurationKey(3)
-
     val stripZeros: ConfigurationKey<Boolean> = ConfigurationKey(true)
 
     override fun format(

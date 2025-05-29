@@ -23,6 +23,9 @@ import me.datafox.dfxtools.values.Value
 /**
  * @author Lauri "datafox" Heino
  */
-abstract class AbstractModifier(override val priority: Int = 0, vararg params: Value) : Modifier, AbstractObservableObserver() {
+abstract class AbstractModifier(
+    override val priority: Int = 0,
+    vararg params: Value
+) : Modifier, AbstractObservableObserver() {
     protected val params: MutableList<Value> by ObservableListProperty(*params)
 }

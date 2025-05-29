@@ -35,9 +35,7 @@ private val logger = KotlinLogging.logger {}
 
 object EvenLengthNumberFormatter : NumberFormatter {
     val length: ConfigurationKey<Int> = ConfigurationKey(8)
-
     val minExponent: ConfigurationKey<Int> = ConfigurationKey(3)
-
     val padZeros: ConfigurationKey<Boolean> = ConfigurationKey(true)
 
     override fun format(

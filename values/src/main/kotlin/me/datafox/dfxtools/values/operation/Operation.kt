@@ -30,7 +30,6 @@ interface Operation {
 
     companion object {
         var context: MathContext = MathContext.DECIMAL128
-
         val add = SingleParameterOperation { a, b -> a.add(b, context) }
         val sub = SingleParameterOperation { a, b -> a.subtract(b, context) }
         val subInv = SingleParameterOperation { a, b -> b.subtract(a, context) }

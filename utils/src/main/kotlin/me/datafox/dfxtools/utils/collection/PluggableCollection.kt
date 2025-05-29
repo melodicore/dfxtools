@@ -29,7 +29,6 @@ abstract class PluggableCollection<E>(
     protected open val spec: PluggableSpec<E>
 ) : MutableCollection<E> {
     override val size: Int get() = delegate.size
-
     protected val beforeAdd get() = spec.beforeAdd
     protected val afterAdd get() = spec.afterAdd
     protected val beforeRemove get() = spec.beforeRemove

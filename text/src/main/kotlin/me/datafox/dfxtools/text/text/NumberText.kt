@@ -23,7 +23,10 @@ import java.math.BigDecimal
 /**
  * @author Lauri "datafox" Heino
  */
-class NumberText(override val configuration: Configuration? = null, val number: () -> BigDecimal) : Text {
+class NumberText(
+    override val configuration: Configuration? = null,
+    val number: () -> BigDecimal
+) : Text {
     override fun generate(configuration: Configuration?) =
         applyConfiguration(configuration)[numberFormatter].format(number(), configuration)
 }

@@ -19,6 +19,7 @@ package me.datafox.dfxtools.invalidation.collection
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.utils.collection.PluggableList
+import me.datafox.dfxtools.utils.collection.PluggableSpec
 
 /**
  * A mutable list for [Observable] elements owned by an [observer] that is added to and removed from
@@ -42,10 +43,15 @@ class ObservableList<E : Observable>(
     identifier: Any = Any(),
     list: PluggableList<E> = PluggableList(
         delegate = delegate,
-        spec = observableSpec(observer, invalidateObserver, identifier)
+        spec = spec(observer, invalidateObserver, identifier)
     )
 ) : MutableList<E> by list {
     init {
         if(callInitialElements) list.callInitialElements()
+    }
+
+    companion object {
+        fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =
+            ObservableSet.spec(observer, invalidateObserver, identifier)
     }
 }

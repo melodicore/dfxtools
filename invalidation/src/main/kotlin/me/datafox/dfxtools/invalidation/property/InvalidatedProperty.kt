@@ -32,7 +32,6 @@ import kotlin.reflect.KProperty
  */
 class InvalidatedProperty<V>(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProperty<Observer, V> {
     private var value = value ?: calculation(null)
-
     private var invalidated = false
 
     /**

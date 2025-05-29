@@ -14,6 +14,16 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.handles
+package me.datafox.dfxtools.utils.collection
 
-import me.datafox.dfxtools.utils.collection.PluggableSet
+/**
+ * @author Lauri "datafox" Heino
+ */
+
+fun <E> MutableCollection<E>.addIfNotNull(element: E?) {
+    element?.apply { add(this) }
+}
+
+fun <E> MutableCollection<E>.addAllIfNotNull(elements: Collection<E?>?) {
+    elements?.filterNotNull()?.apply { addAll(this) }
+}

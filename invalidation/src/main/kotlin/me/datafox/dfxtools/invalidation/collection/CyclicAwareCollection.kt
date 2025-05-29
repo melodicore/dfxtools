@@ -28,11 +28,11 @@ private val logger = KotlinLogging.logger {}
  * A collection for [Observer] values owned by an [Observable] that checks for cyclic dependencies and tracks which
  * object added the observer. The cyclic dependency detection only works for classes that implement both [Observable]
  * and [Observer], preferably by implementing [ObservableObserver]. Tracking is based on an identifier object, usually
- * either the object that added the observer or a private `Any()` if the object could have [Any.equals] conflicts
- * between instances, like with collections. An observer is only removed if all identifiers associated with that
- * observer are removed.
+ * either the object that added the observer or a unique instance of [Any] if the object could have [equals][Any.equals]
+ * conflicts between instances, like with collections. Reference to the observer is only removed if all identifiers
+ * associated with it are removed.
  *
- * @property owner Owner of this collection.
+ * @property owner [Observable] owner of this collection.
  * @property delegate Underlying map implementation, defaults to [mutableMapOf].
  * @constructor Creates a new cyclic-aware collection.
  *
@@ -43,6 +43,13 @@ class CyclicAwareCollection(
     private val owner: Observable,
     private val delegate: MutableMap<Observer, MutableSet<Any>> = mutableMapOf()
 ): Set<Observer> by delegate.keys {
+    /**
+     * Adds an [observer] with [identifier] to this collection.
+     *
+     * @param observer [Observer] to be added.
+     * @param identifier Identifier for the object that called this function.
+     * @return `true` if this collection changed as a result of this operation.
+     */
     fun add(observer: Observer, identifier: Any): Boolean {
         checkCyclic(observer, owner, logger)
         if(!delegate.containsKey(observer)) {
@@ -51,13 +58,21 @@ class CyclicAwareCollection(
         return delegate[observer]!!.add(identifier)
     }
 
+    /**
+     * Removes an [observer] with [identifier] to this collection. Reference to the observer is only removed if all
+     * identifiers associated with it are removed.
+     *
+     * @param observer [Observer] to be removed.
+     * @param identifier Identifier for the object that called this function.
+     * @return `true` if this collection changed as a result of this operation.
+     */
     fun remove(observer: Observer, identifier: Any): Boolean {
         if(!delegate.containsKey(observer)) {
             return false
         }
-        val adders = delegate[observer]!!
-        val remove = adders.remove(identifier)
-        if(adders.isEmpty()) {
+        val identifiers = delegate[observer]!!
+        val remove = identifiers.remove(identifier)
+        if(identifiers.isEmpty()) {
             delegate.remove(observer)
         }
         return remove

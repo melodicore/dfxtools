@@ -19,6 +19,7 @@ package me.datafox.dfxtools.invalidation.collection
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.utils.collection.PluggableSet
+import me.datafox.dfxtools.utils.collection.PluggableSpec
 
 /**
  * A mutable set for [Observable] elements owned by an [observer] that is added to and removed from
@@ -42,10 +43,19 @@ class ObservableSet<E : Observable>(
     identifier: Any = Any(),
     set: PluggableSet<E> = PluggableSet(
         delegate = delegate,
-        spec = observableSpec(observer, invalidateObserver, identifier)
+        spec = spec(observer, invalidateObserver, identifier)
     )
 ) : MutableSet<E> by set {
     init {
         if(callInitialElements) set.callInitialElements()
+    }
+
+    companion object {
+        fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =
+            PluggableSpec(
+                beforeAdd = { it.observers.add(observer, identifier) },
+                beforeRemove = { it.observers.remove(observer, identifier) },
+                afterOperation = { if(invalidateObserver) observer.invalidate() }
+            )
     }
 }

@@ -44,7 +44,6 @@ object SplittingNumberFormatter : NumberFormatter {
         Split(BigDecimal("2592000"), "mo", "mo"),
         Split(BigDecimal("31536000"), "y", "y")
     )
-
     val longTime: Array<Split> = arrayOf(
         Split(BigDecimal.ONE, " second", " seconds"),
         Split(BigDecimal("60"), " minute", " minutes"),
@@ -54,13 +53,9 @@ object SplittingNumberFormatter : NumberFormatter {
         Split(BigDecimal("2592000"), " month", " months"),
         Split(BigDecimal("31536000"), " year", " years")
     )
-
     val splits: ConfigurationKey<Array<Split>> = ConfigurationKey(longTime)
-
     val formatter: ConfigurationKey<NumberFormatter> = ConfigurationKey(SimpleNumberFormatter)
-
     val roundSmallest: ConfigurationKey<Boolean> = ConfigurationKey(true)
-
     val useListDelimiter: ConfigurationKey<Boolean> = ConfigurationKey(true)
 
     override fun format(

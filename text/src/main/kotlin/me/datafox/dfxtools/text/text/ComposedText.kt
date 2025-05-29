@@ -23,7 +23,10 @@ import me.datafox.dfxtools.text.join
 /**
  * @author Lauri "datafox" Heino
  */
-class ComposedText(override val configuration: Configuration? = null, vararg val texts: Text) : Text {
+class ComposedText(
+    override val configuration: Configuration? = null,
+    vararg val texts: Text
+) : Text {
     val useListDelimiter: ConfigurationKey<Boolean> = ConfigurationKey(true)
 
     override fun generate(configuration: Configuration?): String {

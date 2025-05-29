@@ -39,10 +39,8 @@ class ModifiableValue(
     var base: BigDecimal by InvalidatorProperty(value) {
         (this::value.getDelegate() as InvalidatedProperty<*>).invalidate()
     }
-
-    override val value: BigDecimal by InvalidatedProperty { calculate() }
-
     val modifiers: MutableSet<Modifier> by ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
+    override val value: BigDecimal by InvalidatedProperty { calculate() }
 
     fun apply(operation: Operation, useValue: Boolean = false, vararg params: BigDecimal) {
         base = operation.apply(if(useValue) value else base, *params)

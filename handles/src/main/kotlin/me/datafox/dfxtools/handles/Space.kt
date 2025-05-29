@@ -36,18 +36,12 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class Space : ComparableHandled {
-    private lateinit var _handle: Handle
-
-    override val handle: Handle get() = _handle
-
-    private val _handles: HandleSet = HandleSet(this)
-
     val handles: Set<Handle> by lazy { _handles.immutableView }
-
-    private val _groups: HandleMap<Group> by lazy { HandleMap(HandleManager.spaceSpace) }
-
     val groups: Map<Handle, Group> by lazy { _groups.immutableView }
-
+    override val handle: Handle get() = _handle
+    private lateinit var _handle: Handle
+    private val _handles: HandleSet = HandleSet(this)
+    private val _groups: HandleMap<Group> by lazy { HandleMap(HandleManager.spaceSpace) }
     private val permitExternalHandleCreation: Boolean
 
     internal constructor(spaceSpace: Boolean) { permitExternalHandleCreation = !spaceSpace }

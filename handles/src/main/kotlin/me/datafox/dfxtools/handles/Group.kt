@@ -30,11 +30,9 @@ package me.datafox.dfxtools.handles
  * @author Lauri "datafox" Heino
  */
 class Group : ComparableHandled {
-    override val handle: Handle
-
     val space: Space
-
     val handles: HandleSet
+    override val handle: Handle
 
     internal constructor(id: Handle, space: Space) {
         this.handle = id

@@ -21,13 +21,9 @@ package me.datafox.dfxtools.utils.collection
  */
 class LateDelegatedMap<K, V> : MutableMap<K, V> {
     lateinit var delegate: MutableMap<K, V>
-
     override val size: Int get() = delegate.size
-
     override val keys: MutableSet<K> get() = delegate.keys
-
     override val values: MutableCollection<V> get() = delegate.values
-
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>> get() = delegate.entries
 
     override fun get(key: K): V? = delegate[key]

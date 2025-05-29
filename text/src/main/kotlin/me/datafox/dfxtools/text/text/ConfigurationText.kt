@@ -25,7 +25,8 @@ import me.datafox.dfxtools.configuration.ConfigurationKey
 class ConfigurationText<T>(
     val key: ConfigurationKey<T>,
     override val configuration: Configuration? = null,
-    val transformer: (T) -> String) : Text {
+    val transformer: (T) -> String
+) : Text {
     override fun generate(configuration: Configuration?) =
         transformer(applyConfiguration(configuration)[key])
 }

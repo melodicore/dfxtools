@@ -16,45 +16,144 @@
 
 package me.datafox.dfxtools.utils.collection
 
+import me.datafox.dfxtools.utils.collection.PluggableMapSpec.Companion.convert
+
 /**
  * @author Lauri "datafox" Heino
  */
-data class PluggableMapSpec<K, V>(
-    val beforeAdd: (K, V) -> Unit = { k, v -> },
-    val afterAdd: (K, V) -> Unit = { k, v -> },
-    val beforeRemove: (K, V) -> Unit = { k, v -> },
-    val afterRemove: (K, V) -> Unit = { k, v -> },
-    val beforeOperation: () -> Unit = {},
-    val afterOperation: () -> Unit = {}
-) {
-    fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>> {
-        return PluggableSpec(
-            beforeAdd = { beforeAdd(it.key, it.value) },
-            afterAdd = { afterAdd(it.key, it.value) },
-            beforeRemove = { beforeRemove(it.key, it.value) },
-            afterRemove = { afterRemove(it.key, it.value) },
+sealed interface PluggableMapSpec<K, V> {
+    val beforeAdd: (K, V) -> Unit
+    val afterAdd: (K, V) -> Unit
+    val beforeRemove: (K, V) -> Unit
+    val afterRemove: (K, V) -> Unit
+    val beforeOperation: () -> Unit
+    val afterOperation: () -> Unit
+
+    fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>>
+
+    companion object {
+        operator fun <K, V> invoke(
+            beforeAdd: ((K, V) -> Unit)? = null,
+            afterAdd: ((K, V) -> Unit)? = null,
+            beforeRemove: ((K, V) -> Unit)? = null,
+            afterRemove: ((K, V) -> Unit)? = null,
+            beforeOperation: (() -> Unit)? = null,
+            afterOperation: (() -> Unit)? = null
+        ): PluggableMapSpec<K, V> = PluggableMapSpecImpl(
+            beforeAdd = beforeAdd,
+            afterAdd = afterAdd,
+            beforeRemove = beforeRemove,
+            afterRemove = afterRemove,
+            beforeOperation = beforeOperation,
+            afterOperation = afterOperation
+        )
+
+        operator fun <K, V> invoke(vararg specs: PluggableMapSpec<K, V>): PluggableMapSpec<K, V> {
+            if(specs.isEmpty()) return PluggableMapSpecImpl()
+            if(specs.size == 1) return specs[0]
+            val first = specs[0]
+            if(first is ConcatenatedPluggableMapSpec) {
+                first.addSpecs(*specs.copyOfRange(1, specs.size))
+                return first
+            }
+            return ConcatenatedPluggableMapSpec(*specs)
+        }
+
+        internal fun <K, V> convert(lambda: (K, V) -> Unit): (MutableMap.MutableEntry<K, V>) -> Unit {
+            return { lambda(it.key, it.value) }
+        }
+
+        internal fun <K, V> convert(list: List<(K, V) -> Unit>): Collection<(MutableMap.MutableEntry<K, V>) -> Unit> {
+            return list.map { convert(it) }
+        }
+    }
+}
+
+internal class PluggableMapSpecImpl<K, V>(
+    beforeAdd: ((K, V) -> Unit)? = null,
+    afterAdd: ((K, V) -> Unit)? = null,
+    beforeRemove: ((K, V) -> Unit)? = null,
+    afterRemove: ((K, V) -> Unit)? = null,
+    beforeOperation: (() -> Unit)? = null,
+    afterOperation: (() -> Unit)? = null
+) : PluggableMapSpec<K, V> {
+    internal val beforeAddInternal = beforeAdd
+    internal val afterAddInternal = afterAdd
+    internal val beforeRemoveInternal = beforeRemove
+    internal val afterRemoveInternal = afterRemove
+    internal val beforeOperationInternal = beforeOperation
+    internal val afterOperationInternal = afterOperation
+    override val beforeAdd = beforeAddInternal ?: { k, v -> }
+    override val afterAdd = afterAddInternal ?: { k, v -> }
+    override val beforeRemove = beforeRemoveInternal ?: { k, v -> }
+    override val afterRemove = afterRemoveInternal ?: { k, v -> }
+    override val beforeOperation = beforeOperationInternal ?: {}
+    override val afterOperation = afterOperationInternal ?: {}
+    
+    override fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>> {
+        return PluggableSpecImpl(
+            beforeAdd = convert(beforeAdd),
+            afterAdd = convert(afterAdd),
+            beforeRemove = convert(beforeRemove),
+            afterRemove = convert(afterRemove),
             beforeOperation = beforeOperation,
             afterOperation = afterOperation
         )
     }
+}
 
-    companion object {
-        fun <K, V> concat(vararg specs: PluggableMapSpec<K, V>): PluggableMapSpec<K, V> {
-            if(specs.size == 1) return specs[0]
-            val beforeAdds = specs.map { it.beforeAdd }
-            val afterAdds = specs.map { it.afterAdd }
-            val beforeRemoves = specs.map { it.beforeRemove }
-            val afterRemoves = specs.map { it.afterRemove }
-            val beforeOperations = specs.map { it.beforeOperation }
-            val afterOperations = specs.map { it.afterOperation }
-            return PluggableMapSpec(
-                beforeAdd = { k, v -> beforeAdds.forEach { it(k, v) } },
-                afterAdd = { k, v -> afterAdds.forEach { it(k, v) } },
-                beforeRemove = { k, v -> beforeRemoves.forEach { it(k, v) } },
-                afterRemove = { k, v -> afterRemoves.forEach { it(k, v) } },
-                beforeOperation = { beforeOperations.forEach { it() } },
-                afterOperation = { afterOperations.forEach { it() } }
-            )
+internal class ConcatenatedPluggableMapSpec<K, V>(vararg specs: PluggableMapSpec<K, V>) : PluggableMapSpec<K, V> {
+    internal val beforeAddList: MutableList<(K, V) -> Unit> = mutableListOf()
+    internal val afterAddList: MutableList<(K, V) -> Unit> = mutableListOf()
+    internal val beforeRemoveList: MutableList<(K, V) -> Unit> = mutableListOf()
+    internal val afterRemoveList: MutableList<(K, V) -> Unit> = mutableListOf()
+    internal val beforeOperationList: MutableList<() -> Unit> = mutableListOf()
+    internal val afterOperationList: MutableList<() -> Unit> = mutableListOf()
+    override val beforeAdd: (K, V) -> Unit = { k, v -> beforeAddList.forEach { it(k, v) } }
+    override val afterAdd: (K, V) -> Unit = { k, v -> afterAddList.forEach { it(k, v) } }
+    override val beforeRemove: (K, V) -> Unit = { k, v -> beforeRemoveList.forEach { it(k, v) } }
+    override val afterRemove: (K, V) -> Unit = { k, v -> afterRemoveList.forEach { it(k, v) } }
+    override val beforeOperation: () -> Unit = { beforeOperationList.forEach { it() } }
+    override val afterOperation: () -> Unit = { afterOperationList.forEach { it() } }
+
+    init {
+        if(specs.isNotEmpty()) addSpecs(*specs)
+    }
+
+    override fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>> {
+        val spec = ConcatenatedPluggableSpec<MutableMap.MutableEntry<K, V>>()
+        spec.beforeAddList.addAll(convert(beforeAddList))
+        spec.afterAddList.addAll(convert(afterAddList))
+        spec.beforeRemoveList.addAll(convert(beforeRemoveList))
+        spec.afterRemoveList.addAll(convert(afterRemoveList))
+        spec.beforeOperationList.addAll(beforeOperationList)
+        spec.afterOperationList.addAll(afterOperationList)
+        return spec
+    }
+
+    fun addSpec(spec: PluggableMapSpec<K, V>) {
+        when(spec) {
+            is PluggableMapSpecImpl -> {
+                beforeAddList.addIfNotNull(spec.beforeAddInternal)
+                afterAddList.addIfNotNull(spec.afterAddInternal)
+                beforeRemoveList.addIfNotNull(spec.beforeRemoveInternal)
+                afterRemoveList.addIfNotNull(spec.afterRemoveInternal)
+                beforeOperationList.addIfNotNull(spec.beforeOperation)
+                afterOperationList.addIfNotNull(spec.afterOperation)
+            }
+
+            is ConcatenatedPluggableMapSpec -> {
+                beforeAddList.addAll(spec.beforeAddList)
+                afterAddList.addAll(spec.afterAddList)
+                beforeRemoveList.addAll(spec.beforeRemoveList)
+                afterRemoveList.addAll(spec.afterRemoveList)
+                beforeOperationList.addAll(spec.beforeOperationList)
+                afterOperationList.addAll(spec.afterOperationList)
+            }
         }
+    }
+
+    fun addSpecs(vararg specs: PluggableMapSpec<K, V>) {
+        specs.forEach { addSpec(it) }
     }
 }

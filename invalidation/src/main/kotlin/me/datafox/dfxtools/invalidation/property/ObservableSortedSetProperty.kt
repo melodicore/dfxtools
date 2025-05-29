@@ -37,7 +37,6 @@ class ObservableSortedSetProperty<E : Observable>(
     comparator: (E, E) -> Int
 ) : ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toSortedSet(comparator)
-
     private lateinit var set: ObservableSet<E>
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableSet<E> = set

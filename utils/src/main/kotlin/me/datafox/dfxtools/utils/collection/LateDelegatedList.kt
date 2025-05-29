@@ -21,7 +21,6 @@ package me.datafox.dfxtools.utils.collection
  */
 class LateDelegatedList<E> : MutableList<E> {
     lateinit var delegate: MutableList<E>
-
     override val size: Int get() = delegate.size
 
     override fun get(index: Int): E = delegate[index]

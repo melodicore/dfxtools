@@ -21,6 +21,9 @@ import me.datafox.dfxtools.configuration.Configuration
 /**
  * @author Lauri "datafox" Heino
  */
-class SimpleText(override val configuration: Configuration? = null, var text: () -> String) : Text {
+class SimpleText(
+    override val configuration: Configuration? = null,
+    var text: () -> String
+) : Text {
     override fun generate(configuration: Configuration?) = text()
 }

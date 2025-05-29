@@ -48,21 +48,13 @@ private val logger = KotlinLogging.logger {}
  */
 class Handle : Comparable<Handle> {
     val space: Space
-
     val id: String
-
     val index: Int
-
     val subindex: Int
-
     val parent: Handle?
-
-    private val _subhandles: HandleSet?
-
     val subhandles: Set<Handle>? by lazy { _subhandles?.immutableView }
-
     val tags: HandleSet
-
+    private val _subhandles: HandleSet?
     private val permitExternalSubhandleCreation: Boolean
 
     internal constructor(space: Space, id: String, index: Int) {

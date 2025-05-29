@@ -32,9 +32,7 @@ private val logger = KotlinLogging.logger {}
 
 object ExponentSuffixFormatter : NumberSuffixFormatter {
     val interval: ConfigurationKey<Int> = ConfigurationKey(1)
-
     val exponentPlus: ConfigurationKey<Boolean> = ConfigurationKey(false)
-
     override val infinite = true
 
     override fun format(number: BigDecimal, configuration: Configuration?): Output {

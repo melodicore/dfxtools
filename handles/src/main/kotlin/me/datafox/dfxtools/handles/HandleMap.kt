@@ -17,9 +17,9 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import me.datafox.dfxtools.handles.HandleMap.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
-import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableMapView
 import me.datafox.dfxtools.utils.collection.LateDelegatedMap
@@ -29,18 +29,11 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-fun <V> handleMapSpec(space: Space): PluggableMapSpec<Handle, V> = PluggableMapSpec(beforeAdd = { k, _ ->
-    val handle = checkHandleIsInSpace(space, k)
-    if(handle != null) {
-        logThrow(logger, mapHandleNotInSpace(space.handle.id, handle.toString())) {
-            IllegalArgumentException(it)
-        }
-    }
-})
-
 /**
  * A sorted mutable map with [Handle] keys that may only contain keys from a single [Space]. This file also contains
- * extension functions for generic maps that have handle keys. This map is backed by a [TreeMap].
+ * extension functions for generic maps that have handle keys. This map is implemented with [PluggableMap] and backed by
+ * a [TreeMap]. The detection of handles is done with [spec], which can be used to create more complex
+ * pluggable maps without this class.
  *
  * @property space [Space] of this map.
  * @property immutableView Immutable view of this map.
@@ -50,11 +43,9 @@ fun <V> handleMapSpec(space: Space): PluggableMapSpec<Handle, V> = PluggableMapS
 class HandleMap<V> internal constructor(
     private val map: LateDelegatedMap<Handle, V> = LateDelegatedMap()
 ) : MutableMap<Handle, V> by map {
-    private lateinit var _space: Space
-
     val space: Space get() = _space
-
     val immutableView: Map<Handle, V> by lazy { ImmutableMapView(this) }
+    private lateinit var _space: Space
 
     /**
      * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to the space.
@@ -64,7 +55,7 @@ class HandleMap<V> internal constructor(
      */
     constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this() {
         this._space = space
-        map.delegate = PluggableMap(TreeMap(), handleMapSpec(space))
+        map.delegate = PluggableMap(TreeMap(), spec(space))
         if(entries.isNotEmpty()) {
             putAll(entries)
         }
@@ -80,8 +71,22 @@ class HandleMap<V> internal constructor(
             logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this._space = entries.keys.first().space
-        map.delegate = PluggableMap(TreeMap(), handleMapSpec(space))
+        map.delegate = PluggableMap(TreeMap(), spec(space))
         putAll(entries)
+    }
+
+    companion object {
+        /**
+         * Returns a [PluggableMapSpec] which asserts that all added [Handle] keys belong to [space].
+         *
+         * @param space [Space] that all [Handle] keys must belong to.
+         * @return [PluggableMapSpec] which asserts that all added [Handle] keys belong to [space].
+         */
+        fun <V> spec(space: Space): PluggableMapSpec<Handle, V> = PluggableMapSpec(beforeAdd = { k, _ ->
+            if(k.space != space) {
+                logThrow(logger, mapHandleNotInSpace(space, k)) { IllegalArgumentException(it) }
+            }
+        })
     }
 }
 

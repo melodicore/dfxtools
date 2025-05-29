@@ -35,7 +35,6 @@ class ObservableListProperty<E : Observable>(
     private val invalidateOwner: Boolean = true
 ) : ReadOnlyProperty<Observer, MutableList<E>> {
     private val backingList: MutableList<E> = values.toMutableList()
-
     private lateinit var list: ObservableList<E>
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableList<E> = list

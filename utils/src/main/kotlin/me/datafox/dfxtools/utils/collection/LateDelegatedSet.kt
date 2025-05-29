@@ -21,7 +21,6 @@ package me.datafox.dfxtools.utils.collection
  */
 class LateDelegatedSet<E> : MutableSet<E> {
     lateinit var delegate: MutableSet<E>
-
     override val size: Int get() = delegate.size
 
     override fun add(element: E): Boolean = delegate.add(element)

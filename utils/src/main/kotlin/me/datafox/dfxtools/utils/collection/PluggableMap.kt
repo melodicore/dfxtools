@@ -24,13 +24,9 @@ class PluggableMap<K, V>(
     private val spec: PluggableMapSpec<K, V>
 ) : MutableMap<K, V> {
     override val size: Int get() = delegate.size
-
     override val keys: MutableSet<K> = PluggableMapKeys(this)
-
     override val values: MutableCollection<V> = PluggableMapValues(this)
-
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>> = PluggableMapEntries(this)
-
     private val beforeAdd get() = spec.beforeAdd
     private val afterAdd get() = spec.afterAdd
     private val beforeRemove get() = spec.beforeRemove
@@ -171,7 +167,7 @@ class PluggableMap<K, V>(
         override fun containsAll(elements: Collection<K>): Boolean = elements.all { parent.containsKey(it) }
     }
 
-    class PluggableMapValues<K, V>(private val parent: PluggableMap<K, V>) : MutableCollection<V> {
+    private class PluggableMapValues<K, V>(private val parent: PluggableMap<K, V>) : MutableCollection<V> {
         override val size: Int get() = parent.size
 
         override fun add(element: V): Boolean = throw UnsupportedOperationException()
@@ -204,7 +200,7 @@ class PluggableMap<K, V>(
         override fun containsAll(elements: Collection<V>): Boolean = elements.all { parent.containsValue(it) }
     }
 
-    class PluggableMapEntries<K, V>(private val parent: PluggableMap<K, V>) : MutableSet<MutableMap.MutableEntry<K, V>> {
+    private class PluggableMapEntries<K, V>(private val parent: PluggableMap<K, V>) : MutableSet<MutableMap.MutableEntry<K, V>> {
         override val size: Int get() = parent.size
 
         override fun add(element: MutableMap.MutableEntry<K, V>): Boolean {

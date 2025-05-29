@@ -17,9 +17,9 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import me.datafox.dfxtools.handles.HandleSet.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
-import me.datafox.dfxtools.handles.internal.Utils.checkHandleIsInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableSetView
 import me.datafox.dfxtools.utils.collection.LateDelegatedSet
@@ -29,18 +29,11 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-fun handleSetSpec(space: Space): PluggableSpec<Handle> = PluggableSpec(beforeAdd = {
-    val handle = checkHandleIsInSpace(space, it)
-    if(handle != null) {
-        logThrow(logger, setHandleNotInSpace(space.handle.id, handle.toString())) {
-            IllegalArgumentException(it)
-        }
-    }
-})
-
 /**
  * A sorted mutable set that may only contain [Handles][Handle] from a single [Space]. This file also contains extension
- * functions for generic sets that contain handles. This set is backed by a [TreeSet].
+ * functions for generic sets that contain handles. This set is implemented with [PluggableSet] and backed by a
+ * [TreeSet]. The detection of handles is done with [spec], which can be used to create more complex pluggable
+ * sets without this class.
  *
  * @property space [Space] of this set.
  * @property immutableView Immutable view of this set.
@@ -50,11 +43,9 @@ fun handleSetSpec(space: Space): PluggableSpec<Handle> = PluggableSpec(beforeAdd
 class HandleSet internal constructor(
     private val set: LateDelegatedSet<Handle> = LateDelegatedSet()
 ) : MutableSet<Handle> by set {
-    private lateinit var _space: Space
-
     val space: Space get() = _space
-
     val immutableView: Set<Handle> by lazy { ImmutableSetView(this) }
+    private lateinit var _space: Space
 
     /**
      * Creates a new set with [space] and [elements]. Elements must belong to the space.
@@ -64,7 +55,7 @@ class HandleSet internal constructor(
      */
     constructor(space: Space, elements: Collection<Handle> = emptySet()) : this() {
         this._space = space
-        set.delegate = PluggableSet<Handle>(TreeSet(), handleSetSpec(space))
+        set.delegate = PluggableSet<Handle>(TreeSet(), spec(space))
         addAll(elements)
     }
 
@@ -78,7 +69,7 @@ class HandleSet internal constructor(
             logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
         }
         this._space = elements.first().space
-        set.delegate = PluggableSet<Handle>(TreeSet(), handleSetSpec(space))
+        set.delegate = PluggableSet<Handle>(TreeSet(), spec(space))
         addAll(elements)
     }
 
@@ -125,6 +116,20 @@ class HandleSet internal constructor(
      * @param ids Ids of [Handles][Handle] to be removed.
      */
     operator fun minusAssign(ids: Iterable<String>) { removeAll(ids) }
+
+    companion object {
+        /**
+         * Returns a [PluggableSpec] which asserts that all added [Handles][Handle] belong to [space].
+         *
+         * @param space [Space] that all [Handles][Handle] must belong to.
+         * @return [PluggableSpec] which asserts that all added [Handles][Handle] belong to [space].
+         */
+        fun spec(space: Space): PluggableSpec<Handle> = PluggableSpec(beforeAdd = {
+            if(it.space != space) {
+                logThrow(logger, setHandleNotInSpace(space, it)) { s -> IllegalArgumentException(s) }
+            }
+        })
+    }
 }
 
 /**

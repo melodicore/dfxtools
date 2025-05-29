@@ -48,14 +48,9 @@ import me.datafox.dfxtools.utils.property.ConditionalReadWriteProperty
  */
 object TextManager {
     val delimiter: ConfigurationKey<String> = ConfigurationKey(" ")
-
     val listDelimiter: ConfigurationKey<String> = ConfigurationKey(", ")
-
     val listLastDelimiter: ConfigurationKey<String> = ConfigurationKey(" and ")
-
     val numberFormatter: ConfigurationKey<NumberFormatter> = ConfigurationKey(SimpleNumberFormatter)
-
     val numberSuffixFormatter: ConfigurationKey<NumberSuffixFormatter> = ConfigurationKey(ExponentSuffixFormatter)
-
     var fallbackNumberSuffixFormatter: NumberSuffixFormatter by ConditionalReadWriteProperty(ExponentSuffixFormatter) { it.infinite }
 }

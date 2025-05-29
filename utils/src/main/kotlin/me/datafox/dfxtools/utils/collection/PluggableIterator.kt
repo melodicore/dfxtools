@@ -24,7 +24,6 @@ open class PluggableIterator<E>(
     protected open val spec: PluggableSpec<E>
 ) : MutableIterator<E> {
     protected var current: E? = null
-
     protected val beforeRemove get() = spec.beforeRemove
     protected val afterRemove get() = spec.afterRemove
     protected val beforeOperation get() = spec.beforeOperation

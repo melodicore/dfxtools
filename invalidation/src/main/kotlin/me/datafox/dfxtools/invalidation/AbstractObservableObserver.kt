@@ -26,6 +26,5 @@ import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
  */
 abstract class AbstractObservableObserver : ObservableObserver {
     override val observers = CyclicAwareCollection(this)
-
     override val propertyHandler = InvalidatedProperty.Handler()
 }
