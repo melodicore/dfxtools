@@ -16,6 +16,7 @@
 
 package me.datafox.dfxtools.text
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.text.TextManager.delimiter
 import me.datafox.dfxtools.text.TextManager.fallbackNumberSuffixFormatter
@@ -28,6 +29,8 @@ import me.datafox.dfxtools.text.formatting.NumberFormatter
 import me.datafox.dfxtools.text.formatting.NumberSuffixFormatter
 import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter
 import me.datafox.dfxtools.utils.property.ConditionalReadWriteProperty
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * A singleton object that contains various [ConfigurationKeys][ConfigurationKey] used by other parts of the Text
@@ -52,5 +55,5 @@ object TextManager {
     val listLastDelimiter: ConfigurationKey<String> = ConfigurationKey(" and ")
     val numberFormatter: ConfigurationKey<NumberFormatter> = ConfigurationKey(SimpleNumberFormatter)
     val numberSuffixFormatter: ConfigurationKey<NumberSuffixFormatter> = ConfigurationKey(ExponentSuffixFormatter)
-    var fallbackNumberSuffixFormatter: NumberSuffixFormatter by ConditionalReadWriteProperty(ExponentSuffixFormatter) { it.infinite }
+    var fallbackNumberSuffixFormatter: NumberSuffixFormatter by ConditionalReadWriteProperty(value = ExponentSuffixFormatter) { it.infinite }
 }

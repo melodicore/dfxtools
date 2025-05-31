@@ -16,10 +16,6 @@
 
 package me.datafox.dfxtools.utils.collection
 
-/**
- * @author Lauri "datafox" Heino
- */
-
 fun <E> MutableCollection<E>.addIfNotNull(element: E?) {
     element?.apply { add(this) }
 }

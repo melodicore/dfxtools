@@ -17,7 +17,9 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import me.datafox.dfxtools.handles.HandleManager.at
 import me.datafox.dfxtools.handles.HandleManager.createSpace
+import me.datafox.dfxtools.handles.HandleManager.get
 import me.datafox.dfxtools.handles.HandleManager.getOrCreateQualifiedHandle
 import me.datafox.dfxtools.handles.HandleManager.getOrCreateSpace
 import me.datafox.dfxtools.handles.HandleManager.spaceSpace
@@ -61,6 +63,22 @@ object HandleManager {
     }
 
     /**
+     * Returns a [Space] with [handle], or `null` if no space with the handle is present.
+     *
+     * @param handle [Handle] of a [Space].
+     * @return [Space] with [handle], or `null` if no space with the handle is present.
+     */
+    operator fun get(handle: Handle): Space? = spaces[handle]
+
+    /**
+     * Returns a [Space] with [id], or `null` if no space with the id is present.
+     *
+     * @param id Id of a [Space].
+     * @return [Space] with [id], or `null` if no space with the id is present.
+     */
+    operator fun get(id: String): Space? = spaces[id]
+
+    /**
      * Creates a new [Space] with [id]. Throws an [IllegalArgumentException] if the id is not valid (contains colons or
      * at symbols) or if a space with the id already exists.
      *
@@ -86,20 +104,36 @@ object HandleManager {
     fun getOrCreateSpace(id: String): Space = spaces[id] ?: createSpace(id)
 
     /**
+     * Returns a [Handle] or a subhandle based on its fully qualified id, or `null` if no such handle exists. A fully
+     * qualified id is in the format `handle@space`, or `handle:subhandle@space` in case of a subhandle. This is the
+     * same format that [Handle.toString] returns. This function takes in a [QualifiedId], which can be created
+     * with infix notation `"handle:subhandle" `[at]` "space"`.
+     *
+     * @param id Fully qualified id of a [Handle] or a subhandle.
+     * @return [Handle] or subhandle with the fully qualified [id].
+     */
+    operator fun get(id: QualifiedId): Handle? {
+        val id = id.id
+        checkQualified(id)
+        val split = id.split('@')
+        val space = get(split[1]) ?: return null
+        if(':' in split[0]) {
+            val split = split[0].split(':')
+            return space[split[0]]?.get(split[1])
+        }
+        return space[split[0]]
+    }
+
+    /**
      * Returns a [Handle] or a subhandle, creating it, its containing handle if subhandle, and its [Space] if any of
-     * them do not exist. A fully qualified handle is in the format `handle@space`, or `handle:subhandle@space` in case
+     * them do not exist. A fully qualified id is in the format `handle@space`, or `handle:subhandle@space` in case
      * of a subhandle. This is the same format that [Handle.toString] returns.
      *
      * @param id Fully qualified id of a [Handle] or a subhandle.
      * @return [Handle] or subhandle with the fully qualified [id].
      */
     fun getOrCreateQualifiedHandle(id: String): Handle {
-        if(!checkHandleId(id, true)) {
-            logThrow(logger, invalidQualifiedHandleId(id)) { IllegalArgumentException(it) }
-        }
-        if('@' !in id) {
-            logThrow(logger, qualifiedHandleNoSpace(id)) { IllegalArgumentException(it) }
-        }
+        checkQualified(id)
         val split = id.split('@')
         val space = getOrCreateSpace(split[1])
         if(':' in split[0]) {
@@ -108,6 +142,17 @@ object HandleManager {
         }
         return space.getOrCreateHandle(split[0])
     }
+
+    /**
+     * Returns a [Handle] or a subhandle, creating it, its containing handle if subhandle, and its [Space] if any of
+     * them do not exist. A fully qualified id is in the format `handle@space`, or `handle:subhandle@space` in case
+     * of a subhandle. This is the same format that [Handle.toString] returns. This function takes in a
+     * [QualifiedId], which can be created with infix notation `"handle:subhandle" `[at]` "space"`.
+     *
+     * @param id Fully qualified id of a [Handle] or a subhandle.
+     * @return [Handle] or subhandle with the fully qualified [id].
+     */
+    fun getOrCreateQualifiedHandle(id: QualifiedId): Handle = getOrCreateQualifiedHandle(id.id)
 
     /**
      * Removes all [Spaces][Space], [Groups][Group] and [Handles][Handle], except for [spaceSpace], [tagSpace] and their
@@ -125,6 +170,16 @@ object HandleManager {
         spaceSpace.purge(true)
         tagSpace.purge(false)
     }
+
+    /**
+     * Infix function to create a [QualifiedId] for [get] and [getOrCreateQualifiedHandle] functions. Usage:
+     * `"handle:subhandle" `[at]` "space"`.
+     *
+     * @param this Id of a [Handle] or subhandle.
+     * @param space Id of a [Space].
+     * @return [QualifiedId] for a [Handle] in a [Space].
+     */
+    infix fun String.at(space: String): QualifiedId = QualifiedId("$this@$space")
 
     /**
      * Returns a string representation of all [Spaces][Space], [Groups][Group] and [Handles][Handle], including tags
@@ -161,6 +216,17 @@ object HandleManager {
         }
         return sb.toString()
     }
+
+    private fun checkQualified(id: String) {
+        if(!checkHandleId(id, true)) {
+            logThrow(logger, invalidQualifiedHandleId(id)) { IllegalArgumentException(it) }
+        }
+        if('@' !in id) {
+            logThrow(logger, qualifiedHandleNoSpace(id)) { IllegalArgumentException(it) }
+        }
+    }
+
+    class QualifiedId internal constructor(val id: String)
 }
 
 /**
