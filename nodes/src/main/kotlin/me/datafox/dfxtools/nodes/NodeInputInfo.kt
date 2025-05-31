@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.nodes.node
+package me.datafox.dfxtools.nodes
+
+import io.github.oshai.kotlinlogging.KotlinLogging
+import me.datafox.dfxtools.utils.Logging.logThrow
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * @author Lauri "datafox" Heino
  */
-data class NodeData<T : Any>(
+data class NodeInputInfo<T : Any>(
     val type: NodeType<T>,
-    val variant: NodeType.Variant<T>,
-    val data: T
+    val allowedVariants: Set<NodeType.Variant<T>>,
+    val validator: (T.() -> String?)? = null
 ) {
-    @Suppress("UNCHECKED_CAST")
-    fun <R : Any> toKnownType(type: NodeType<R>): NodeData<R> {
-        if(this.type != type || !type.type.isInstance(data)) throw ClassCastException()
-        return this as NodeData<R>
+    init {
+        if(allowedVariants.isEmpty()) {
+            logThrow(logger, "Variants must not be empty") { IllegalArgumentException(it) }
+        }
+        if(!type.variants.values.containsAll(allowedVariants)) {
+            logThrow(logger, "All allowed variants must be variants of the type") { IllegalArgumentException(it) }
+        }
     }
 }

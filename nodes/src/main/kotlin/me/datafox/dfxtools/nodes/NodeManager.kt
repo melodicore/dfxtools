@@ -3,7 +3,6 @@ package me.datafox.dfxtools.nodes
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.nodes.internal.Strings.TYPE_SPACE_EXISTS
-import me.datafox.dfxtools.nodes.node.NodeType
 
 private val logger = KotlinLogging.logger {}
 

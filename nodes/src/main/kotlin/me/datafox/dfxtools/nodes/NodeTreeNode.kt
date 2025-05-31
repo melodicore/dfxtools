@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.nodes.node
+package me.datafox.dfxtools.nodes
 
 import io.github.oshai.kotlinlogging.KLogger
-import me.datafox.dfxtools.nodes.internal.Utils.validateInputData
-import me.datafox.dfxtools.nodes.internal.Utils.validateOutputData
 
 /**
  * @author Lauri "datafox" Heino
  */
-interface Node {
-    val name: String
-    val description: String
-    val inputs: List<NodeInputInfo<*>>
-    val outputs: List<NodeOutputInfo<*>>
-    val logger: KLogger
-    val block: (List<NodeData<*>>) -> List<NodeData<*>>
+class NodeTreeNode(
+    override val name: String,
+    override val description: String,
+    val tree: NodeTree,
+    override val logger: KLogger,
+) : Node {
+    override val inputs: List<NodeInputInfo<*>> = tree.inputs
+    override val outputs: List<NodeOutputInfo<*>> = tree.outputs
+    override val block: (List<NodeData<*>>) -> List<NodeData<*>> = { throw UnsupportedOperationException() }
 
-    fun accept(params: List<NodeData<*>>): List<NodeData<*>> {
-        validateInputData(inputs, params, logger)
-        val output = block(params)
-        validateOutputData(outputs, output, logger)
-        return output
-    }
+    override fun accept(params: List<NodeData<*>>): List<NodeData<*>> = tree.accept(params)
 }

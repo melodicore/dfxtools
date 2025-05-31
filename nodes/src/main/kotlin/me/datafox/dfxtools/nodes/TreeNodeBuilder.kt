@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.nodes.node
+package me.datafox.dfxtools.nodes
 
 /**
  * @author Lauri "datafox" Heino

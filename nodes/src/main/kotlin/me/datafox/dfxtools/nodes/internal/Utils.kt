@@ -1,7 +1,11 @@
 package me.datafox.dfxtools.nodes.internal
 
 import io.github.oshai.kotlinlogging.KLogger
-import me.datafox.dfxtools.nodes.node.*
+import me.datafox.dfxtools.nodes.NodeConnection
+import me.datafox.dfxtools.nodes.NodeData
+import me.datafox.dfxtools.nodes.NodeInputInfo
+import me.datafox.dfxtools.nodes.NodeOutputInfo
+import me.datafox.dfxtools.nodes.TreeNode
 import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**

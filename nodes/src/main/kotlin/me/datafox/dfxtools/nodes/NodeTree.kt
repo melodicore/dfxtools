@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.nodes.node
+package me.datafox.dfxtools.nodes
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.nodes.internal.Utils.validateInputData

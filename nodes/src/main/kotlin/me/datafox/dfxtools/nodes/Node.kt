@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.nodes.node
+package me.datafox.dfxtools.nodes
 
 import io.github.oshai.kotlinlogging.KLogger
+import me.datafox.dfxtools.nodes.internal.Utils.validateInputData
+import me.datafox.dfxtools.nodes.internal.Utils.validateOutputData
 
 /**
  * @author Lauri "datafox" Heino
  */
-data class BasicNode(
-    override val name: String,
-    override val description: String,
-    override val inputs: List<NodeInputInfo<*>>,
-    override val outputs: List<NodeOutputInfo<*>>,
-    override val logger: KLogger,
-    override val block: (List<NodeData<*>>) -> List<NodeData<*>>
-) : Node
+interface Node {
+    val name: String
+    val description: String
+    val inputs: List<NodeInputInfo<*>>
+    val outputs: List<NodeOutputInfo<*>>
+    val logger: KLogger
+    val block: (List<NodeData<*>>) -> List<NodeData<*>>
+
+    fun accept(params: List<NodeData<*>>): List<NodeData<*>> {
+        validateInputData(inputs, params, logger)
+        val output = block(params)
+        validateOutputData(outputs, output, logger)
+        return output
+    }
+}
