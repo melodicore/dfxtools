@@ -166,10 +166,7 @@ object HandleManager {
      */
     @Purge
     fun purge() {
-        _spaces.iterator().apply { while(hasNext()) {
-            val (_, value) = next()
-            if(value != spaceSpace && value != tagSpace) remove()
-        } }
+        _spaces.values.retainAll(setOf(spaceSpace, tagSpace))
         spaceSpace.purge(true)
         tagSpace.purge(false)
     }
