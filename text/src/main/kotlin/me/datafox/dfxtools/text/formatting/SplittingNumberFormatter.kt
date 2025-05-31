@@ -20,20 +20,23 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.internal.Strings.SPNF_NEGATIVE
+import me.datafox.dfxtools.text.internal.Strings.SPNF_SELF_DELEGATE
+import me.datafox.dfxtools.text.internal.Strings.SPNF_SPLIT_ORDER
 import me.datafox.dfxtools.text.isOne
 import me.datafox.dfxtools.text.isZero
 import me.datafox.dfxtools.text.join
-import me.datafox.dfxtools.utils.Logging
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-/**
- * @author Lauri "datafox" Heino
- */
 private val logger = KotlinLogging.logger {}
 
 typealias Split = Triple<BigDecimal, String, String>
 
+/**
+ * @author Lauri "datafox" Heino
+ */
 object SplittingNumberFormatter : NumberFormatter {
     val shortTime: Array<Split> = arrayOf(
         Split(BigDecimal.ONE, "s", "s"),
@@ -68,46 +71,36 @@ object SplittingNumberFormatter : NumberFormatter {
         val splits = configuration[splits]
         validateConfiguration(delegate, splits)
         if(number < BigDecimal.ZERO) {
-            logger.warn { "Negative number given to SplittingNumberFormatter, number won't be split" }
+            logger.warn { SPNF_NEGATIVE }
             return delegate.format(number, configuration)
         }
         val out: MutableList<String> = mutableListOf()
         for(i in splits.size - 1 downTo 0) {
             val split = splits[i]
             if(i == 0 || number > split.first) {
-                var divided = number
-                if(i != 0) {
-                    divided = divided.divideToIntegralValue(split.first).setScale(0, RoundingMode.DOWN)
-                } else if(configuration[roundSmallest]) {
-                    divided = divided.setScale(0, RoundingMode.DOWN)
-                }
+                val divided = if(i != 0) number.divideToIntegralValue(split.first).setScale(0, RoundingMode.DOWN)
+                else if(configuration[roundSmallest]) number.setScale(0, RoundingMode.DOWN)
+                else number
                 val formatted = delegate.format(divided, configuration)
-                if(i != 0 && formatted.isZero()) {
-                    continue
-                }
+                if(i != 0 && formatted.isZero()) continue
                 number = number.remainder(split.first)
-                if(formatted.isOne()) {
-                    out.add(formatted + split.second)
-                } else {
-                    out.add(formatted + split.third)
-                }
+                if(formatted.isOne()) out.add(formatted + split.second)
+                else out.add(formatted + split.third)
             }
         }
-        return out.join(configuration[useListDelimiter], configuration)
+        return out.join(useListDelimiter, configuration)
     }
 
 
 
     private fun validateConfiguration(delegate: NumberFormatter, splits: Array<Split>) {
         if(delegate == SplittingNumberFormatter) {
-            Logging.logThrow(logger, "Splitting number formatter cannot have itself as a formatter") { IllegalArgumentException(it) }
+            logThrow(logger, SPNF_SELF_DELEGATE) { IllegalArgumentException(it) }
         }
         var last: BigDecimal? = null
         for(split in splits) {
-            if(last != null) {
-                if(last >= split.first) {
-                    Logging.logThrow(logger, "Splits must be in numerical order from lowest to highest") { IllegalArgumentException(it) }
-                }
+            if(last != null && last >= split.first) {
+                logThrow(logger, SPNF_SPLIT_ORDER) { IllegalArgumentException(it) }
             }
             last = split.first
         }

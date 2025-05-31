@@ -21,15 +21,16 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
-import me.datafox.dfxtools.utils.Logging
+import me.datafox.dfxtools.text.internal.Strings.esfInterval
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 import kotlin.math.abs
+
+private val logger = KotlinLogging.logger {}
 
 /**
  * @author Lauri "datafox" Heino
  */
-private val logger = KotlinLogging.logger {}
-
 object ExponentSuffixFormatter : NumberSuffixFormatter {
     val interval: ConfigurationKey<Int> = ConfigurationKey(1)
     val exponentPlus: ConfigurationKey<Boolean> = ConfigurationKey(false)
@@ -41,27 +42,19 @@ object ExponentSuffixFormatter : NumberSuffixFormatter {
         validateConfiguration(interval)
         var shift = 0
         var exponent = BigDecimalMath.exponent(number)
-        if(abs(exponent) < interval) {
-            return Output(number, "")
-        }
+        if(abs(exponent) < interval) return Output(number, "")
         if(interval != 1) {
             shift = Math.floorMod(exponent, interval)
             exponent = Math.floorDiv(exponent, interval) * interval
         }
         var mantissa = BigDecimalMath.mantissa(number)
-        if(shift != 0) {
-            mantissa = mantissa.movePointRight(shift)
-        }
+        if(shift != 0) mantissa = mantissa.movePointRight(shift)
         var plus = ""
-        if(configuration[exponentPlus] && exponent >= 0) {
-            plus = "+"
-        }
+        if(configuration[exponentPlus] && exponent >= 0) plus = "+"
         return Output(mantissa, "e$plus$exponent")
     }
 
     private fun validateConfiguration(interval: Int) {
-        if(interval < 1) {
-            Logging.logThrow(logger, "Interval must be 1 or greater") { IllegalArgumentException(it) }
-        }
+        if(interval < 1) logThrow(logger, esfInterval(interval)) { IllegalArgumentException(it) }
     }
 }

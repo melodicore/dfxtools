@@ -21,6 +21,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.internal.Strings.CDSF_EMPTY_CHARACTERS
+import me.datafox.dfxtools.text.internal.Strings.CDSF_NOT_DISTINCT_CHARACTERS
+import me.datafox.dfxtools.text.internal.Strings.cdsfInterval
 import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 import kotlin.math.abs
@@ -57,37 +60,22 @@ object CharDigitSuffixFormatter : NumberSuffixFormatter {
         }
         index = abs(index)
         var mantissa = BigDecimalMath.mantissa(number)
-        if(shift != 0) {
-            mantissa = mantissa.movePointRight(shift)
-        }
-        if(index == 0) {
-            return Output(mantissa, "")
-        }
+        if(shift != 0) mantissa = mantissa.movePointRight(shift)
+        if(index == 0) return Output(mantissa, "")
         val sb = StringBuilder()
         while(true) {
             sb.insert(0, characters[(index - 1) % characters.size])
-            if(index <= characters.size) {
-                break
-            }
+            if(index <= characters.size) break
             index = (index - 1) / characters.size
         }
-        if(exponent < 0) {
-            sb.insert(0, '-')
-        } else if(configuration[exponentPlus]) {
-            sb.insert(0, '+')
-        }
+        if(exponent < 0) sb.insert(0, '-')
+        else if(configuration[exponentPlus]) sb.insert(0, '+')
         return Output(mantissa, sb.toString())
     }
 
     private fun validateConfiguration(interval: Int, characters: Array<Char>) {
-        if(interval < 1) {
-            logThrow(logger, "Interval must be 1 or greater") { IllegalArgumentException(it) }
-        }
-        if(characters.isEmpty()) {
-            logThrow(logger, "Characters must not be empty") { IllegalArgumentException(it) }
-        }
-        if(characters.toSet().size != characters.size) {
-            logger.warn { "Not all characters are distinct, this will cause ambiguity" }
-        }
+        if(interval < 1) logThrow(logger, cdsfInterval(interval)) { IllegalArgumentException(it) }
+        if(characters.isEmpty()) logThrow(logger, CDSF_EMPTY_CHARACTERS) { IllegalArgumentException(it) }
+        if(characters.toSet().size != characters.size) logger.warn { CDSF_NOT_DISTINCT_CHARACTERS }
     }
 }

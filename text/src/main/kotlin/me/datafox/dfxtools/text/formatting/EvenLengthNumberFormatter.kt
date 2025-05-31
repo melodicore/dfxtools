@@ -22,17 +22,20 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
-import me.datafox.dfxtools.utils.Logging
+import me.datafox.dfxtools.text.internal.Strings.elnfExponent
+import me.datafox.dfxtools.text.internal.Strings.elnfLength
+import me.datafox.dfxtools.text.internal.Strings.elnfLengthExponent
+import me.datafox.dfxtools.text.internal.Strings.elnfLongNumber
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 import java.math.MathContext
 import kotlin.math.abs
 
+private val logger = KotlinLogging.logger {}
 
 /**
  * @author Lauri "datafox" Heino
  */
-private val logger = KotlinLogging.logger {}
-
 object EvenLengthNumberFormatter : NumberFormatter {
     val length: ConfigurationKey<Int> = ConfigurationKey(8)
     val minExponent: ConfigurationKey<Int> = ConfigurationKey(3)
@@ -50,12 +53,9 @@ object EvenLengthNumberFormatter : NumberFormatter {
         val exponent = BigDecimalMath.exponent(number)
         lateinit var out: String
         var suffix = ""
-        if(number.signum() == -1) {
-            length--
-        }
-        if(exponent == length - 1 && length == minExponent) {
-            out = getNumberString(number, length, actualLength)
-        } else if(abs(exponent) >= minExponent) {
+        if(number.signum() == -1) length--
+        if(exponent == length - 1 && length == minExponent) out = getNumberString(number, length, actualLength)
+        else if(abs(exponent) >= minExponent) {
             val output = configuration[TextManager.numberSuffixFormatter].format(number, configuration)
             suffix = output.suffix
             val exp = abs(BigDecimalMath.exponent(output.scaled))
@@ -64,45 +64,32 @@ object EvenLengthNumberFormatter : NumberFormatter {
             } else {
                 getNumberString(output.scaled, number, length - suffix.length - 1, actualLength)
             }
-        } else if(exponent < 0) {
-            out = getNumberString(number, length - 1 + exponent, actualLength)
-        } else {
-            out = getNumberString(number, length - 1, actualLength)
-        }
-        if(configuration[padZeros]) {
-            if(out.length + suffix.length < actualLength) {
-                out += if(out.contains(".")) {
-                    "0".repeat(actualLength - (out.length + suffix.length))
-                } else {
-                    "." + "0".repeat(actualLength - (out.length + suffix.length) - 1)
-                }
-            }
+        } else if(exponent < 0) out = getNumberString(number, length - 1 + exponent, actualLength)
+        else out = getNumberString(number, length - 1, actualLength)
+        if(configuration[padZeros]) if(out.length + suffix.length < actualLength) {
+            out += if(out.contains(".")) "0".repeat(actualLength - (out.length + suffix.length))
+            else "." + "0".repeat(actualLength - (out.length + suffix.length) - 1)
         }
         return out + suffix
     }
 
     private fun validateConfiguration(length: Int, minExponent: Int) {
-        if(length < 1) {
-            Logging.logThrow(logger, "Length must be 1 or greater") { IllegalArgumentException(it) }
-        }
-        if(minExponent < 0) {
-            Logging.logThrow(logger, "Minimum exponent must be 0 or greater") { IllegalArgumentException(it) }
-        }
+        if(length < 1) logThrow(logger, elnfLength(length)) { IllegalArgumentException(it) }
+        if(minExponent < 0) logThrow(logger, elnfExponent(minExponent)) { IllegalArgumentException(it) }
         if(length < minExponent) {
-            Logging.logThrow(logger, "Precision must be greater than minimum exponent") { IllegalArgumentException(it) }
+            logThrow(logger, elnfLengthExponent(length, minExponent)) { IllegalArgumentException(it) }
         }
     }
 
     private fun getNumberString(number: BigDecimal, original: BigDecimal, precision: Int, length: Int): String {
         var precision = precision
         if(precision < 1) {
-            logger.warn { "Number is longer than length" }
+            logger.warn { elnfLongNumber(original, length) }
             precision = 1
         }
         return number.stripTrailingZeros().round(MathContext(precision)).toPlainString()
     }
 
-    private fun getNumberString(number: BigDecimal, precision: Int, length: Int): String {
-        return getNumberString(number, number, precision, length)
-    }
+    private fun getNumberString(number: BigDecimal, precision: Int, length: Int): String =
+        getNumberString(number, number, precision, length)
 }

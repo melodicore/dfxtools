@@ -22,14 +22,6 @@ import me.datafox.dfxtools.text.TextManager
 import java.math.BigDecimal
 
 /**
- * Output for a [NumberSuffixFormatter].
- *
- * @property scaled [BigDecimal] number scaled according to the suffix.
- * @property suffix formatted suffix.
- */
-class Output(val scaled: BigDecimal, val suffix: String)
-
-/**
  * Interface for formatting suffixes used by [NumberFormatters][NumberFormatter]. If this formatter cannot format all
  * numbers, [infinite] must be `false` and this formatter must return the output of
  * [TextManager.fallbackNumberSuffixFormatter] when a number cannot be formatted.
@@ -51,3 +43,11 @@ interface NumberSuffixFormatter {
      */
     fun format(number: BigDecimal, configuration: Configuration? = null): Output
 }
+
+/**
+ * Output for a [NumberSuffixFormatter].
+ *
+ * @property scaled [BigDecimal] number scaled according to the suffix.
+ * @property suffix formatted suffix.
+ */
+data class Output(val scaled: BigDecimal, val suffix: String)

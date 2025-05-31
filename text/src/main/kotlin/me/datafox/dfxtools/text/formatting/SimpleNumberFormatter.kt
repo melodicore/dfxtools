@@ -22,17 +22,19 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
-import me.datafox.dfxtools.utils.Logging
+import me.datafox.dfxtools.text.internal.Strings.snfExponent
+import me.datafox.dfxtools.text.internal.Strings.snfPrecision
+import me.datafox.dfxtools.text.internal.Strings.snfPrecisionExponent
+import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 import java.math.MathContext
 import kotlin.math.abs
 
+private val logger = KotlinLogging.logger {}
 
 /**
  * @author Lauri "datafox" Heino
  */
-private val logger = KotlinLogging.logger {}
-
 object SimpleNumberFormatter : NumberFormatter {
     val precision: ConfigurationKey<Int> = ConfigurationKey(6)
     val minExponent: ConfigurationKey<Int> = ConfigurationKey(3)
@@ -53,21 +55,15 @@ object SimpleNumberFormatter : NumberFormatter {
             number = output.scaled
             suffix = output.suffix
         }
-        if(configuration[stripZeros]) {
-            number = number.stripTrailingZeros()
-        }
+        if(configuration[stripZeros]) number = number.stripTrailingZeros()
         return number.round(MathContext(precision)).toPlainString() + suffix
     }
 
     private fun validateConfiguration(precision: Int, minExponent: Int) {
-        if(precision < 1) {
-            Logging.logThrow(logger, "Precision must be 1 or greater") { IllegalArgumentException(it) }
-        }
-        if(minExponent < 0) {
-            Logging.logThrow(logger, "Minimum exponent must be 0 or greater") { IllegalArgumentException(it) }
-        }
+        if(precision < 1) logThrow(logger, snfPrecision(precision)) { IllegalArgumentException(it) }
+        if(minExponent < 0) logThrow(logger, snfExponent(minExponent)) { IllegalArgumentException(it) }
         if(precision < minExponent) {
-            Logging.logThrow(logger, "Precision must be greater than minimum exponent") { IllegalArgumentException(it) }
+            logThrow(logger, snfPrecisionExponent(precision, minExponent)) { IllegalArgumentException(it) }
         }
     }
 }

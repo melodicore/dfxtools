@@ -27,6 +27,5 @@ class ConfigurationText<T>(
     override val configuration: Configuration? = null,
     val transformer: (T) -> String
 ) : Text {
-    override fun generate(configuration: Configuration?) =
-        transformer(applyConfiguration(configuration)[key])
+    override fun generate(configuration: Configuration?) = transformer(applyConfiguration(configuration)[key])
 }

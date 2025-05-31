@@ -27,11 +27,10 @@ class ComposedText(
     override val configuration: Configuration? = null,
     vararg val texts: Text
 ) : Text {
-    val useListDelimiter: ConfigurationKey<Boolean> = ConfigurationKey(true)
+    val useListDelimiter: ConfigurationKey<Boolean> = ConfigurationKey(false)
 
     override fun generate(configuration: Configuration?): String {
         val configuration = applyConfiguration(configuration)
-        return texts.map { it.generate(configuration) }
-            .join(configuration[useListDelimiter], configuration)
+        return texts.map { it.generate(configuration) }.join(useListDelimiter, configuration)
     }
 }

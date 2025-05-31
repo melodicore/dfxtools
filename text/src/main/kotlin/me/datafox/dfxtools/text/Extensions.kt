@@ -17,10 +17,7 @@
 package me.datafox.dfxtools.text
 
 import me.datafox.dfxtools.configuration.Configuration
-
-/**
- * @author Lauri "datafox" Heino
- */
+import me.datafox.dfxtools.configuration.ConfigurationKey
 
 fun String.isZero(): Boolean = matches(Regex("0|0\\.0*"))
 
@@ -53,3 +50,6 @@ fun Collection<String>.join(useListDelimiter: Boolean, configuration: Configurat
     sb.append(configuration[TextManager.listLastDelimiter]).append(last)
     return sb.toString()
 }
+
+fun Collection<String>.join(useListDelimiter: ConfigurationKey<Boolean>, configuration: Configuration) =
+    join(configuration[useListDelimiter], configuration)
