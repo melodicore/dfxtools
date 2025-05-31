@@ -18,6 +18,8 @@ package me.datafox.dfxtools.invalidation
 
 import io.github.oshai.kotlinlogging.KLogger
 import me.datafox.dfxtools.invalidation.collection.CyclicAwareCollection
+import me.datafox.dfxtools.invalidation.internal.Strings.cyclicDependency
+import me.datafox.dfxtools.invalidation.internal.Strings.selfDependency
 import me.datafox.dfxtools.utils.Logging.logThrow
 
 /**
@@ -30,32 +32,26 @@ object Utils {
      * Checks for cyclic dependencies between [Observer] and [Observable] classes, and throws an
      * [IllegalArgumentException] if any are found. Cyclic dependencies are only detected on classes that implement both
      * [Observable] and [Observer], preferably by implementing [ObservableObserver]. This function is called
-     * automatically by [CyclicAwareCollection]. If called manually, do it before adding the [element] to
+     * automatically by [CyclicAwareCollection]. If called manually, do it before adding the [observer] to
      * [Observable.observers].
      *
-     * @param element [Observer] to be added.
-     * @param owner [Observable] that [element] is to be added to.
+     * @param observer [Observer] to be added.
+     * @param observable [Observable] that [observer] is to be added to.
      * @param logger [KLogger] used if a cyclic dependency is detected.
      */
-    fun checkCyclic(element: Observer, owner: Observable, logger: KLogger) {
-        if(element == owner) {
-            logThrow(logger, "Self dependency") { IllegalArgumentException(it) }
-        }
-        if(element !is Observable || owner !is Observer) {
-            return
-        }
-        checkCyclicRecursive(owner, element, logger)
+    fun checkCyclic(observer: Observer, observable: Observable, logger: KLogger) {
+        if(observer == observable) logThrow(logger, selfDependency(observer)) { IllegalArgumentException(it) }
+        if(observer !is Observable || observable !is Observer) return
+        checkCyclicRecursive(observer, observer, observable, logger)
     }
 
-    private fun checkCyclicRecursive(element: Observer, current: Observable, logger: KLogger) {
-        if(element in current.observers) {
-            logThrow(logger, "Cyclic dependency") { IllegalArgumentException(it) }
+    private fun checkCyclicRecursive(current: Observable, original: Observable, owner: Observer, logger: KLogger) {
+        if(owner in current.observers) {
+            logThrow(logger, cyclicDependency(current, original, owner)) { IllegalArgumentException(it) }
         }
         current.observers.forEach {
-            if(it !is Observable) {
-                return@forEach
-            }
-            checkCyclicRecursive(element, it, logger)
+            if(it !is Observable) return@forEach
+            checkCyclicRecursive(it, original, owner, logger)
         }
     }
 }
