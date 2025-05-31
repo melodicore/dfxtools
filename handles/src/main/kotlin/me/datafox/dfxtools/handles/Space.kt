@@ -97,9 +97,7 @@ class Space : ComparableHandled {
         if(!permitExternalHandleCreation) {
             logThrow(logger, SPACE_SPACE_HANDLE_CREATION) { IllegalArgumentException(it) }
         }
-        for(id in ids) {
-            checkHandle(id)
-        }
+        for(id in ids) checkHandle(id)
         return ids.map { createHandleInternal(it) }
     }
 
@@ -196,9 +194,7 @@ class Space : ComparableHandled {
         if(!checkHandleId(id, false)) {
             logThrow(logger, invalidHandleId(id)) { IllegalArgumentException(it) }
         }
-        if(id in handles) {
-            logThrow(logger, handleIdExists(id)) { IllegalArgumentException(it) }
-        }
+        if(id in handles) logThrow(logger, handleIdExists(id)) { IllegalArgumentException(it) }
     }
 
     internal fun purge(spaceSpace: Boolean) {

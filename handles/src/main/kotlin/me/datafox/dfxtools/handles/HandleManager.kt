@@ -46,6 +46,9 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 object HandleManager {
+    const val SPACE_SPACE_ID = "spaces"
+    const val TAG_SPACE_ID = "tags"
+
     val spaceSpace get() = _spaceSpace
     val tagSpace: Space get() = _tagSpace
     val spaces: Map<Handle, Space> by lazy { _spaces.immutableView }
@@ -54,9 +57,9 @@ object HandleManager {
     private val _spaces: HandleMap<Space> by lazy { HandleMap(spaceSpace) }
 
     init {
-        val spacesHandle = spaceSpace.createHandleInternal("spaces")
+        val spacesHandle = spaceSpace.createHandleInternal(SPACE_SPACE_ID)
         spaceSpace.setHandle(spacesHandle)
-        val tagsHandle = spaceSpace.createHandleInternal("tags")
+        val tagsHandle = spaceSpace.createHandleInternal(TAG_SPACE_ID)
         tagSpace.setHandle(tagsHandle)
         _spaces.putHandled(spaceSpace)
         _spaces.putHandled(tagSpace)
@@ -188,9 +191,7 @@ object HandleManager {
     override fun toString(): String {
         fun entry(sb: StringBuilder, handle: Handle, set: HandleSet) {
             sb.append("  ").append(handle.id)
-            if(set.isNotEmpty()) {
-                sb.append(" (").append(set.joinToString(", ") { it.id }).append(")")
-            }
+            if(set.isNotEmpty()) sb.append(" (").append(set.joinToString(", ") { it.id }).append(")")
             sb.append("\n")
         }
 
@@ -201,16 +202,12 @@ object HandleManager {
                 sb.append("Handles: \n")
                 entry.value.handles.forEach { handle ->
                     entry(sb, handle, handle.tags)
-                    handle.subhandles?.forEach { subhandle ->
-                        entry(sb, subhandle, subhandle.tags)
-                    }
+                    handle.subhandles?.forEach { subhandle -> entry(sb, subhandle, subhandle.tags) }
                 }
             }
             if(entry.value.groups.isNotEmpty()) {
                 sb.append("Groups:\n")
-                entry.value.groups.values.forEach { group ->
-                    entry(sb, group.handle, group.handles)
-                }
+                entry.value.groups.values.forEach { group -> entry(sb, group.handle, group.handles) }
             }
             sb.append("\n")
         }
@@ -221,9 +218,7 @@ object HandleManager {
         if(!checkHandleId(id, true)) {
             logThrow(logger, invalidQualifiedHandleId(id)) { IllegalArgumentException(it) }
         }
-        if('@' !in id) {
-            logThrow(logger, qualifiedHandleNoSpace(id)) { IllegalArgumentException(it) }
-        }
+        if('@' !in id) logThrow(logger, qualifiedHandleNoSpace(id)) { IllegalArgumentException(it) }
     }
 
     class QualifiedId internal constructor(val id: String)

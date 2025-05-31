@@ -17,6 +17,8 @@
 package me.datafox.dfxtools.handles.internal
 
 /**
+ * Internal utilities for the Handles module.
+ *
  * @author Lauri "datafox" Heino
  */
 internal object Utils {

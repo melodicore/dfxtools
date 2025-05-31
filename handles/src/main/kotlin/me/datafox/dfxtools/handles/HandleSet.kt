@@ -65,9 +65,7 @@ class HandleSet internal constructor(
      * @param elements [Handles][Handle] for this set, must not be empty.
      */
     constructor(elements: Collection<Handle>) : this() {
-        if(elements.isEmpty()) {
-            logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
-        }
+        if(elements.isEmpty()) logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
         this._space = elements.first().space
         set.delegate = PluggableSet<Handle>(TreeSet(), spec(space))
         addAll(elements)
@@ -213,11 +211,7 @@ operator fun Set<Handle>.contains(id: String): Boolean = this[id] != null
  */
 fun Set<Handle>.containsAll(ids: Iterable<String>): Boolean {
     val set = ids.toHashSet()
-    for(handle in this) {
-        if(handle.id in set) {
-            set.remove(handle.id)
-        }
-    }
+    for(handle in this) if(handle.id in set) set.remove(handle.id)
     return set.isEmpty()
 }
 

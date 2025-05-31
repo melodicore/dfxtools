@@ -179,12 +179,8 @@ class Handle : Comparable<Handle> {
     fun getOrCreateSubhandle(id: String): Handle = subhandles?.get(id) ?: createSubhandle(id)
 
     override fun compareTo(other: Handle): Int {
-        if(space != other.space) {
-            return space.compareTo(other.space)
-        }
-        if(index != other.index) {
-            return index.compareTo(other.index)
-        }
+        if(space != other.space) return space.compareTo(other.space)
+        if(index != other.index) return index.compareTo(other.index)
         return subindex.compareTo(other.subindex)
     }
 

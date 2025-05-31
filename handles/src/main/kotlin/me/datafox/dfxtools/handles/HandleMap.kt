@@ -56,9 +56,7 @@ class HandleMap<V> internal constructor(
     constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this() {
         this._space = space
         map.delegate = PluggableMap(TreeMap(), spec(space))
-        if(entries.isNotEmpty()) {
-            putAll(entries)
-        }
+        if(entries.isNotEmpty()) putAll(entries)
     }
 
     /**
@@ -67,9 +65,7 @@ class HandleMap<V> internal constructor(
      * @param entries Entries for this map, must not be empty.
      */
     constructor(entries: Map<Handle, V>) : this() {
-        if(entries.isEmpty()) {
-            logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
-        }
+        if(entries.isEmpty()) logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
         this._space = entries.keys.first().space
         map.delegate = PluggableMap(TreeMap(), spec(space))
         putAll(entries)
@@ -125,11 +121,7 @@ fun <V> MutableMap<Handle, V>.remove(id: String): V? {
  */
 fun <V> MutableMap<Handle, V>.removeAll(ids: Iterable<String>): Boolean {
     var removed = false
-    for(id in ids) {
-        if(remove(id) != null) {
-            removed = true
-        }
-    }
+    for(id in ids) if(remove(id) != null) removed = true
     return removed
 }
 

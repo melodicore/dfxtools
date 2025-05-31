@@ -20,6 +20,8 @@ import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.Space
 
 /**
+ * Internal strings for the Handles module.
+ *
  * @author Lauri "datafox" Heino
  */
 
