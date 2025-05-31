@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
+plugins {
+    id("dfxtools.maven-library-convention")
+    id("dfxtools.dokka-convention")
+}
+
+version = libs.versions.nodes.get()
+
+dependencies {
+    implementation(project(":configuration"))
+    implementation(project(":handles"))
+    implementation(project(":utils"))
+    implementation(kotlin("reflect"))
+    implementation(libs.logging)
+    implementation(libs.bigmath)
+    implementation(libs.bigmath.kotlin)
+}
+
+mavenPublishing {
+    coordinates(group.toString(), name, version.toString())
+    pom {
+        name = "DFXTools Text"
+        description = "Number formatting and text handling"
     }
 }
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
-
-rootProject.name = "dfxtools"
-include("configuration")
-include("docs")
-include("handles")
-include("invalidation")
-include("nodes")
-include("text")
-include("utils")
-include("values")

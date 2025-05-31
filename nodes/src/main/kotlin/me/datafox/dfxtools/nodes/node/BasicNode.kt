@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositories {
-        mavenCentral()
-    }
-}
+package me.datafox.dfxtools.nodes.node
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
+import io.github.oshai.kotlinlogging.KLogger
 
-rootProject.name = "dfxtools"
-include("configuration")
-include("docs")
-include("handles")
-include("invalidation")
-include("nodes")
-include("text")
-include("utils")
-include("values")
+/**
+ * @author Lauri "datafox" Heino
+ */
+data class BasicNode(
+    override val name: String,
+    override val description: String,
+    override val inputs: List<NodeInputInfo<*>>,
+    override val outputs: List<NodeOutputInfo<*>>,
+    override val logger: KLogger,
+    override val block: (List<NodeData<*>>) -> List<NodeData<*>>
+) : Node

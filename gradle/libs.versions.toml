@@ -3,6 +3,7 @@
 configuration = "1.0.0"
 handles = "1.0.0"
 invalidation = "1.0.0"
+nodes = "1.0.0"
 text = "1.0.0"
 utils = "1.0.0"
 values = "1.0.0"
