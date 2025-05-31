@@ -26,7 +26,7 @@ data class NodeData<T : Any>(
 ) {
     @Suppress("UNCHECKED_CAST")
     fun <R : Any> toKnownType(type: NodeType<R>): NodeData<R> {
-        if(this.type != type) throw ClassCastException()
+        if(this.type != type || !type.type.isInstance(data)) throw ClassCastException()
         return this as NodeData<R>
     }
 }

@@ -18,7 +18,6 @@ package me.datafox.dfxtools.nodes.node
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.utils.Logging.logThrow
-import kotlin.reflect.cast
 
 private val logger = KotlinLogging.logger {}
 
@@ -38,6 +37,4 @@ data class NodeInputInfo<T : Any>(
             logThrow(logger, "All allowed variants must be variants of the type") { IllegalArgumentException(it) }
         }
     }
-
-    fun cast(value: Any): T = type.type.cast(value)
 }

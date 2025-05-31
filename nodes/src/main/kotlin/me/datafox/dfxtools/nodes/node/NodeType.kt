@@ -20,10 +20,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleMap
 import me.datafox.dfxtools.handles.Handled
+import me.datafox.dfxtools.nodes.NodeManager.DEFAULT_VARIANT_ID
 import me.datafox.dfxtools.nodes.NodeManager.typeSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import kotlin.reflect.KClass
-import kotlin.reflect.cast
 
 private val logger = KotlinLogging.logger {}
 
@@ -48,8 +48,6 @@ data class NodeType<T : Any>(
             }
         }
     }
-
-    fun cast(value: Any): T = type.cast(value)
 
     data class Variant<T : Any>(
         override val handle: Handle,
@@ -77,7 +75,7 @@ data class NodeType<T : Any>(
 
         internal fun build(): NodeType<T> {
             if(variants.isEmpty()) {
-                variant("normal") { true }
+                variant(DEFAULT_VARIANT_ID) { true }
                 logger.info { "No type variant was defined so a default one was created with id ${variants[0].handle.id}" }
             }
             return NodeType(handle, type, HandleMap(variants.associateBy { it.handle }))
@@ -85,9 +83,7 @@ data class NodeType<T : Any>(
     }
 
     companion object {
-        fun <T : Any> of(id: String, type: KClass<T>): NodeType<T> = of(id, type) { }
-
-        fun <T : Any> of(id: String, type: KClass<T>, builder: Builder<T>.() -> Unit): NodeType<T> =
+        fun <T : Any> of(id: String, type: KClass<T>, builder: Builder<T>.() -> Unit = { }): NodeType<T> =
             Builder(typeSpace.getOrCreateHandle(id), type).apply(builder).build()
     }
 }
