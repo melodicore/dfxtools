@@ -20,6 +20,15 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.TextManager.delimiter
+import me.datafox.dfxtools.text.TextManager.listDelimiter
+import me.datafox.dfxtools.text.TextManager.listLastDelimiter
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.formatter
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.longTime
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.roundSmallest
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.shortTime
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.splits
+import me.datafox.dfxtools.text.formatting.SplittingNumberFormatter.useListDelimiter
 import me.datafox.dfxtools.text.internal.Strings.SPNF_NEGATIVE
 import me.datafox.dfxtools.text.internal.Strings.SPNF_SELF_DELEGATE
 import me.datafox.dfxtools.text.internal.Strings.SPNF_SPLIT_ORDER
@@ -32,9 +41,21 @@ import java.math.RoundingMode
 
 private val logger = KotlinLogging.logger {}
 
-typealias Split = Triple<BigDecimal, String, String>
-
 /**
+ * A [NumberFormatter] that splits a number into multiple parts, like when formatting time in multiple units.
+ *
+ * @property shortTime [Splits][Split] for formatting time. Uses a single character for all units except for months,
+ * which use `mo` to prevent ambiguity with minutes.
+ * @property longTime [Splits][Split] for formatting time. Uses full names for all units.
+ * @property splits [ConfigurationKey] that determines the array of [Splits][Split] to be used for formatting.
+ * [Split.scale] values must be in ascending numerical order. Default value is [longTime].
+ * @property formatter [ConfigurationKey] that determines the delegate [NumberFormatter] to be used for each individual
+ * split. Must not be [SplittingNumberFormatter]. Default value is [SimpleNumberFormatter].
+ * @property roundSmallest [ConfigurationKey] that determines if the last split should be rounded down to the nearest
+ * integer. Default value is `true`.
+ * @property useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and [listLastDelimiter] should be
+ * used instead of [delimiter] for joining the splits. Default value is `true`.
+ *
  * @author Lauri "datafox" Heino
  */
 object SplittingNumberFormatter : NumberFormatter {
@@ -77,21 +98,19 @@ object SplittingNumberFormatter : NumberFormatter {
         val out: MutableList<String> = mutableListOf()
         for(i in splits.size - 1 downTo 0) {
             val split = splits[i]
-            if(i == 0 || number > split.first) {
-                val divided = if(i != 0) number.divideToIntegralValue(split.first).setScale(0, RoundingMode.DOWN)
+            if(i == 0 || number > split.scale) {
+                val divided = if(i != 0) number.divideToIntegralValue(split.scale).setScale(0, RoundingMode.DOWN)
                 else if(configuration[roundSmallest]) number.setScale(0, RoundingMode.DOWN)
                 else number
                 val formatted = delegate.format(divided, configuration)
                 if(i != 0 && formatted.isZero()) continue
-                number = number.remainder(split.first)
-                if(formatted.isOne()) out.add(formatted + split.second)
-                else out.add(formatted + split.third)
+                number = number.remainder(split.scale)
+                if(formatted.isOne()) out.add(formatted + split.singular)
+                else out.add(formatted + split.plural)
             }
         }
         return out.join(useListDelimiter, configuration)
     }
-
-
 
     private fun validateConfiguration(delegate: NumberFormatter, splits: Array<Split>) {
         if(delegate == SplittingNumberFormatter) {
@@ -99,10 +118,19 @@ object SplittingNumberFormatter : NumberFormatter {
         }
         var last: BigDecimal? = null
         for(split in splits) {
-            if(last != null && last >= split.first) {
+            if(last != null && last >= split.scale) {
                 logThrow(logger, SPNF_SPLIT_ORDER) { IllegalArgumentException(it) }
             }
-            last = split.first
+            last = split.scale
         }
     }
 }
+
+/**
+ * Split definition for [SplittingNumberFormatter].
+ *
+ * @property scale Scale for this split.
+ * @property singular Singular name for this split.
+ * @property plural Plural name for this split.
+ */
+data class Split(val scale: BigDecimal, val singular: String, val plural: String)

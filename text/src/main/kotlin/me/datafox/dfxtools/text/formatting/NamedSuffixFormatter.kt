@@ -22,15 +22,32 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
+import me.datafox.dfxtools.text.formatting.NamedSuffixFormatter.interval
+import me.datafox.dfxtools.text.formatting.NamedSuffixFormatter.long
+import me.datafox.dfxtools.text.formatting.NamedSuffixFormatter.short
+import me.datafox.dfxtools.text.formatting.NamedSuffixFormatter.si
+import me.datafox.dfxtools.text.formatting.NamedSuffixFormatter.suffixes
 import me.datafox.dfxtools.text.internal.Strings.nsfInterval
 import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
 
-/**
- * @author Lauri "datafox" Heino
- */
 private val logger = KotlinLogging.logger {}
 
+/**
+ * A [NumberSuffixFormatter] that scales a number and selects a suffix from a string array of suffixes.
+ *
+ * @property si String array of SI suffixes. [interval] must be `3` for this array to work as intended.
+ * @property short String array of abbreviated short form suffixes. [interval] must be `3` for this array to work as
+ * intended.
+ * @property long String array of abbreviated long form suffixes. [interval] must be `3` for this array to work as
+ * intended.
+ * @property suffixes [ConfigurationKey] that determines the string array of suffixes to be used. Default value is
+ * [short].
+ * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a positive non-zero integer.
+ * All preset suffix arrays ([si], [short] and [long]) require this to be `3` to work as intended. Default value is `3`.
+ *
+ * @author Lauri "datafox" Heino
+ */
 object NamedSuffixFormatter : NumberSuffixFormatter {
     val si: Array<String> = arrayOf("", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q")
     val short: Array<String> = arrayOf(

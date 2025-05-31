@@ -21,6 +21,10 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.formatting.CharDigitSuffixFormatter.alphabet
+import me.datafox.dfxtools.text.formatting.CharDigitSuffixFormatter.characters
+import me.datafox.dfxtools.text.formatting.CharDigitSuffixFormatter.exponentPlus
+import me.datafox.dfxtools.text.formatting.CharDigitSuffixFormatter.interval
 import me.datafox.dfxtools.text.internal.Strings.CDSF_EMPTY_CHARACTERS
 import me.datafox.dfxtools.text.internal.Strings.CDSF_NOT_DISTINCT_CHARACTERS
 import me.datafox.dfxtools.text.internal.Strings.cdsfInterval
@@ -31,6 +35,18 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
+ * A [NumberSuffixFormatter] that formats an exponent in an arbitrary base number where each digit is represented by a
+ * character.
+ *
+ * @property alphabet Character array that contains the lowercase English alphabet.
+ * @property characters [ConfigurationKey] that determines the character array to be used as digits. The arbitrary base
+ * is equivalent to the length of this array. Must not be empty, and all characters are recommended to be distinct for
+ * unambiguity. Default value is [alphabet].
+ * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a positive non-zero integer.
+ * Default value is `3`.
+ * @property exponentPlus [ConfigurationKey] that determines if a positive exponent should be prefixed with `+`. Default
+ * value is `false`.
+ *
  * @author Lauri "datafox" Heino
  */
 object CharDigitSuffixFormatter : NumberSuffixFormatter {

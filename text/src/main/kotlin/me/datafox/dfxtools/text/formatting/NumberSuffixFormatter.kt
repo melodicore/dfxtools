@@ -37,7 +37,7 @@ interface NumberSuffixFormatter {
      * Formats a suffix for a [NumberFormatter].
      *
      * @param number [BigDecimal] number to be formatted.
-     * @param configuration extra [Configuration] for this formatting action, or `null` if none is needed. Will override
+     * @param configuration Extra [Configuration] for this formatting action, or `null` if none is needed. Will override
      * values in [ConfigurationManager.configuration].
      * @return [Output] containing a scaled [BigDecimal] number and a string suffix.
      */

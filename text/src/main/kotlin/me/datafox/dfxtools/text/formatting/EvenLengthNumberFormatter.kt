@@ -22,6 +22,9 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
+import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.length
+import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.minExponent
+import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.padZeros
 import me.datafox.dfxtools.text.internal.Strings.elnfExponent
 import me.datafox.dfxtools.text.internal.Strings.elnfLength
 import me.datafox.dfxtools.text.internal.Strings.elnfLengthExponent
@@ -34,6 +37,16 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
+ * A [NumberFormatter] that attempts to format all numbers to the same amount of characters.
+ *
+ * @property length [ConfigurationKey] that determines how many characters a formatted number should be. Must be a
+ * positive non-zero integer larger than or equal to [minExponent]. Default value is `8`.
+ * @property minExponent [ConfigurationKey] that determines when to use a [NumberSuffixFormatter]. The formatted number
+ * must be larger than `10^`[minExponent] or smaller than `10^-`[minExponent] for a suffix formatter to be used. Must be
+ * a positive or zero integer smaller than or equal to [length]. Default value is `3`.
+ * @property padZeros [ConfigurationKey] that determines if the number should be padded with zeros when the formatted
+ * output would be shorter than [length]. Default value is `true`.
+ *
  * @author Lauri "datafox" Heino
  */
 object EvenLengthNumberFormatter : NumberFormatter {

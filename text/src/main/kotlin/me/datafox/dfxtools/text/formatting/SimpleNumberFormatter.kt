@@ -22,6 +22,9 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
+import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.minExponent
+import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.precision
+import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.stripZeros
 import me.datafox.dfxtools.text.internal.Strings.snfExponent
 import me.datafox.dfxtools.text.internal.Strings.snfPrecision
 import me.datafox.dfxtools.text.internal.Strings.snfPrecisionExponent
@@ -33,6 +36,16 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
+ * A simple [NumberFormatter].
+ *
+ * @property precision [ConfigurationKey] for the [BigDecimal.precision] to be used for formatting. Must be a positive
+ * non-zero integer larger than or equal to [minExponent]. Default value is `6`.
+ * @property minExponent [ConfigurationKey] that determines when to use a [NumberSuffixFormatter]. The formatted number
+ * must be larger than `10^`[minExponent] or smaller than `10^-`[minExponent] for a suffix formatter to be used. Must be
+ * a positive or zero integer smaller than or equal to [precision]. Default value is `3`.
+ * @property stripZeros [ConfigurationKey] that determines if trailing zeros of the number should be stripped. Default
+ * value is `true`.
+ *
  * @author Lauri "datafox" Heino
  */
 object SimpleNumberFormatter : NumberFormatter {

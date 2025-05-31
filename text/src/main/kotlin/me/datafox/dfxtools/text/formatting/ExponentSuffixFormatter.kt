@@ -21,6 +21,8 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import me.datafox.dfxtools.text.formatting.ExponentSuffixFormatter.exponentPlus
+import me.datafox.dfxtools.text.formatting.ExponentSuffixFormatter.interval
 import me.datafox.dfxtools.text.internal.Strings.esfInterval
 import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
@@ -29,6 +31,13 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
+ * A simple [NumberSuffixFormatter] that formats a number's suffix to the traditional power of ten notation.
+ *
+ * @property interval [ConfigurationKey] that determines an interval for exponents. `1` is equivalent to scientific
+ * notation, `3` is equivalent to engineering notation. Must be a positive non-zero integer. Default value is `1`.
+ * @property exponentPlus [ConfigurationKey] that determines if a positive exponent should be prefixed with `+`. Default
+ * value is `false`.
+ *
  * @author Lauri "datafox" Heino
  */
 object ExponentSuffixFormatter : NumberSuffixFormatter {

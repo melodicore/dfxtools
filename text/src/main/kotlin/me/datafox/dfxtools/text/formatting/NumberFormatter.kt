@@ -27,13 +27,13 @@ import java.math.BigDecimal
  */
 interface NumberFormatter {
     /**
-     * Formats a [BigDecimal] number. Extra configuration may be provided, which will be applied on top of a copy of
+     * Formats a [BigDecimal] number. Extra [configuration] may be provided, which will be applied on top of a copy of
      * [ConfigurationManager.configuration].
      *
      * @param number [BigDecimal] number to be formatted.
-     * @param configuration extra [Configuration] for this formatting action, or `null` if none is needed. Will override
+     * @param configuration Extra [Configuration] for this formatting action, or `null` if none is needed. Will override
      * values in [ConfigurationManager.configuration].
-     * @return formatted string.
+     * @return Formatted string.
      */
     fun format(number: BigDecimal, configuration: Configuration? = null): String
 }
