@@ -143,56 +143,40 @@ class PropertyTest {
     private class TestObserver : AbstractObserver() {
         var counter = 0
 
-        override fun onInvalidated() {
-            counter++
-        }
+        override fun onInvalidated() { counter++ }
     }
 
     private class TestObservableProperty(observable: Observable) : AbstractObserver() {
         val observable by ObservableProperty(observable)
-
         var counter = 0
 
-        override fun onInvalidated() {
-            counter++
-        }
+        override fun onInvalidated() { counter++ }
     }
 
     private class TestObservable : AbstractObservable()
 
     private class TestObservableListProperty : AbstractObserver() {
         val observables: MutableList<TestObservable> by ObservableListProperty()
-
         var counter = 0
 
-        override fun onInvalidated() {
-            counter++
-        }
+        override fun onInvalidated() { counter++ }
     }
 
     private class TestObservableSetProperty : AbstractObserver() {
         val observables: MutableSet<TestObservable> by ObservableSetProperty()
-
         var counter = 0
 
-        override fun onInvalidated() {
-            counter++
-        }
+        override fun onInvalidated() { counter++ }
     }
 
     private class TestObservableSortedSetProperty : AbstractObserver() {
         val observables: MutableSet<TestComparableObservable> by ObservableSortedSetProperty { e1, e2 -> e1.compareTo(e2) }
-
         var counter = 0
 
-        override fun onInvalidated() {
-            counter++
-        }
+        override fun onInvalidated() { counter++ }
     }
 
     private class TestComparableObservable(val i: Int) : AbstractObservable(), Comparable<TestComparableObservable> {
-        override fun compareTo(other: TestComparableObservable): Int {
-            return i.compareTo(other.i)
-        }
+        override fun compareTo(other: TestComparableObservable): Int = i.compareTo(other.i)
     }
 }
