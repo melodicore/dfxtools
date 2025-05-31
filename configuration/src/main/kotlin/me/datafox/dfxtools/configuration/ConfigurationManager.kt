@@ -44,7 +44,8 @@ object ConfigurationManager {
      * @param configuration [Configuration] to be appended
      * @return Copy of the [Configuration] associated with this manager with [configuration] appended to it.
      */
-    operator fun get(configuration: Configuration?): Configuration = get().apply { if(configuration != null) append(configuration) }
+    operator fun get(configuration: Configuration?): Configuration =
+        get().apply { if(configuration != null) append(configuration) }
 
     /**
      * Returns the value associated with the [key].
@@ -62,10 +63,8 @@ object ConfigurationManager {
      * @param value Lambda that returns a value, or `null` if the association with the key should be removed.
      * @return This manager.
      */
-    operator fun <T> set(key: ConfigurationKey<T>, value: (() -> T)?): ConfigurationManager {
-        configuration[key] = value
-        return this
-    }
+    operator fun <T> set(key: ConfigurationKey<T>, value: (() -> T)?): ConfigurationManager =
+        apply { configuration[key] = value }
 
     /**
      * Removes an association with the [key].
@@ -90,10 +89,7 @@ object ConfigurationManager {
      * @param configuration [Configuration] to copy values from.
      * @return This manager.
      */
-    fun append(configuration: Configuration): ConfigurationManager {
-        this.configuration.append(configuration)
-        return this
-    }
+    fun append(configuration: Configuration): ConfigurationManager = apply { this.configuration.append(configuration) }
 
     /**
      * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
@@ -109,10 +105,9 @@ object ConfigurationManager {
      * @param [Configuration] to get values from.
      * @return This manager.
      */
-    fun replace(configuration: Configuration): ConfigurationManager {
+    fun replace(configuration: Configuration): ConfigurationManager = apply {
         this.configuration.clear()
         append(configuration)
-        return this
     }
 
     /**
@@ -120,8 +115,5 @@ object ConfigurationManager {
      *
      * @return This manager.
      */
-    fun clear(): ConfigurationManager {
-        configuration.clear()
-        return this
-    }
+    fun clear(): ConfigurationManager = apply { configuration.clear() }
 }

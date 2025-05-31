@@ -86,7 +86,5 @@ class Configuration() {
     /**
      * Clears all values from this configuration.
      */
-    fun clear() {
-        map.clear()
-    }
+    fun clear() = map.clear()
 }
