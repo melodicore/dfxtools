@@ -39,8 +39,6 @@ class ObservableSetProperty<E : Observable>(
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableSet<E> = set
 
-    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableSet<E>> {
-        set = ObservableSet(backingSet, thisRef, invalidateOwner)
-        return this
-    }
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableSet<E>> =
+        apply { set = ObservableSet(backingSet, thisRef, invalidateOwner) }
 }

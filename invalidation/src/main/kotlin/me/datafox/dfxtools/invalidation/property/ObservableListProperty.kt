@@ -39,8 +39,6 @@ class ObservableListProperty<E : Observable>(
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableList<E> = list
 
-    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableList<E>> {
-        list = ObservableList(backingList, thisRef, invalidateOwner)
-        return this
-    }
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableList<E>> =
+        apply { list = ObservableList(backingList, thisRef, invalidateOwner) }
 }

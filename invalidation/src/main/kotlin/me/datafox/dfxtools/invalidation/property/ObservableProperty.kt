@@ -38,22 +38,16 @@ class ObservableProperty(
     override fun getValue(thisRef: Observer, property: KProperty<*>): Observable = value
 
     override fun setValue(thisRef: Observer, property: KProperty<*>, value: Observable) {
-        if(value === this.value) {
-            return
-        }
+        if(value === this.value) return
         this.value.observers.remove(thisRef, identifier)
         value.observers.add(thisRef, identifier)
         this.value = value
-        if(invalidateOwner) {
-            thisRef.invalidate()
-        }
+        if(invalidateOwner) thisRef.invalidate()
     }
 
     operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadWriteProperty<Observer, Observable> {
         value.observers.add(thisRef, identifier)
-        if(invalidateOwner) {
-            thisRef.invalidate()
-        }
+        if(invalidateOwner) thisRef.invalidate()
         return this
     }
 }

@@ -23,7 +23,5 @@ package me.datafox.dfxtools.invalidation
  * @author Lauri "datafox" Heino
  */
 interface ObservableObserver : Observable, Observer {
-    override fun onInvalidated() {
-        onChanged()
-    }
+    override fun onInvalidated() = onChanged()
 }

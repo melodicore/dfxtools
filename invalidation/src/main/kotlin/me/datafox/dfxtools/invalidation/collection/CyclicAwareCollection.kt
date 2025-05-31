@@ -52,9 +52,7 @@ class CyclicAwareCollection(
      */
     fun add(observer: Observer, identifier: Any): Boolean {
         checkCyclic(observer, owner, logger)
-        if(!delegate.containsKey(observer)) {
-            delegate.put(observer, mutableSetOf())
-        }
+        if(!delegate.containsKey(observer)) delegate.put(observer, mutableSetOf())
         return delegate[observer]!!.add(identifier)
     }
 
@@ -67,14 +65,10 @@ class CyclicAwareCollection(
      * @return `true` if this collection changed as a result of this operation.
      */
     fun remove(observer: Observer, identifier: Any): Boolean {
-        if(!delegate.containsKey(observer)) {
-            return false
-        }
+        if(!delegate.containsKey(observer)) return false
         val identifiers = delegate[observer]!!
         val remove = identifiers.remove(identifier)
-        if(identifiers.isEmpty()) {
-            delegate.remove(observer)
-        }
+        if(identifiers.isEmpty()) delegate.remove(observer)
         return remove
     }
 }

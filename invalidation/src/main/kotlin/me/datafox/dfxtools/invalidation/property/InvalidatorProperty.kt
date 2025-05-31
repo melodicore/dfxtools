@@ -29,7 +29,10 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class InvalidatorProperty<V>(private var value: V, private val onInvalidate: () -> Unit = {}) : ReadWriteProperty<Observable, V> {
+class InvalidatorProperty<V>(
+    private var value: V,
+    private val onInvalidate: () -> Unit = {}
+) : ReadWriteProperty<Observable, V> {
     override fun getValue(thisRef: Observable, property: KProperty<*>) = value
 
     override fun setValue(thisRef: Observable, property: KProperty<*>, value: V) {

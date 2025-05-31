@@ -72,21 +72,23 @@ class InvalidationTest {
 
     @Test
     fun `cyclic dependency detection test`() {
-        val first = TestOO()
+        val first = TestOO("first")
         assertThrows<IllegalArgumentException> { first.observers.add(first, this) }
-        val second = TestOO()
-        val third = TestOO()
+        val second = TestOO("second")
+        val third = TestOO("third")
         first.observers.add(second, this)
         second.observers.add(third, this)
         assertThrows<IllegalArgumentException> { third.observers.add(first, this) }
     }
 
-    private class TestOO : AbstractObservableObserver() {
+    private class TestOO(val str: String? = null) : AbstractObservableObserver() {
         var counter = 0
 
         override fun onInvalidated() {
             counter++
             onChanged()
         }
+
+        override fun toString(): String = str ?: super.toString()
     }
 }

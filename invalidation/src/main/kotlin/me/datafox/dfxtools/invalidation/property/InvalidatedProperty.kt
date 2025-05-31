@@ -30,7 +30,10 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class InvalidatedProperty<V>(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProperty<Observer, V> {
+class InvalidatedProperty<V>(
+    value: V? = null,
+    private val calculation: (V?) -> V
+) : ReadOnlyProperty<Observer, V> {
     private var value = value ?: calculation(null)
     private var invalidated = false
 
@@ -47,10 +50,8 @@ class InvalidatedProperty<V>(value: V? = null, private val calculation: (V?) -> 
         return value
     }
 
-    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, V> {
-        thisRef.propertyHandler.add(this)
-        return this
-    }
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, V> =
+        apply { thisRef.propertyHandler.add(this) }
 
     class Handler() {
         private val invalidatedProperties: MutableSet<InvalidatedProperty<*>> = mutableSetOf()

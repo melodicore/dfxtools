@@ -41,10 +41,7 @@ class ObservableList<E : Observable>(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    list: PluggableList<E> = PluggableList(
-        delegate = delegate,
-        spec = spec(observer, invalidateObserver, identifier)
-    )
+    list: PluggableList<E> = PluggableList(delegate = delegate, spec = spec(observer, invalidateObserver, identifier))
 ) : MutableList<E> by list {
     init {
         if(callInitialElements) list.callInitialElements()
