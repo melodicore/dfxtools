@@ -22,9 +22,11 @@ import me.datafox.dfxtools.text.TextManager
 import java.math.BigDecimal
 
 /**
- * Interface for formatting suffixes used by [NumberFormatters][NumberFormatter]. If this formatter cannot format all
- * numbers, [infinite] must be `false` and this formatter must return the output of
- * [TextManager.fallbackNumberSuffixFormatter] when a number cannot be formatted.
+ * Interface for formatting suffixes used by [NumberFormatters][NumberFormatter]. Generates [Output], which contains a
+ * scaled [BigDecimal] and a string suffix. For example, number `522959.3` could be formatted as `5.229593e5` where
+ * `5.229593` is [Output.scaled] and `e5` is [Output.suffix]. If this formatter cannot format all numbers, [infinite]
+ * must be `false` and this formatter must return the output of [TextManager.fallbackNumberSuffixFormatter] when a
+ * number cannot be formatted.
  *
  * @property infinite `true` if this formatter can format any number, `false` otherwise.
  *
@@ -47,7 +49,7 @@ interface NumberSuffixFormatter {
 /**
  * Output for a [NumberSuffixFormatter].
  *
- * @property scaled [BigDecimal] number scaled according to the suffix.
- * @property suffix formatted suffix.
+ * @property scaled Scaled number.
+ * @property suffix Formatted suffix.
  */
 data class Output(val scaled: BigDecimal, val suffix: String)

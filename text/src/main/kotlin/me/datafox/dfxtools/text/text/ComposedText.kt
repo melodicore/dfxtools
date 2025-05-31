@@ -18,9 +18,20 @@ package me.datafox.dfxtools.text.text
 
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
+import me.datafox.dfxtools.text.TextManager.delimiter
+import me.datafox.dfxtools.text.TextManager.listDelimiter
+import me.datafox.dfxtools.text.TextManager.listLastDelimiter
 import me.datafox.dfxtools.text.join
 
 /**
+ * A text implementation that returns the output of [texts], joined with either [delimiter], or [listDelimiter] and
+ * [listLastDelimiter], determined by [useListDelimiter].
+ *
+ * @property configuration [Configuration] for this text.
+ * @property texts [Texts][Text] to be generated.
+ * @property useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and [listLastDelimiter] or
+ * [delimiter] should be used for joining the [texts]. Default value is `false`.
+ *
  * @author Lauri "datafox" Heino
  */
 class ComposedText(
@@ -29,6 +40,14 @@ class ComposedText(
 ) : Text {
     val useListDelimiter: ConfigurationKey<Boolean> = ConfigurationKey(false)
 
+    /**
+     * Returns the outputs of [texts], joined with either [delimiter], or [listDelimiter] and [listLastDelimiter],
+     * determined by [useListDelimiter].
+     *
+     * @param configuration Extra [Configuration] for this text.
+     * @return Outputs of [texts], joined with either [delimiter], or [listDelimiter] and [listLastDelimiter],
+     * determined by [useListDelimiter].
+     */
     override fun generate(configuration: Configuration?): String {
         val configuration = applyConfiguration(configuration)
         return texts.map { it.generate(configuration) }.join(useListDelimiter, configuration)

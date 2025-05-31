@@ -36,7 +36,12 @@ private val logger = KotlinLogging.logger {}
 
 /**
  * A [NumberSuffixFormatter] that formats an exponent in an arbitrary base number where each digit is represented by a
- * character.
+ * character. Scales a number down by powers of ten (or up if the number is lesser than one), `10^`[interval] at a time,
+ * until the number is the smallest possible value greater than one. This number will be used as [Output.scaled]. The
+ * amount of times the number was scaled down (or up, in which case the amount is negative) is then formatted with
+ * [characters], where the amount of characters is the base and each character is a digit. This resulting string will be
+ * used as [Output.suffix]. If the exponent is positive and [exponentPlus] is `true`, `+` will be added to the beginning
+ * of the suffix.
  *
  * @property alphabet Character array that contains the lowercase English alphabet.
  * @property characters [ConfigurationKey] that determines the character array to be used as digits. The arbitrary base

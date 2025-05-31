@@ -31,7 +31,11 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
- * A simple [NumberSuffixFormatter] that formats a number's suffix to the traditional power of ten notation.
+ * A simple [NumberSuffixFormatter] that formats a number's suffix in the traditional power of ten notation. Scales a
+ * number down by powers of ten (or up if the number is lesser than one), `10^`[interval] at a time, until the number
+ * is the smallest possible value greater than one. This number will be used as [Output.scaled], and [Output.suffix]
+ * will be `e` followed by the amount of powers of ten the number was scaled with. If the exponent is positive and
+ * [exponentPlus] is `true`, `+` will be added between `e` and the exponent.
  *
  * @property interval [ConfigurationKey] that determines an interval for exponents. `1` is equivalent to scientific
  * notation, `3` is equivalent to engineering notation. Must be a positive non-zero integer. Default value is `1`.

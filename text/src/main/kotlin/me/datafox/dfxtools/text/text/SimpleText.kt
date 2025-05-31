@@ -19,11 +19,22 @@ package me.datafox.dfxtools.text.text
 import me.datafox.dfxtools.configuration.Configuration
 
 /**
+ * A simple [Text] implementation that always returns the output of [text].
+ *
+ * @property configuration Ignored [Configuration].
+ * @property text Lambda that returns the text to be "generated".
+ *
  * @author Lauri "datafox" Heino
  */
 class SimpleText(
     override val configuration: Configuration? = null,
     var text: () -> String
 ) : Text {
+    /**
+     * Always returns the output of [text].
+     *
+     * @param configuration Ignored [Configuration].
+     * @return Output of [text].
+     */
     override fun generate(configuration: Configuration?) = text()
 }

@@ -21,12 +21,23 @@ import me.datafox.dfxtools.text.TextManager.numberFormatter
 import java.math.BigDecimal
 
 /**
+ * A [Text] implementation that returns the output of [number] formatted with [numberFormatter].
+ *
+ * @property configuration [Configuration] for this text. Will be passed on to [numberFormatter].
+ * @property number Lambda that returns a [BigDecimal] to be formatted.
+ *
  * @author Lauri "datafox" Heino
  */
 class NumberText(
     override val configuration: Configuration? = null,
     val number: () -> BigDecimal
 ) : Text {
+    /**
+     * Returns the output of [number] formatted with [numberFormatter].
+
+     * @param configuration Extra [Configuration] for this generation. Will be passed on to [numberFormatter].
+     * @return Output of [number] formatted with [numberFormatter].
+     */
     override fun generate(configuration: Configuration?) =
         applyConfiguration(configuration)[numberFormatter].format(number(), configuration)
 }

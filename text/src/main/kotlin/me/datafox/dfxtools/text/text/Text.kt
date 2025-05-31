@@ -20,11 +20,21 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager
 
 /**
+ * Interface for generating text.
+ *
+ * @property configuration [Configuration] for this text.
+ *
  * @author Lauri "datafox" Heino
  */
 interface Text {
     val configuration: Configuration?
 
+    /**
+     * Generates text based on the implementation and [configuration].
+     *
+     * @param configuration Extra [Configuration] for this generation.
+     * @return Generated text.
+     */
     fun generate(configuration: Configuration? = null): String
 
     fun applyConfiguration(funConfiguration: Configuration?): Configuration {

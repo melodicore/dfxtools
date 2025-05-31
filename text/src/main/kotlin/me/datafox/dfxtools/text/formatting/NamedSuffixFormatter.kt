@@ -34,7 +34,11 @@ import java.math.BigDecimal
 private val logger = KotlinLogging.logger {}
 
 /**
- * A [NumberSuffixFormatter] that scales a number and selects a suffix from a string array of suffixes.
+ * A [NumberSuffixFormatter] that scales a number and selects a suffix from a string array of suffixes. Scales a number
+ * down by powers of ten, `10^`[interval] at a time, until the number is the smallest possible value greater than one.
+ * This number will be used as [Output.scaled], and [Output.suffix] will be an element of [suffixes] indexed with the
+ * amount of times the number was scaled down. If this index would be out of bounds, suffix formatting will be delegated
+ * to [TextManager.fallbackNumberSuffixFormatter].
  *
  * @property si String array of SI suffixes. [interval] must be `3` for this array to work as intended.
  * @property short String array of abbreviated short form suffixes. [interval] must be `3` for this array to work as

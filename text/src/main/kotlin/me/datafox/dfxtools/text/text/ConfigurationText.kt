@@ -20,6 +20,12 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 
 /**
+ * A [Text] implementation that returns the value of [key] transformed to a string with [transformer].
+ *
+ * @property key [ConfigurationKey] to be used for generation.
+ * @property configuration [Configuration] for this text.
+ * @property transformer Lambda that transforms the value of [key] to a string.
+ *
  * @author Lauri "datafox" Heino
  */
 class ConfigurationText<T>(
@@ -27,5 +33,11 @@ class ConfigurationText<T>(
     override val configuration: Configuration? = null,
     val transformer: (T) -> String
 ) : Text {
+    /**
+     * Returns the value of [key] transformed to a string with [transformer].
+     *
+     * @param configuration Extra [Configuration] for this text.
+     * @return Value of [key] transformed to a string with [transformer].
+     */
     override fun generate(configuration: Configuration?) = transformer(applyConfiguration(configuration)[key])
 }

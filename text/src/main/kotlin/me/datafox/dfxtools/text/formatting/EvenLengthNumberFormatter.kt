@@ -37,13 +37,19 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
- * A [NumberFormatter] that attempts to format all numbers to the same amount of characters.
+ * A [NumberFormatter] that attempts to format all numbers to the same amount of characters. If the number is greater
+ * than `10^`[minExponent] or lesser than `10^-`[minExponent], a [NumberSuffixFormatter]'s [Output.scaled] will be
+ * formatted instead of the number, [Output.suffix] is appended to the end. The number is formatted so that its length
+ * (plus the length of the suffix if present) is equal to [length]. If the suffix is this many characters or longer, a
+ * warning will be logged and formatted string longer than [length] is returned. If the formatted string would be
+ * shorter than length and [padZeros] is `true`, the part before the suffix is appended with zeros, preceded by a
+ * decimal point if necessary. This can output a trailing decimal point (`1.e308` with a length of `6`, for example).
  *
  * @property length [ConfigurationKey] that determines how many characters a formatted number should be. Must be a
- * positive non-zero integer larger than or equal to [minExponent]. Default value is `8`.
+ * positive non-zero integer greater than or equal to [minExponent]. Default value is `8`.
  * @property minExponent [ConfigurationKey] that determines when to use a [NumberSuffixFormatter]. The formatted number
- * must be larger than `10^`[minExponent] or smaller than `10^-`[minExponent] for a suffix formatter to be used. Must be
- * a positive or zero integer smaller than or equal to [length]. Default value is `3`.
+ * must be greater than `10^`[minExponent] or lesser than `10^-`[minExponent] for a suffix formatter to be used. Must
+ * be a positive or zero integer lesser than or equal to [length]. Default value is `3`.
  * @property padZeros [ConfigurationKey] that determines if the number should be padded with zeros when the formatted
  * output would be shorter than [length]. Default value is `true`.
  *
