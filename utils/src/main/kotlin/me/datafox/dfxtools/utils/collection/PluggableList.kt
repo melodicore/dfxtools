@@ -22,10 +22,7 @@ package me.datafox.dfxtools.utils.collection
 class PluggableList<E>(
     override val delegate: MutableList<E>,
     override val spec: PluggableSpec<E>
-) : PluggableCollection<E>(
-    delegate,
-    spec
-), MutableList<E> {
+) : PluggableCollection<E>(delegate, spec), MutableList<E> {
     override fun get(index: Int): E = delegate[index]
 
     override fun indexOf(element: E): Int = delegate.indexOf(element)
@@ -37,14 +34,10 @@ class PluggableList<E>(
         return true
     }
 
-    override fun addAll(elements: Collection<E>): Boolean {
-        return addAll(delegate.size, elements)
-    }
+    override fun addAll(elements: Collection<E>): Boolean = addAll(delegate.size, elements)
 
     override fun addAll(index: Int, elements: Collection<E>): Boolean {
-        if(index < 0 || index > delegate.size) {
-            throw IndexOutOfBoundsException()
-        }
+        if(index < 0 || index > delegate.size) throw IndexOutOfBoundsException(index)
         beforeOperation()
         elements.forEach { beforeAdd(it) }
         delegate.addAll(index, elements)
@@ -66,9 +59,7 @@ class PluggableList<E>(
     }
 
     override fun add(index: Int, element: E) {
-        if(index < 0 || index > delegate.size) {
-            throw IndexOutOfBoundsException()
-        }
+        if(index < 0 || index > delegate.size) throw IndexOutOfBoundsException(index)
         beforeOperation()
         beforeAdd(element)
         delegate.add(index, element)

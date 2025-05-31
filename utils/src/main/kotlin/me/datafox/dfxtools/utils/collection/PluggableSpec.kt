@@ -62,21 +62,13 @@ sealed interface PluggableSpec<E> {
             return ConcatenatedPluggableSpec(*specs)
         }
 
-        internal fun <E, V> convertKey(lambda: (E) -> Unit): (E, V) -> Unit {
-            return { k, _ -> lambda(k) }
-        }
+        internal fun <E, V> convertKey(lambda: (E) -> Unit): (E, V) -> Unit = { k, _ -> lambda(k) }
 
-        internal fun <E, V> convertKey(list: List<(E) -> Unit>): Collection<(E, V) -> Unit> {
-            return list.map { convertKey(it) }
-        }
+        internal fun <E, V> convertKey(list: List<(E) -> Unit>): Collection<(E, V) -> Unit> = list.map { convertKey(it) }
 
-        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit {
-            return { _, v -> lambda(v) }
-        }
+        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit = { _, v -> lambda(v) }
 
-        internal fun <K, E> convertValue(list: List<(E) -> Unit>): Collection<(K, E) -> Unit> {
-            return list.map { convertValue(it) }
-        }
+        internal fun <K, E> convertValue(list: List<(E) -> Unit>): Collection<(K, E) -> Unit> = list.map { convertValue(it) }
     }
 }
 
@@ -152,7 +144,6 @@ internal class ConcatenatedPluggableSpec<E>(vararg specs: PluggableSpec<E>) : Pl
                 beforeOperationList.addIfNotNull(spec.beforeOperation)
                 afterOperationList.addIfNotNull(spec.afterOperation)
             }
-
             is ConcatenatedPluggableSpec -> {
                 beforeAddList.addAll(spec.beforeAddList)
                 afterAddList.addAll(spec.afterAddList)
@@ -164,9 +155,7 @@ internal class ConcatenatedPluggableSpec<E>(vararg specs: PluggableSpec<E>) : Pl
         }
     }
 
-    fun addSpecs(vararg specs: PluggableSpec<E>) {
-        specs.forEach { addSpec(it) }
-    }
+    fun addSpecs(vararg specs: PluggableSpec<E>) = specs.forEach { addSpec(it) }
 
     override fun <V> toMapKeySpec(): PluggableMapSpec<E, V> {
         val spec = ConcatenatedPluggableMapSpec<E, V>()

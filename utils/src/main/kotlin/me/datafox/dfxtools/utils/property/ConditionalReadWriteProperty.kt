@@ -45,13 +45,8 @@ class ConditionalReadWriteProperty<T>(
 ) : ReadWriteProperty<Any?, T> {
     override fun getValue(thisRef: Any?, property: KProperty<*>): T = value
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        if(predicate(value)) {
-            this.value = value
-        } else {
-            invalidValue(value)
-        }
-    }
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) =
+        if(predicate(value)) this.value = value else invalidValue(value)
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ReadWriteProperty<Any?, T> {
         if(!predicate(value)) {
@@ -63,11 +58,8 @@ class ConditionalReadWriteProperty<T>(
 
     private fun invalidValue(value: T) {
         if(message != null) {
-            if(throws) {
-                logThrow(logger, message(value)) { IllegalArgumentException(it) }
-            } else {
-                logger.warn { message(value) }
-            }
+            if(throws) logThrow(logger, message(value)) { IllegalArgumentException(it) }
+            else logger.warn { message(value) }
         }
     }
 }

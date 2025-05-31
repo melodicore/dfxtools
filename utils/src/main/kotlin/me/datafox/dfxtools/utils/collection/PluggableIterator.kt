@@ -37,9 +37,7 @@ open class PluggableIterator<E>(
     override fun hasNext(): Boolean = delegate.hasNext()
 
     override fun remove() {
-        if(current == null) {
-            throw NoSuchElementException()
-        }
+        if(current == null) throw NoSuchElementException()
         beforeOperation()
         beforeRemove(current!!)
         delegate.remove()

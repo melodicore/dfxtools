@@ -59,13 +59,11 @@ sealed interface PluggableMapSpec<K, V> {
             return ConcatenatedPluggableMapSpec(*specs)
         }
 
-        internal fun <K, V> convert(lambda: (K, V) -> Unit): (MutableMap.MutableEntry<K, V>) -> Unit {
-            return { lambda(it.key, it.value) }
-        }
+        internal fun <K, V> convert(lambda: (K, V) -> Unit): (MutableMap.MutableEntry<K, V>) -> Unit =
+            { lambda(it.key, it.value) }
 
-        internal fun <K, V> convert(list: List<(K, V) -> Unit>): Collection<(MutableMap.MutableEntry<K, V>) -> Unit> {
-            return list.map { convert(it) }
-        }
+        internal fun <K, V> convert(list: List<(K, V) -> Unit>): Collection<(MutableMap.MutableEntry<K, V>) -> Unit> =
+            list.map { convert(it) }
     }
 }
 
@@ -120,17 +118,6 @@ internal class ConcatenatedPluggableMapSpec<K, V>(vararg specs: PluggableMapSpec
         if(specs.isNotEmpty()) addSpecs(*specs)
     }
 
-    override fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>> {
-        val spec = ConcatenatedPluggableSpec<MutableMap.MutableEntry<K, V>>()
-        spec.beforeAddList.addAll(convert(beforeAddList))
-        spec.afterAddList.addAll(convert(afterAddList))
-        spec.beforeRemoveList.addAll(convert(beforeRemoveList))
-        spec.afterRemoveList.addAll(convert(afterRemoveList))
-        spec.beforeOperationList.addAll(beforeOperationList)
-        spec.afterOperationList.addAll(afterOperationList)
-        return spec
-    }
-
     fun addSpec(spec: PluggableMapSpec<K, V>) {
         when(spec) {
             is PluggableMapSpecImpl -> {
@@ -153,7 +140,16 @@ internal class ConcatenatedPluggableMapSpec<K, V>(vararg specs: PluggableMapSpec
         }
     }
 
-    fun addSpecs(vararg specs: PluggableMapSpec<K, V>) {
-        specs.forEach { addSpec(it) }
+    fun addSpecs(vararg specs: PluggableMapSpec<K, V>) = specs.forEach { addSpec(it) }
+
+    override fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>> {
+        val spec = ConcatenatedPluggableSpec<MutableMap.MutableEntry<K, V>>()
+        spec.beforeAddList.addAll(convert(beforeAddList))
+        spec.afterAddList.addAll(convert(afterAddList))
+        spec.beforeRemoveList.addAll(convert(beforeRemoveList))
+        spec.afterRemoveList.addAll(convert(afterRemoveList))
+        spec.beforeOperationList.addAll(beforeOperationList)
+        spec.afterOperationList.addAll(afterOperationList)
+        return spec
     }
 }

@@ -55,22 +55,16 @@ class PluggableMap<K, V>(
         val old = delegate[key]
         beforeOperation()
         beforeAdd(key, value)
-        if(old != null) {
-            beforeRemove(key, old)
-        }
+        if(old != null) beforeRemove(key, old)
         delegate.put(key, value)
         afterAdd(key, value)
-        if(old != null) {
-            afterRemove(key, old)
-        }
+        if(old != null) afterRemove(key, old)
         afterOperation()
         return old
     }
 
     override fun remove(key: K): V? {
-        if(key !in delegate) {
-            return null
-        }
+        if(key !in delegate) return null
         val removed = delegate[key]!!
         beforeOperation()
         beforeRemove(key, removed)
@@ -81,17 +75,13 @@ class PluggableMap<K, V>(
     }
 
     override fun remove(key: K, value: V): Boolean {
-        if(delegate[key] != value) {
-            return false
-        }
+        if(delegate[key] != value) return false
         remove(key)
         return true
     }
 
     override fun putAll(from: Map<out K, V>) {
-        if(from.isEmpty()) {
-            return
-        }
+        if(from.isEmpty()) return
         val removed = delegate.filterKeys { it in from }
         beforeOperation()
         from.forEach { beforeAdd(it.key, it.value) }
@@ -103,9 +93,7 @@ class PluggableMap<K, V>(
     }
 
     override fun clear() {
-        if(isEmpty()) {
-            return
-        }
+        if(isEmpty()) return
         val removed = delegate.toMap()
         beforeOperation()
         removed.forEach { beforeRemove(it.key, it.value) }
@@ -116,9 +104,7 @@ class PluggableMap<K, V>(
 
     fun removeAll(keys: Collection<K>): Boolean {
         val its = delegate.filter { it.key in keys }
-        if(its.isEmpty()) {
-            return false
-        }
+        if(its.isEmpty()) return false
         beforeOperation()
         its.forEach { beforeRemove(it.key, it.value) }
         its.keys.forEach { delegate.remove(it) }
@@ -128,18 +114,14 @@ class PluggableMap<K, V>(
 
     fun removeAll(entries: Map<out K, V>): Boolean {
         val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
-        if(its.isEmpty()) {
-            return false
-        }
+        if(its.isEmpty()) return false
         return removeAll(its)
     }
 
     fun retainAll(entries: Map<out K, V>): Boolean {
         val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
         val reverse = delegate.filter { it.key !in its }
-        if(reverse.isEmpty()) {
-            return false
-        }
+        if(reverse.isEmpty()) return false
         return removeAll(reverse)
     }
 
@@ -154,7 +136,8 @@ class PluggableMap<K, V>(
 
         override fun removeAll(elements: Collection<K>): Boolean = parent.removeAll(elements)
 
-        override fun retainAll(elements: Collection<K>): Boolean = parent.removeAll(parent.delegate.keys.filter { it !in elements })
+        override fun retainAll(elements: Collection<K>): Boolean =
+            parent.removeAll(parent.delegate.keys.filter { it !in elements })
 
         override fun clear() = parent.clear()
 
@@ -176,9 +159,7 @@ class PluggableMap<K, V>(
 
         override fun remove(element: V): Boolean {
             val entry = parent.delegate.entries.find { it.value == element }
-            if(entry == null) {
-                return false
-            }
+            if(entry == null) return false
             return parent.remove(entry.key) != null
         }
 
@@ -223,12 +204,14 @@ class PluggableMap<K, V>(
 
         override fun clear() = parent.clear()
 
-        override fun iterator(): MutableIterator<MutableMap.MutableEntry<K, V>> = UnsupportedRemoveIterator(parent.delegate.entries.iterator())
+        override fun iterator(): MutableIterator<MutableMap.MutableEntry<K, V>> =
+            UnsupportedRemoveIterator(parent.delegate.entries.iterator())
 
         override fun isEmpty(): Boolean = parent.isEmpty()
 
         override fun contains(element: MutableMap.MutableEntry<K, V>): Boolean = parent.containsKey(element.key)
 
-        override fun containsAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean = elements.all { parent.containsKey(it.key) }
+        override fun containsAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean =
+            elements.all { parent.containsKey(it.key) }
     }
 }

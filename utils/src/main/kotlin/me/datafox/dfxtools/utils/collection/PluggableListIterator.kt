@@ -27,9 +27,7 @@ class PluggableListIterator<E>(
     private val afterAdd get() = spec.afterAdd
 
     override fun set(element: E) {
-        if(current == null) {
-            throw IllegalStateException()
-        }
+        if(current == null) throw IllegalStateException()
         beforeOperation()
         beforeRemove(current!!)
         beforeAdd(element)
