@@ -22,7 +22,6 @@ import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableMapView
-import me.datafox.dfxtools.utils.collection.LateDelegatedMap
 import me.datafox.dfxtools.utils.collection.PluggableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import java.util.*
@@ -41,11 +40,12 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class HandleMap<V> internal constructor(
-    private val map: LateDelegatedMap<Handle, V> = LateDelegatedMap()
+    ignored: Any?,
+    private val _space: Space,
+    private val map: PluggableMap<Handle, V> = PluggableMap(TreeMap(), spec(_space)),
 ) : MutableMap<Handle, V> by map {
     val space: Space get() = _space
     val immutableView: Map<Handle, V> by lazy { ImmutableMapView(this) }
-    private lateinit var _space: Space
 
     /**
      * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to the space.
@@ -53,10 +53,8 @@ class HandleMap<V> internal constructor(
      * @param space [Space] for this map.
      * @param entries Entries for this map.
      */
-    constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this() {
-        this._space = space
-        map.delegate = PluggableMap(TreeMap(), spec(space))
-        if(entries.isNotEmpty()) putAll(entries)
+    constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this(null, space) {
+        putAll(entries)
     }
 
     /**
@@ -64,10 +62,7 @@ class HandleMap<V> internal constructor(
      *
      * @param entries Entries for this map, must not be empty.
      */
-    constructor(entries: Map<Handle, V>) : this() {
-        if(entries.isEmpty()) logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
-        this._space = entries.keys.first().space
-        map.delegate = PluggableMap(TreeMap(), spec(space))
+    constructor(entries: Map<Handle, V>) : this(null, getEntrySpace(entries)) {
         putAll(entries)
     }
 
@@ -166,4 +161,9 @@ fun <V> Map<Handle, V>.getByTag(id: String): List<V> = mapNotNull { if(it.key.ta
 fun <V> Map<Handle, V>.getByTags(tags: Iterable<Handle>): List<V> {
     val set = tags.toSet()
     return mapNotNull { if(it.key.tags.containsAll(set)) it.value else null }
+}
+
+internal fun getEntrySpace(entries: Map<Handle, *>) : Space {
+    if(entries.isEmpty()) logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
+    return entries.keys.first().space
 }

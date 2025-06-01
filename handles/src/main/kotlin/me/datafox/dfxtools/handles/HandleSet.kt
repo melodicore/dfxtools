@@ -22,7 +22,6 @@ import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ImmutableSetView
-import me.datafox.dfxtools.utils.collection.LateDelegatedSet
 import me.datafox.dfxtools.utils.collection.PluggableSet
 import me.datafox.dfxtools.utils.collection.PluggableSpec
 import java.util.*
@@ -41,11 +40,12 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class HandleSet internal constructor(
-    private val set: LateDelegatedSet<Handle> = LateDelegatedSet()
+    ignored: Any?,
+    private val _space: Space,
+    private val set: PluggableSet<Handle> = PluggableSet(TreeSet(), spec(_space))
 ) : MutableSet<Handle> by set {
     val space: Space get() = _space
     val immutableView: Set<Handle> by lazy { ImmutableSetView(this) }
-    private lateinit var _space: Space
 
     /**
      * Creates a new set with [space] and [elements]. Elements must belong to the space.
@@ -53,9 +53,7 @@ class HandleSet internal constructor(
      * @param space [Space] for this set.
      * @param elements [Handles][Handle] for this set.
      */
-    constructor(space: Space, elements: Collection<Handle> = emptySet()) : this() {
-        this._space = space
-        set.delegate = PluggableSet<Handle>(TreeSet(), spec(space))
+    constructor(space: Space, elements: Collection<Handle> = emptySet()) : this(null, space) {
         addAll(elements)
     }
 
@@ -64,10 +62,7 @@ class HandleSet internal constructor(
      *
      * @param elements [Handles][Handle] for this set, must not be empty.
      */
-    constructor(elements: Collection<Handle>) : this() {
-        if(elements.isEmpty()) logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
-        this._space = elements.first().space
-        set.delegate = PluggableSet<Handle>(TreeSet(), spec(space))
+    constructor(elements: Collection<Handle>) : this(null, getElementSpace(elements)) {
         addAll(elements)
     }
 
@@ -240,4 +235,9 @@ fun Set<Handle>.getByTag(id: String): Set<Handle> = mapNotNull { if(it.tags.cont
 fun Set<Handle>.getByTags(tags: Iterable<Handle>): Set<Handle> {
     val set = tags.toSet()
     return mapNotNull { if(it.tags.containsAll(set)) it else null }.toSet()
+}
+
+internal fun getElementSpace(elements: Collection<Handle>): Space {
+    if(elements.isEmpty()) logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
+    return elements.first().space
 }
