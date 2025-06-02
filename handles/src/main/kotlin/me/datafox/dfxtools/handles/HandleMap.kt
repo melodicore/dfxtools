@@ -21,7 +21,6 @@ import me.datafox.dfxtools.handles.HandleMap.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.ImmutableMapView
 import me.datafox.dfxtools.utils.collection.PluggableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import java.util.*
@@ -45,7 +44,6 @@ class HandleMap<V> private constructor(
     private val map: PluggableMap<Handle, V> = PluggableMap(TreeMap(), spec(_space)),
 ) : MutableMap<Handle, V> by map {
     val space: Space get() = _space
-    val immutableView: Map<Handle, V> by lazy { ImmutableMapView(this) }
 
     /**
      * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to the space.

@@ -1,6 +1,7 @@
 [versions]
 # Internal module versions
 configuration = "1.0.0"
+entities = "1.0.0"
 handles = "1.0.0"
 invalidation = "1.0.0"
 text = "1.0.0"

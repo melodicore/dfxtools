@@ -21,7 +21,6 @@ import me.datafox.dfxtools.handles.HandleSet.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.ImmutableSetView
 import me.datafox.dfxtools.utils.collection.PluggableSet
 import me.datafox.dfxtools.utils.collection.PluggableSpec
 import java.util.*
@@ -45,7 +44,6 @@ class HandleSet private constructor(
     private val set: PluggableSet<Handle> = PluggableSet(TreeSet(), spec(_space))
 ) : MutableSet<Handle> by set {
     val space: Space get() = _space
-    val immutableView: Set<Handle> by lazy { ImmutableSetView(this) }
 
     /**
      * Creates a new set with [space] and [elements]. Elements must belong to the space.

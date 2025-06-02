@@ -26,9 +26,9 @@ class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
 ) {
     val size get() = first.size
     private val _first: MutableMap<K1, V> = mutableMapOf()
-    val first: Map<K1, V> = ImmutableMapView(_first)
+    val first: Map<K1, V> = _first
     private val _second: MutableMap<K2, V> = mutableMapOf()
-    val second: Map<K2, V> = ImmutableMapView(_second)
+    val second: Map<K2, V> = _second
     private val firstToSecond: MutableMap<K1, K2> = mutableMapOf()
     private val secondToFirst: MutableMap<K2, K1> = mutableMapOf()
 

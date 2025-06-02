@@ -52,7 +52,7 @@ class Handle : Comparable<Handle> {
     val index: Int
     val subindex: Int
     val parent: Handle?
-    val subhandles: Set<Handle>? by lazy { _subhandles?.immutableView }
+    val subhandles: Set<Handle>? by lazy { _subhandles }
     val tags: HandleSet
     private val _subhandles: HandleSet?
     private val permitExternalSubhandleCreation: Boolean

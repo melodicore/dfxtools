@@ -36,8 +36,8 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class Space : ComparableHandled {
-    val handles: Set<Handle> by lazy { _handles.immutableView }
-    val groups: Map<Handle, Group> by lazy { _groups.immutableView }
+    val handles: Set<Handle> by lazy { _handles }
+    val groups: Map<Handle, Group> by lazy { _groups }
     override val handle: Handle get() = _handle
     private lateinit var _handle: Handle
     private val _handles: HandleSet = HandleSet(this)

@@ -51,7 +51,7 @@ object HandleManager {
 
     val spaceSpace get() = _spaceSpace
     val tagSpace: Space get() = _tagSpace
-    val spaces: Map<Handle, Space> by lazy { _spaces.immutableView }
+    val spaces: Map<Handle, Space> by lazy { _spaces }
     private var _spaceSpace: Space = Space(true)
     private var _tagSpace: Space = Space(false)
     private val _spaces: HandleMap<Space> by lazy { HandleMap(spaceSpace) }
