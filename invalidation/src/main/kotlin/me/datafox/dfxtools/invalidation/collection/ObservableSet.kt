@@ -41,7 +41,7 @@ class ObservableSet<E : Observable>(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    set: PluggableSet<E> = PluggableSet(delegate = delegate, spec = spec(observer, invalidateObserver, identifier))
+    set: PluggableSet<E> = PluggableSet(delegate, spec(observer, invalidateObserver, identifier))
 ) : MutableSet<E> by set {
     init {
         if(callInitialElements) set.callInitialElements()

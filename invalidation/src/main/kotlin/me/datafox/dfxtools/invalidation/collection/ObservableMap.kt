@@ -40,7 +40,7 @@ class ObservableMap<K, V : Observable>(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    map: PluggableMap<K, V> = PluggableMap(delegate = delegate, spec = spec(observer, invalidateObserver, identifier)),
+    map: PluggableMap<K, V> = PluggableMap(delegate, spec(observer, invalidateObserver, identifier)),
 ) : MutableMap<K, V> by map {
     init {
         if(callInitialElements) map.callInitialElements()
