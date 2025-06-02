@@ -37,7 +37,7 @@ private val logger = KotlinLogging.logger {}
  *
  * @author Lauri "datafox" Heino
  */
-class ConditionalReadWriteProperty<T>(
+class ConditionalReadWriteProperty<T> @JvmOverloads constructor(
     var value: T,
     val message: ((T) -> String)? = null,
     val throws: Boolean = false,

@@ -34,7 +34,7 @@ import me.datafox.dfxtools.text.join
  *
  * @author Lauri "datafox" Heino
  */
-class ComposedText(
+class ComposedText @JvmOverloads constructor(
     override val configuration: Configuration? = null,
     vararg val texts: Text
 ) : Text {

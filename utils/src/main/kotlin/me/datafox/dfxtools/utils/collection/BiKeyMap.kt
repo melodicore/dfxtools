@@ -19,7 +19,7 @@ package me.datafox.dfxtools.utils.collection
 /**
  * @author Lauri "datafox" Heino
  */
-class BiKeyMap<K1, K2, V>(
+class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
     first: MutableMap<K1, V> = mutableMapOf(),
     second: MutableMap<K2, V> = mutableMapOf(),
     entries: Map<Pair<K1, K2>, V> = emptyMap()

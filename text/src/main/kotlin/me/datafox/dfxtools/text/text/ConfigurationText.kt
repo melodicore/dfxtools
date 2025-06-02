@@ -28,7 +28,7 @@ import me.datafox.dfxtools.configuration.ConfigurationKey
  *
  * @author Lauri "datafox" Heino
  */
-class ConfigurationText<T>(
+class ConfigurationText<T> @JvmOverloads constructor(
     val key: ConfigurationKey<T>,
     override val configuration: Configuration? = null,
     val transformer: (T) -> String

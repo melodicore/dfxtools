@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class InvalidatedProperty<V>(
+class InvalidatedProperty<V> @JvmOverloads constructor(
     value: V? = null,
     private val calculation: (V?) -> V
 ) : ReadOnlyProperty<Observer, V> {

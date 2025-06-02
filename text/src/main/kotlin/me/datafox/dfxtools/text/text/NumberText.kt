@@ -28,7 +28,7 @@ import java.math.BigDecimal
  *
  * @author Lauri "datafox" Heino
  */
-class NumberText(
+class NumberText @JvmOverloads constructor(
     override val configuration: Configuration? = null,
     val number: () -> BigDecimal
 ) : Text {

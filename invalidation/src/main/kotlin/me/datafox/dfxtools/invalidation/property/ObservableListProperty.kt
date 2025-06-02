@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableListProperty<E : Observable>(
+class ObservableListProperty<E : Observable> @JvmOverloads constructor(
     vararg values: E,
     private val invalidateOwner: Boolean = true
 ) : ReadOnlyProperty<Observer, MutableList<E>> {

@@ -39,7 +39,7 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
-class CyclicAwareCollection(
+class CyclicAwareCollection @JvmOverloads constructor(
     private val owner: Observable,
     private val delegate: MutableMap<Observer, MutableSet<Any>> = mutableMapOf()
 ): Set<Observer> by delegate.keys {

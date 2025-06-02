@@ -39,7 +39,7 @@ private val logger = KotlinLogging.logger {}
  *
  * @author Lauri "datafox" Heino
  */
-class HandleMap<V> internal constructor(
+class HandleMap<V> private constructor(
     ignored: Any?,
     private val _space: Space,
     private val map: PluggableMap<Handle, V> = PluggableMap(TreeMap(), spec(_space)),
@@ -53,6 +53,7 @@ class HandleMap<V> internal constructor(
      * @param space [Space] for this map.
      * @param entries Entries for this map.
      */
+    @JvmOverloads
     constructor(space: Space, entries: Map<Handle, V> = emptyMap()) : this(null, space) {
         putAll(entries)
     }

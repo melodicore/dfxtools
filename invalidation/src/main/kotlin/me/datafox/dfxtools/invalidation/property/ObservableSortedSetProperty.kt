@@ -31,7 +31,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableSortedSetProperty<E : Observable>(
+class ObservableSortedSetProperty<E : Observable> @JvmOverloads constructor(
     vararg values: E,
     private val invalidateOwner: Boolean = true,
     comparator: (E, E) -> Int

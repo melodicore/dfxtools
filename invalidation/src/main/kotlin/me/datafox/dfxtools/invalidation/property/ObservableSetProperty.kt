@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableSetProperty<E : Observable>(
+class ObservableSetProperty<E : Observable> @JvmOverloads constructor(
     vararg values: E,
     private val invalidateOwner: Boolean = true
 ) : ReadOnlyProperty<Observer, MutableSet<E>> {

@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class InvalidatorProperty<V>(
+class InvalidatorProperty<V> @JvmOverloads constructor(
     private var value: V,
     private val onInvalidate: () -> Unit = {}
 ) : ReadWriteProperty<Observable, V> {

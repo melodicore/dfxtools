@@ -39,7 +39,7 @@ private val logger = KotlinLogging.logger {}
  *
  * @author Lauri "datafox" Heino
  */
-class HandleSet internal constructor(
+class HandleSet private constructor(
     ignored: Any?,
     private val _space: Space,
     private val set: PluggableSet<Handle> = PluggableSet(TreeSet(), spec(_space))
@@ -53,6 +53,7 @@ class HandleSet internal constructor(
      * @param space [Space] for this set.
      * @param elements [Handles][Handle] for this set.
      */
+    @JvmOverloads
     constructor(space: Space, elements: Collection<Handle> = emptySet()) : this(null, space) {
         addAll(elements)
     }

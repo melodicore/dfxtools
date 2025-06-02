@@ -26,7 +26,7 @@ import me.datafox.dfxtools.configuration.Configuration
  *
  * @author Lauri "datafox" Heino
  */
-class SimpleText(
+class SimpleText @JvmOverloads constructor(
     override val configuration: Configuration? = null,
     var text: () -> String
 ) : Text {

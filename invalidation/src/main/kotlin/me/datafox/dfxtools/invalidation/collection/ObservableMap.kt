@@ -34,7 +34,7 @@ import me.datafox.dfxtools.utils.collection.PluggableMapSpec
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableMap<K, V : Observable>(
+class ObservableMap<K, V : Observable> @JvmOverloads constructor(
     delegate: MutableMap<K, V>,
     observer: Observer,
     invalidateObserver: Boolean = true,

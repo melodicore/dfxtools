@@ -29,7 +29,7 @@ import kotlin.reflect.KProperty
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableProperty(
+class ObservableProperty @JvmOverloads constructor(
     var value: Observable,
     private val invalidateOwner: Boolean = true
 ) : ReadWriteProperty<Observer, Observable> {

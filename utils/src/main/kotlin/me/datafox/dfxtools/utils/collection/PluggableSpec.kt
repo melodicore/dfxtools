@@ -35,6 +35,7 @@ sealed interface PluggableSpec<E> {
     fun <K> toMapValueSpec(): PluggableMapSpec<K, E>
 
     companion object {
+        @JvmOverloads
         operator fun <E> invoke(
             beforeAdd: ((E) -> Unit)? = null,
             afterAdd: ((E) -> Unit)? = null,

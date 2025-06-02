@@ -35,7 +35,7 @@ import me.datafox.dfxtools.utils.collection.PluggableSpec
  *
  * @author Lauri "datafox" Heino
  */
-class ObservableSet<E : Observable>(
+class ObservableSet<E : Observable> @JvmOverloads constructor(
     delegate: MutableSet<E>,
     observer: Observer,
     invalidateObserver: Boolean = true,

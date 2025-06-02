@@ -32,6 +32,7 @@ sealed interface PluggableMapSpec<K, V> {
     fun toCollectionSpec(): PluggableSpec<MutableMap.MutableEntry<K, V>>
 
     companion object {
+        @JvmOverloads
         operator fun <K, V> invoke(
             beforeAdd: ((K, V) -> Unit)? = null,
             afterAdd: ((K, V) -> Unit)? = null,
