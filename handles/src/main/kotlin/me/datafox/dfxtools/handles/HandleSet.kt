@@ -237,6 +237,16 @@ fun Set<Handle>.getByTags(tags: Iterable<Handle>): Set<Handle> {
     return mapNotNull { if(it.tags.containsAll(set)) it else null }.toSet()
 }
 
+/**
+ * Returns all [Handles][Handle] in this set that have tags with all [ids].
+ *
+ * @param ids Ids of the tags to be queried.
+ * @return All [Handles][Handle] in this set that have tags with all [ids].
+ */
+@JvmName("getByTagIds")
+fun Set<Handle>.getByTags(ids: Iterable<String>): Set<Handle> =
+    mapNotNull { if(it.tags.containsAll(ids)) it else null }.toSet()
+
 internal fun getElementSpace(elements: Collection<Handle>): Space {
     if(elements.isEmpty()) logThrow(logger, SET_SPACE_INFER) { IllegalArgumentException(it) }
     return elements.first().space

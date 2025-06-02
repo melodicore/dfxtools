@@ -114,6 +114,14 @@ class Handle : Comparable<Handle> {
     operator fun plusAssign(tags: Iterable<Handle>) { this.tags += tags }
 
     /**
+     * Adds tags with [ids] to this handle, creating new tags if they do not already exist.
+     *
+     * @param ids Ids of the tags to be added.
+     */
+    @JvmName("plusAssignIds")
+    operator fun Handle.plusAssign(ids: Iterable<String>) { tags += ids }
+
+    /**
      * Removes [tag] from this handle.
      *
      * @param tag Tag to be removed.
@@ -133,6 +141,14 @@ class Handle : Comparable<Handle> {
      * @param tags Tags to be removed.
      */
     operator fun minusAssign(tags: Iterable<Handle>) { this.tags -= tags }
+
+    /**
+     * Removes tags with [ids] from this handle.
+     *
+     * @param ids Ids of the tags to be removed.
+     */
+    @JvmName("minusAssignIds")
+    operator fun Handle.minusAssign(ids: Iterable<String>) { tags -= ids }
 
     /**
      * Returns `true` if this handle contains [tag].

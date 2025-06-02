@@ -70,6 +70,14 @@ class Group : ComparableHandled {
     operator fun plusAssign(handles: Iterable<Handle>) { this.handles += handles }
 
     /**
+     * Adds [Handles][Handle] with [ids] to this group, creating new handles if necessary and permitted.
+     *
+     * @param ids Ids of the [Handles][Handle] to be added.
+     */
+    @JvmName("plusAssignIds")
+    operator fun Group.plusAssign(ids: Iterable<String>) { handles += handle }
+
+    /**
      * Removes [handle] from this group.
      *
      * @param handle [Handle] to be removed.
@@ -89,6 +97,14 @@ class Group : ComparableHandled {
      * @param handles [Handles][Handle] to be removed.
      */
     operator fun minusAssign(handles: Iterable<Handle>) { this.handles -= handles }
+
+    /**
+     * Removes [Handles][Handle] with [ids] from this group.
+     *
+     * @param ids Ids of the [Handles][Handle] to be removed.
+     */
+    @JvmName("minusAssignIds")
+    operator fun Group.minusAssign(ids: Iterable<String>) { handles -= handle }
 
     /**
      * Returns `true` if this group contains [handle].

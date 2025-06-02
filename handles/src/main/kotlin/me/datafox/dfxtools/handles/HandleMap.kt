@@ -163,6 +163,16 @@ fun <V> Map<Handle, V>.getByTags(tags: Iterable<Handle>): List<V> {
     return mapNotNull { if(it.key.tags.containsAll(set)) it.value else null }
 }
 
+/**
+ * Returns all values in this map whose keys have tags with all [ids].
+ *
+ * @param ids Ids of the tags to be queried.
+ * @return All values in this map whose keys have tags with all [ids].
+ */
+@JvmName("getByTagIds")
+fun <V> Map<Handle, V>.getByTags(ids: Iterable<String>): List<V> =
+    mapNotNull { if(it.key.tags.containsAll(ids)) it.value else null }
+
 internal fun getEntrySpace(entries: Map<Handle, *>) : Space {
     if(entries.isEmpty()) logThrow(logger, MAP_SPACE_INFER) { IllegalArgumentException(it) }
     return entries.keys.first().space
