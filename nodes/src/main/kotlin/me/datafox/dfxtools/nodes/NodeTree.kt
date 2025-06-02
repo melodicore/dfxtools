@@ -17,47 +17,36 @@
 package me.datafox.dfxtools.nodes
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.nodes.internal.Utils.validateInputData
 import me.datafox.dfxtools.nodes.internal.Utils.validateNodeTree
-import me.datafox.dfxtools.nodes.internal.Utils.validateOutputData
 
 private val logger = KotlinLogging.logger {}
 
 /**
- * @author Lauri "datafox" Heino
- */
-data class NodeTree(
-    val inputs: List<NodeInputInfo<*>>,
-    val outputs: List<NodeOutputInfo<*>>,
-    val nodes: List<TreeNode>,
-    val outputConnections: List<NodeConnection>
+* @author Lauri "datafox" Heino
+*/
+class NodeTree(
+    private val nodes: List<TreeNode>,
+    private val connections: Map<String, Connection>
 ) {
     init {
-        validateNodeTree(inputs, outputs, nodes, outputConnections, logger)
+        validateNodeTree(nodes, connections, logger)
     }
 
-    fun accept(params: List<NodeData<*>>): List<NodeData<*>> {
-        validateInputData(inputs, params, logger)
-        val resolved: MutableList<List<NodeData<*>>> = mutableListOf()
-        for((node, connections) in nodes) {
-            val nodeParams = resolveParams(connections, resolved, params)
-            resolved.add(node.accept(nodeParams))
+    fun run() {
+        val resolved: MutableMap<String, Map<String, NodeData<*>>> = mutableMapOf()
+        nodes.forEach { (id, node) ->
+            val connection = connections[id]!!
+            val params = node.inputs.keys.associateWith {
+                val (node, output) = connection.params[it]!!
+                resolved[node]!![output]!!
+            }
+            resolved.put(id, node.accept(params))
         }
-        val output = resolveParams(outputConnections, resolved, params)
-        validateOutputData(outputs, output, logger)
-        return output
     }
 
-    private fun resolveParams(
-        connections: List<NodeConnection>,
-        resolved: List<List<NodeData<*>>>,
-        params: List<NodeData<*>>
-    ) : List<NodeData<*>> {
-        val list = mutableListOf<NodeData<*>>()
-        for((nodeIndex, dataIndex) in connections) {
-            if(nodeIndex == -1) list.add(params[dataIndex])
-            else list.add(resolved[nodeIndex][dataIndex])
-        }
-        return list
-    }
+    data class TreeNode(val id: String, val node: Node)
+
+    data class Connection(val params: Map<String, Param>)
+
+    data class Param(val node: String, val output: String)
 }

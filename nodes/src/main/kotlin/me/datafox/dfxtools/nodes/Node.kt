@@ -24,14 +24,12 @@ import me.datafox.dfxtools.nodes.internal.Utils.validateOutputData
  * @author Lauri "datafox" Heino
  */
 interface Node {
-    val name: String
-    val description: String
-    val inputs: List<NodeInputInfo<*>>
-    val outputs: List<NodeOutputInfo<*>>
+    val inputs: Map<String, NodeInputInfo<*>>
+    val outputs: Map<String, NodeOutputInfo<*>>
     val logger: KLogger
-    val block: (List<NodeData<*>>) -> List<NodeData<*>>
+    val block: (Map<String, NodeData<*>>) -> Map<String, NodeData<*>>
 
-    fun accept(params: List<NodeData<*>>): List<NodeData<*>> {
+    fun accept(params: Map<String, NodeData<*>>): Map<String, NodeData<*>> {
         validateInputData(inputs, params, logger)
         val output = block(params)
         validateOutputData(outputs, output, logger)

@@ -16,14 +16,19 @@
 
 package me.datafox.dfxtools.nodes
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger {}
+
 /**
  * @author Lauri "datafox" Heino
  */
 data class NodeData<T : Any>(
     val type: NodeType<T>,
-    val variant: NodeType.Variant<T>,
     val data: T
 ) {
+    val variants: Set<NodeType.Variant<T>> = type.variants.values.filter { it.predicate(data) }.toSet()
+
     @Suppress("UNCHECKED_CAST")
     fun <R : Any> toKnownType(type: NodeType<R>): NodeData<R> {
         if(this.type != type || !type.type.isInstance(data)) throw ClassCastException()

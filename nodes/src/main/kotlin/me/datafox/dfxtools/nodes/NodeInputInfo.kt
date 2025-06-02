@@ -27,6 +27,7 @@ private val logger = KotlinLogging.logger {}
 data class NodeInputInfo<T : Any>(
     val type: NodeType<T>,
     val allowedVariants: Set<NodeType.Variant<T>>,
+    val optional: Boolean = false,
     val validator: (T.() -> String?)? = null
 ) {
     init {
@@ -36,5 +37,10 @@ data class NodeInputInfo<T : Any>(
         if(!type.variants.values.containsAll(allowedVariants)) {
             logThrow(logger, "All allowed variants must be variants of the type") { IllegalArgumentException(it) }
         }
+    }
+
+    fun isAcceptedType(type: NodeType<*>, variant: NodeType.Variant<*>): Boolean {
+        if(this != type) return false
+        return variant in allowedVariants
     }
 }

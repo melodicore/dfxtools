@@ -17,12 +17,11 @@
 package me.datafox.dfxtools.nodes
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.handles.Handle
-import me.datafox.dfxtools.handles.HandleMap
-import me.datafox.dfxtools.handles.Handled
-import me.datafox.dfxtools.nodes.NodeManager.DEFAULT_VARIANT_ID
-import me.datafox.dfxtools.nodes.NodeManager.typeSpace
+import me.datafox.dfxtools.handles.*
+import me.datafox.dfxtools.nodes.NodeTypes.any
+import me.datafox.dfxtools.nodes.NodeTypes.typeSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.BiKeyMap
 import kotlin.reflect.KClass
 
 private val logger = KotlinLogging.logger {}
@@ -30,11 +29,18 @@ private val logger = KotlinLogging.logger {}
 /**
  * @author Lauri "datafox" Heino
  */
-data class NodeType<T : Any>(
+class NodeType<T : Any> internal constructor(
     override val handle: Handle,
     val type: KClass<T>,
-    val variants: Map<Handle, Variant<T>>
+    val superType: NodeType<in T>?
 ) : Handled {
+    private val _subTypes: BiKeyMap<Handle, KClass<out T>, NodeType<out T>> =
+        BiKeyMap(HandleMap(typeSpace), mutableMapOf())
+    private val _variants: HandleMap<Variant<T>> = HandleMap(typeSpace)
+    val subTypesByHandle: Map<Handle, NodeType<out T>> = _subTypes.first
+    val subTypes: Map<KClass<out T>, NodeType<out T>> = _subTypes.second
+    val variants: Map<Handle, Variant<T>> = _variants.immutableView
+
     init {
         if(typeSpace != handle.space) {
             logThrow(logger, "Node type handle must belong to space \"$typeSpace\"") { IllegalArgumentException(it) }
@@ -42,11 +48,36 @@ data class NodeType<T : Any>(
         if(handle.parent != null) {
             logThrow(logger, "Node type handle must not be a subhandle") { IllegalArgumentException(it) }
         }
-        variants.forEach { k, _ ->
-            if(handle != k.parent) {
-                logThrow(logger, "Node type variant handle must be a subhandle of the node type handle") { s -> IllegalArgumentException(s) }
-            }
+        registerVariant(NodeTypes.DEFAULT_VARIANT_ID, { true })
+        NodeManager.registerType(this)
+    }
+
+    @Suppress("MUTABLE_PROPERTY_WITH_CAPTURED_TYPE")
+    fun <V : T>registerSubType(id: String, type: KClass<V>): NodeType<V> {
+        if(any.subTypes.contains(type)) {
+            logThrow(logger, "Type is already registered") { IllegalArgumentException(it) }
         }
+        if(any.subTypesByHandle.contains(id)) {
+            logThrow(logger, "Type handle is already registered") { IllegalArgumentException(it) }
+        }
+        return NodeType(typeSpace.getOrCreateHandle(id), type, this).apply { registerSubType(this) }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <V : T> getSubType(type: KClass<V>): NodeType<V>? {
+        return subTypes[type] as NodeType<V>?
+    }
+
+    fun registerVariant(id: String, predicate: T.() -> Boolean): Variant<T> {
+        if(_variants.contains(id)) {
+            logThrow(logger, "Type variant handle is already registered") { IllegalArgumentException(it) }
+        }
+        return Variant(handle.getOrCreateSubhandle(id), type, predicate).apply { _variants.putHandled(this) }
+    }
+
+    private fun registerSubType(type: NodeType<out T>) {
+        _subTypes.put(type.handle, type.type, type)
+        superType?.registerSubType(type)
     }
 
     data class Variant<T : Any>(
@@ -58,33 +89,11 @@ data class NodeType<T : Any>(
             if(typeSpace != handle.space) {
                 logThrow(logger, "Node type variant handle must belong to space \"$typeSpace\"") { IllegalArgumentException(it) }
             }
-            if(handle.parent == null) {
+            if(handle.parent != null) {
                 logThrow(logger, "Node type variant handle must be a subhandle") { IllegalArgumentException(it) }
             }
         }
 
-        fun isVariant(value: T): Boolean = value.predicate()
-    }
-
-    class Builder<T : Any> internal constructor(val handle: Handle, val type: KClass<T>) {
-        private val variants: MutableList<Variant<T>> = mutableListOf()
-
-        fun variant(id: String, predicate: T.() -> Boolean) {
-            variants.add(Variant(handle.getOrCreateSubhandle(id), type, predicate))
-        }
-
-        internal fun build(): NodeType<T> {
-            if(variants.isEmpty()) {
-                variant(DEFAULT_VARIANT_ID) { true }
-                logger.info { "No type variant was defined so a default one was created with id ${variants[0].handle.id}" }
-            }
-            return NodeType(handle, type, HandleMap(variants.associateBy { it.handle }))
-        }
-    }
-
-    companion object {
-        fun <T : Any> of(id: String, type: KClass<T>, builder: Builder<T>.() -> Unit = { }): NodeType<T> =
-            Builder(typeSpace.getOrCreateHandle(id), type).apply(builder).build()
+        fun isVariant(value: T): Boolean = type.isInstance(value) && value.predicate()
     }
 }
-
