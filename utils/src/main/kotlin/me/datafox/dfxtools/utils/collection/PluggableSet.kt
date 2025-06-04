@@ -21,26 +21,26 @@ package me.datafox.dfxtools.utils.collection
  */
 class PluggableSet<E>(
     override val delegate: MutableSet<E>,
-    override val spec: PluggableSpec<E>
+    spec: PluggableSpec<E>
 ) : PluggableCollection<E>(delegate, spec), MutableSet<E> {
     override fun add(element: E): Boolean {
         if(delegate.contains(element)) return false
-        beforeOperation()
-        beforeAdd(element)
+        spec.beforeOperation()
+        spec.beforeAdd(element)
         delegate.add(element)
-        afterAdd(element)
-        afterOperation()
+        spec.afterAdd(element)
+        spec.afterOperation()
         return true
     }
 
     override fun addAll(elements: Collection<E>): Boolean {
         val its = elements.filter { it !in this }
         if(its.isEmpty()) return false
-        beforeOperation()
-        its.forEach { beforeAdd(it) }
+        spec.beforeOperation()
+        its.forEach { spec.beforeAdd(it) }
         delegate.addAll(elements)
-        its.forEach { afterAdd(it) }
-        afterOperation()
+        its.forEach { spec.afterAdd(it) }
+        spec.afterOperation()
         return true
     }
 }

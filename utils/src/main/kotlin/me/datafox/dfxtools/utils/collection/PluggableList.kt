@@ -21,7 +21,7 @@ package me.datafox.dfxtools.utils.collection
  */
 class PluggableList<E>(
     override val delegate: MutableList<E>,
-    override val spec: PluggableSpec<E>
+    spec: PluggableSpec<E>
 ) : PluggableCollection<E>(delegate, spec), MutableList<E> {
     override fun get(index: Int): E = delegate[index]
 
@@ -38,42 +38,42 @@ class PluggableList<E>(
 
     override fun addAll(index: Int, elements: Collection<E>): Boolean {
         if(index < 0 || index > delegate.size) throw IndexOutOfBoundsException(index)
-        beforeOperation()
-        elements.forEach { beforeAdd(it) }
+        spec.beforeOperation()
+        elements.forEach { spec.beforeAdd(it) }
         delegate.addAll(index, elements)
-        elements.forEach { afterAdd(it) }
-        afterOperation()
+        elements.forEach { spec.afterAdd(it) }
+        spec.afterOperation()
         return true
     }
 
     override fun set(index: Int, element: E): E {
         val old = delegate[index]
-        beforeOperation()
-        beforeAdd(element)
-        beforeRemove(old)
+        spec.beforeOperation()
+        spec.beforeAdd(element)
+        spec.beforeRemove(old)
         delegate[index] = element
-        afterAdd(element)
-        afterRemove(old)
-        afterOperation()
+        spec.afterAdd(element)
+        spec.afterRemove(old)
+        spec.afterOperation()
         return old
     }
 
     override fun add(index: Int, element: E) {
         if(index < 0 || index > delegate.size) throw IndexOutOfBoundsException(index)
-        beforeOperation()
-        beforeAdd(element)
+        spec.beforeOperation()
+        spec.beforeAdd(element)
         delegate.add(index, element)
-        afterAdd(element)
-        afterOperation()
+        spec.afterAdd(element)
+        spec.afterOperation()
     }
 
     override fun removeAt(index: Int): E {
         val old = delegate[index]
-        beforeOperation()
-        beforeRemove(old)
+        spec.beforeOperation()
+        spec.beforeRemove(old)
         delegate.removeAt(index)
-        afterRemove(old)
-        afterOperation()
+        spec.afterRemove(old)
+        spec.afterOperation()
         return old
     }
 

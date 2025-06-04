@@ -23,27 +23,25 @@ class PluggableListIterator<E>(
     override val delegate: MutableListIterator<E>,
     spec: PluggableSpec<E>
 ) : PluggableIterator<E>(delegate, spec), MutableListIterator<E> {
-    private val beforeAdd get() = spec.beforeAdd
-    private val afterAdd get() = spec.afterAdd
 
     override fun set(element: E) {
         if(current == null) throw IllegalStateException()
-        beforeOperation()
-        beforeRemove(current!!)
-        beforeAdd(element)
+        spec.beforeOperation()
+        spec.beforeRemove(current!!)
+        spec.beforeAdd(element)
         delegate.set(element)
-        afterRemove(current!!)
-        afterAdd(element)
-        afterOperation()
+        spec.afterRemove(current!!)
+        spec.afterAdd(element)
+        spec.afterOperation()
         current = element
     }
 
     override fun add(element: E) {
-        beforeOperation()
-        beforeAdd(element)
+        spec.beforeOperation()
+        spec.beforeAdd(element)
         delegate.add(element)
-        afterAdd(element)
-        afterOperation()
+        spec.afterAdd(element)
+        spec.afterOperation()
         current = null
     }
 

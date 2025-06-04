@@ -21,25 +21,19 @@ package me.datafox.dfxtools.utils.collection
  */
 class PluggableMap<K, V>(
     private val delegate: MutableMap<K, V>,
-    private val spec: PluggableMapSpec<K, V>
+    val spec: PluggableMapSpec<K, V>
 ) : MutableMap<K, V> {
     override val size: Int get() = delegate.size
     override val keys: MutableSet<K> = PluggableMapKeys(this)
     override val values: MutableCollection<V> = PluggableMapValues(this)
     override val entries: MutableSet<MutableMap.MutableEntry<K, V>> = PluggableMapEntries(this)
-    private val beforeAdd get() = spec.beforeAdd
-    private val afterAdd get() = spec.afterAdd
-    private val beforeRemove get() = spec.beforeRemove
-    private val afterRemove get() = spec.afterRemove
-    private val beforeOperation get() = spec.beforeOperation
-    private val afterOperation get() = spec.afterOperation
 
     fun callInitialElements() {
         if(delegate.isNotEmpty()) {
-            beforeOperation()
-            delegate.forEach { beforeAdd(it.key, it.value) }
-            delegate.forEach { afterAdd(it.key, it.value) }
-            afterOperation()
+            spec.beforeOperation()
+            delegate.forEach { spec.beforeAdd(it.key, it.value) }
+            delegate.forEach { spec.afterAdd(it.key, it.value) }
+            spec.afterOperation()
         }
     }
 
@@ -53,24 +47,24 @@ class PluggableMap<K, V>(
 
     override fun put(key: K, value: V): V? {
         val old = delegate[key]
-        beforeOperation()
-        beforeAdd(key, value)
-        if(old != null) beforeRemove(key, old)
+        spec.beforeOperation()
+        spec.beforeAdd(key, value)
+        if(old != null) spec.beforeRemove(key, old)
         delegate.put(key, value)
-        afterAdd(key, value)
-        if(old != null) afterRemove(key, old)
-        afterOperation()
+        spec.afterAdd(key, value)
+        if(old != null) spec.afterRemove(key, old)
+        spec.afterOperation()
         return old
     }
 
     override fun remove(key: K): V? {
         if(key !in delegate) return null
         val removed = delegate[key]!!
-        beforeOperation()
-        beforeRemove(key, removed)
+        spec.beforeOperation()
+        spec.beforeRemove(key, removed)
         delegate.remove(key)
-        afterRemove(key, removed)
-        afterOperation()
+        spec.afterRemove(key, removed)
+        spec.afterOperation()
         return removed
     }
 
@@ -83,32 +77,32 @@ class PluggableMap<K, V>(
     override fun putAll(from: Map<out K, V>) {
         if(from.isEmpty()) return
         val removed = delegate.filterKeys { it in from }
-        beforeOperation()
-        from.forEach { beforeAdd(it.key, it.value) }
-        removed.forEach { beforeRemove(it.key, it.value) }
+        spec.beforeOperation()
+        from.forEach { spec.beforeAdd(it.key, it.value) }
+        removed.forEach { spec.beforeRemove(it.key, it.value) }
         delegate.putAll(from)
-        from.forEach { afterAdd(it.key, it.value) }
-        removed.forEach { afterRemove(it.key, it.value) }
-        afterOperation()
+        from.forEach { spec.afterAdd(it.key, it.value) }
+        removed.forEach { spec.afterRemove(it.key, it.value) }
+        spec.afterOperation()
     }
 
     override fun clear() {
         if(isEmpty()) return
         val removed = delegate.toMap()
-        beforeOperation()
-        removed.forEach { beforeRemove(it.key, it.value) }
+        spec.beforeOperation()
+        removed.forEach { spec.beforeRemove(it.key, it.value) }
         delegate.clear()
-        removed.forEach { afterRemove(it.key, it.value) }
-        afterOperation()
+        removed.forEach { spec.afterRemove(it.key, it.value) }
+        spec.afterOperation()
     }
 
     fun removeAll(keys: Collection<K>): Boolean {
         val its = delegate.filter { it.key in keys }
         if(its.isEmpty()) return false
-        beforeOperation()
-        its.forEach { beforeRemove(it.key, it.value) }
+        spec.beforeOperation()
+        its.forEach { spec.beforeRemove(it.key, it.value) }
         its.keys.forEach { delegate.remove(it) }
-        its.forEach { afterRemove(it.key, it.value) }
+        its.forEach { spec.afterRemove(it.key, it.value) }
         return true
     }
 

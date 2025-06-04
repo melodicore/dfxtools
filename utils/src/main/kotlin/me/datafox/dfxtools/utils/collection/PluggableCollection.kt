@@ -26,43 +26,37 @@ private val logger = KotlinLogging.logger {}
  */
 abstract class PluggableCollection<E>(
     protected open val delegate: MutableCollection<E>,
-    protected open val spec: PluggableSpec<E>
+    open val spec: PluggableSpec<E>
 ) : MutableCollection<E> {
     override val size: Int get() = delegate.size
-    protected val beforeAdd get() = spec.beforeAdd
-    protected val afterAdd get() = spec.afterAdd
-    protected val beforeRemove get() = spec.beforeRemove
-    protected val afterRemove get() = spec.afterRemove
-    protected val beforeOperation get() = spec.beforeOperation
-    protected val afterOperation get() = spec.afterOperation
 
     fun callInitialElements() {
         if(delegate.isNotEmpty()) {
-            beforeOperation()
-            delegate.forEach { beforeAdd(it) }
-            delegate.forEach { afterAdd(it) }
-            afterOperation()
+            spec.beforeOperation()
+            delegate.forEach { spec.beforeAdd(it) }
+            delegate.forEach { spec.afterAdd(it) }
+            spec.afterOperation()
         }
     }
 
     override fun remove(element: E): Boolean {
         val it = delegate.find { element == it } ?: return false
-        beforeOperation()
-        beforeRemove(it)
+        spec.beforeOperation()
+        spec.beforeRemove(it)
         delegate.remove(it)
-        afterRemove(it)
-        afterOperation()
+        spec.afterRemove(it)
+        spec.afterOperation()
         return true
     }
 
     override fun removeIf(filter: Predicate<in E>): Boolean {
         val its = delegate.filter { filter.test(it) }
         if(its.isEmpty()) return false
-        beforeOperation()
-        its.forEach { beforeRemove(it) }
+        spec.beforeOperation()
+        its.forEach { spec.beforeRemove(it) }
         delegate.removeAll(its)
-        its.forEach { afterRemove(it) }
-        afterOperation()
+        its.forEach { spec.afterRemove(it) }
+        spec.afterOperation()
         return true
     }
 
@@ -76,11 +70,11 @@ abstract class PluggableCollection<E>(
 
     override fun clear() {
         val its = delegate.toList()
-        beforeOperation()
-        its.forEach { beforeRemove(it) }
+        spec.beforeOperation()
+        its.forEach { spec.beforeRemove(it) }
         delegate.clear()
-        its.forEach { afterRemove(it) }
-        afterOperation()
+        its.forEach { spec.afterRemove(it) }
+        spec.afterOperation()
     }
 
     override fun iterator(): MutableIterator<E> =

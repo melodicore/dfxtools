@@ -21,13 +21,9 @@ package me.datafox.dfxtools.utils.collection
  */
 open class PluggableIterator<E>(
     protected open val delegate: MutableIterator<E>,
-    protected open val spec: PluggableSpec<E>
+    open val spec: PluggableSpec<E>
 ) : MutableIterator<E> {
     protected var current: E? = null
-    protected val beforeRemove get() = spec.beforeRemove
-    protected val afterRemove get() = spec.afterRemove
-    protected val beforeOperation get() = spec.beforeOperation
-    protected val afterOperation get() = spec.afterOperation
 
     override fun next(): E {
         current = delegate.next()
@@ -38,11 +34,11 @@ open class PluggableIterator<E>(
 
     override fun remove() {
         if(current == null) throw NoSuchElementException()
-        beforeOperation()
-        beforeRemove(current!!)
+        spec.beforeOperation()
+        spec.beforeRemove(current!!)
         delegate.remove()
-        afterRemove(current!!)
-        afterOperation()
+        spec.afterRemove(current!!)
+        spec.afterOperation()
         current = null
     }
 }
