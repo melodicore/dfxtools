@@ -23,3 +23,8 @@ fun <E> MutableCollection<E>.addIfNotNull(element: E?) {
 fun <E> MutableCollection<E>.addAllIfNotNull(elements: Collection<E?>?) {
     elements?.filterNotNull()?.apply { addAll(this) }
 }
+
+fun <E> Iterable<E>.toCollection(): Collection<E> {
+    if(this is Collection<E>) return this
+    return toCollection(ArrayList())
+}
