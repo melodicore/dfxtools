@@ -39,4 +39,10 @@ class ListenableList<E> private constructor(
     fun addListener(listener: CollectionListener<E>): Boolean = listeners.add(listener)
 
     fun removeListener(listener: CollectionListener<E>): Boolean = listeners.remove(listener)
+
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
 }

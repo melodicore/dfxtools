@@ -40,11 +40,17 @@ class ObservableMap<K, V : Observable> @JvmOverloads constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    map: PluggableMap<K, V> = PluggableMap(delegate, spec(observer, invalidateObserver, identifier)),
+    private val map: PluggableMap<K, V> = PluggableMap(delegate, spec(observer, invalidateObserver, identifier)),
 ) : MutableMap<K, V> by map {
     init {
         if(callInitialElements) map.callInitialElements()
     }
+
+    override fun equals(other: Any?): Boolean = map == other
+
+    override fun hashCode(): Int = map.hashCode()
+
+    override fun toString(): String = map.toString()
 
     companion object {
         fun <K, V : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableMapSpec<K, V> =

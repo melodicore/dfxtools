@@ -41,4 +41,10 @@ class LateDelegatedMap<K, V> : MutableMap<K, V> {
     override fun containsKey(key: K): Boolean = delegate.containsKey(key)
 
     override fun containsValue(value: V): Boolean = delegate.containsValue(value)
+
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
 }

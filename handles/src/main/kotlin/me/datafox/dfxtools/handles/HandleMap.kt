@@ -65,6 +65,12 @@ class HandleMap<V> private constructor(
         putAll(entries)
     }
 
+    override fun equals(other: Any?): Boolean = map == other
+
+    override fun hashCode(): Int = map.hashCode()
+
+    override fun toString(): String = map.toString()
+
     companion object {
         /**
          * Returns a [PluggableMapSpec] which asserts that all added [Handle] keys belong to [space].

@@ -40,6 +40,12 @@ class ListenableMap<K, V> private constructor(
 
     fun removeListener(listener: MapListener<K, V>): Boolean = listeners.remove(listener)
 
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
+
     companion object {
         fun <K, V> spec(beforeSpec: PluggableMapSpec<K, V>?, afterSpec: PluggableMapSpec<K, V>?, listeners: Set<MapListener<K, V>>): PluggableMapSpec<K, V> {
             val spec = PluggableMapSpec<K, V>(

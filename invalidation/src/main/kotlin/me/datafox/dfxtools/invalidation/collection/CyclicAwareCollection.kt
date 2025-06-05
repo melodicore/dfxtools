@@ -71,4 +71,10 @@ class CyclicAwareCollection @JvmOverloads constructor(
         if(identifiers.isEmpty()) delegate.remove(observer)
         return remove
     }
+
+    override fun equals(other: Any?): Boolean = delegate.keys == other
+
+    override fun hashCode(): Int = delegate.keys.hashCode()
+
+    override fun toString(): String = delegate.keys.toString()
 }

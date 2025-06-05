@@ -41,11 +41,17 @@ class ObservableList<E : Observable> @JvmOverloads constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    list: PluggableList<E> = PluggableList(delegate, spec(observer, invalidateObserver, identifier))
+    private val list: PluggableList<E> = PluggableList(delegate, spec(observer, invalidateObserver, identifier))
 ) : MutableList<E> by list {
     init {
         if(callInitialElements) list.callInitialElements()
     }
+
+    override fun equals(other: Any?): Boolean = list == other
+
+    override fun hashCode(): Int = list.hashCode()
+
+    override fun toString(): String = list.toString()
 
     companion object {
         fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =

@@ -41,4 +41,10 @@ open class PluggableIterator<E>(
         spec.afterOperation()
         current = null
     }
+
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
 }

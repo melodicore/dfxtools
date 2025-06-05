@@ -40,6 +40,12 @@ class ListenableSet<E> private constructor(
 
     fun removeListener(listener: CollectionListener<E>): Boolean = listeners.remove(listener)
 
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
+
     companion object {
         fun <E> spec(beforeSpec: PluggableSpec<E>?, afterSpec: PluggableSpec<E>?, listeners: Set<CollectionListener<E>>): PluggableSpec<E> {
             val spec = PluggableSpec<E>(

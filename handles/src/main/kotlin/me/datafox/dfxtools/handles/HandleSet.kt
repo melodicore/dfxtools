@@ -109,6 +109,12 @@ class HandleSet private constructor(
      */
     operator fun minusAssign(ids: Iterable<String>) { removeAll(ids) }
 
+    override fun equals(other: Any?): Boolean = set == other
+
+    override fun hashCode(): Int = set.hashCode()
+
+    override fun toString(): String = set.toString()
+
     companion object {
         /**
          * Returns a [PluggableSpec] which asserts that all added [Handles][Handle] belong to [space].

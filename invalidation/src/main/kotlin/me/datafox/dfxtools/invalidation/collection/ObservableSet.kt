@@ -41,11 +41,17 @@ class ObservableSet<E : Observable> @JvmOverloads constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    set: PluggableSet<E> = PluggableSet(delegate, spec(observer, invalidateObserver, identifier))
+    private val set: PluggableSet<E> = PluggableSet(delegate, spec(observer, invalidateObserver, identifier))
 ) : MutableSet<E> by set {
     init {
         if(callInitialElements) set.callInitialElements()
     }
+
+    override fun equals(other: Any?): Boolean = set == other
+
+    override fun hashCode(): Int = set.hashCode()
+
+    override fun toString(): String = set.toString()
 
     companion object {
         fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =

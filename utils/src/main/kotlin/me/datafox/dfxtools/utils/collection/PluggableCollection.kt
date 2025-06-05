@@ -85,4 +85,10 @@ abstract class PluggableCollection<E>(
     override fun contains(element: E): Boolean = delegate.contains(element)
 
     override fun containsAll(elements: Collection<E>): Boolean = delegate.containsAll(elements)
+
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
 }

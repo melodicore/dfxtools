@@ -62,4 +62,10 @@ class LateDelegatedList<E> : MutableList<E> {
     override fun indexOf(element: E): Int = delegate.indexOf(element)
 
     override fun lastIndexOf(element: E): Int = delegate.lastIndexOf(element)
+
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
 }

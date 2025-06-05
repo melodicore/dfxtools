@@ -119,6 +119,12 @@ class PluggableMap<K, V>(
         return removeAll(reverse)
     }
 
+    override fun equals(other: Any?): Boolean = delegate == other
+
+    override fun hashCode(): Int = delegate.hashCode()
+
+    override fun toString(): String = delegate.toString()
+
     private class PluggableMapKeys<K, V>(private val parent: PluggableMap<K, V>) : MutableSet<K> {
         override val size: Int get() = parent.size
 
