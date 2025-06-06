@@ -58,6 +58,8 @@ class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
         return last
     }
 
+    operator fun set(key1: K1, key2: K2, value: V) = put(key1, key2, value)
+
     fun remove(key1: K1, key2: K2): V? {
         if(firstToSecond[key1] != key2 || secondToFirst[key2] != key1) {
             throw IllegalArgumentException("Keys do not match")
