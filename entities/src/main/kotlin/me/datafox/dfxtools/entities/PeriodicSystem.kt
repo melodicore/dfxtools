@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+package me.datafox.dfxtools.entities
 
-plugins {
-    `kotlin-dsl`
-}
+/**
+ * @author Lauri "datafox" Heino
+ */
+abstract class PeriodicSystem(val period: Float) : EntitySystem {
+    protected var counter = 0f
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_22
-    targetCompatibility = JavaVersion.VERSION_22
-}
+    abstract fun update()
 
-kotlin {
-    jvmToolchain(24)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_22
+    override fun update(delta: Float) {
+        counter += delta
+        while(counter >= period) {
+            update()
+            counter -= period
+        }
     }
-}
-
-dependencies {
-    implementation(libs.kotlinGradlePlugin)
-    implementation(libs.kotlinSerializationPlugin)
-    implementation(libs.mavenPublishPlugin)
-    implementation(libs.dokkaPlugin)
 }

@@ -14,27 +14,15 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+package me.datafox.dfxtools.entities.serialization
 
-plugins {
-    `kotlin-dsl`
-}
+import me.datafox.dfxtools.handles.Handled
+import kotlin.reflect.KClass
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_22
-    targetCompatibility = JavaVersion.VERSION_22
-}
+interface Converter<T : Any> : Handled {
+    val type: KClass<T>
 
-kotlin {
-    jvmToolchain(24)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_22
-    }
-}
+    fun convert(params: Map<String, String>): T
 
-dependencies {
-    implementation(libs.kotlinGradlePlugin)
-    implementation(libs.kotlinSerializationPlugin)
-    implementation(libs.mavenPublishPlugin)
-    implementation(libs.dokkaPlugin)
+    fun convert(value: T): Map<String, String>
 }

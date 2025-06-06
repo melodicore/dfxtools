@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+package me.datafox.dfxtools.entities
 
-plugins {
-    `kotlin-dsl`
-}
+/**
+ * @author Lauri "datafox" Heino
+ */
+interface EntitySystem : Comparable<EntitySystem> {
+    val priority: Int
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_22
-    targetCompatibility = JavaVersion.VERSION_22
-}
+    fun onAttach()
 
-kotlin {
-    jvmToolchain(24)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_22
-    }
-}
+    fun update(delta: Float)
 
-dependencies {
-    implementation(libs.kotlinGradlePlugin)
-    implementation(libs.kotlinSerializationPlugin)
-    implementation(libs.mavenPublishPlugin)
-    implementation(libs.dokkaPlugin)
+    fun onDetach()
+
+    override fun compareTo(other: EntitySystem): Int = priority.compareTo(other.priority)
 }

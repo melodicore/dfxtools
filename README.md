@@ -13,10 +13,10 @@ warning!
 | [Configuration](configuration) | Cascading configuration with arbitrarily typed values | Done               |
 | [Handles](handles)             | Categorizable identification                          | Done               |
 | [Invalidation](invalidation)   | Invalidation of values that depend on other values    | Done               |
+| [Entities](entities)           | Serializable entity-component system                  | Under construction |
 | [Text](text)                   | Number formatting and text handling                   | Under construction |
 | [Utils](utils)                 | Utilities used by other modules                       | Under construction |
 | [Values](values)               | Mutable and dynamically modifiable numbers            | Under construction |
-| Entities                       | Entity-Component system based on nodes                | Not started yet    |
 
 ## Differences to DFXEngine
 
