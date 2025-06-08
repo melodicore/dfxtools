@@ -16,18 +16,13 @@
 
 package me.datafox.dfxtools.values
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.invalidation.AbstractObservable
-import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.values.operation.Marker
 import java.math.BigDecimal
-
-private val logger = KotlinLogging.logger {}
 
 /**
  * @author Lauri "datafox" Heino
  */
-class MarkerValue(val marker: Int) : AbstractObservable(), Value {
-    override val value: BigDecimal get() {
-        logThrow(logger, "Marker values do not hold an actual value") { UnsupportedOperationException(it) }
-    }
+class MarkerValue(value: Int) : AbstractObservable(), Value {
+    override val value: BigDecimal = Marker(value)
 }

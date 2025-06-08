@@ -29,17 +29,17 @@ import java.util.*
 private val logger = KotlinLogging.logger {}
 
 /**
- * A map for [HandledValues][HandledValue]. May be backed with a regular [SortedMap] or a [HandleMap] to limit values
- * to a single [Space]. If any [HandledValue] is invalidated, it also invalidates this map and all of its [observers].
- * [Modifiers][Modifier] can also be added to this map through [modifiers], and all of these modifiers will be added to
- * all values in the map that are [ModifiableValue], retro- and proactively. Removing a modifier will also remove it
- * from all modifiable values in the map, and removing a value will remove all this map's modifiers from the value.
+ * A map for [ModifiableValues][ModifiableValue]. May be backed with a regular [SortedMap] or a [HandleMap] to limit
+ * values to a single [Space]. If any [ModifiableValue] is invalidated, it also invalidates this map and all of its
+ * [observers]. [Modifiers][Modifier] can also be added to this map through [modifiers], and all of these modifiers will
+ * be added to all values in the map retro- and proactively. Removing a modifier will also remove it from all modifiable
+ * values in this map, and removing a value will remove all this map's modifiers from the removed value.
  *
  * @author Lauri "datafox" Heino
  */
-class ValueMap<V : HandledValue> private constructor(
-    private val map: LateDelegatedMap<Handle, V> = LateDelegatedMap()
-): AbstractObservableObserver(), MutableMap<Handle, V> by map {
+class ValueMap private constructor(
+    private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap()
+): AbstractObservableObserver(), MutableMap<Handle, ModifiableValue> by map {
     val modifiers: MutableSet<Modifier> = PluggableSet(sortedSetOf(), modifierSpec { values })
 
     /**
@@ -72,14 +72,14 @@ class ValueMap<V : HandledValue> private constructor(
     }
 
     companion object {
-        fun <V : HandledValue> spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, V> = PluggableMapSpec(
-            beforeAdd = { _, v -> if(v is ModifiableValue) v.modifiers.addAll(modifiers) },
-            beforeRemove = { _, v -> if(v is ModifiableValue) v.modifiers.removeAll(modifiers) }
+        fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> = PluggableMapSpec(
+            beforeAdd = { _, v -> v.modifiers.addAll(modifiers) },
+            beforeRemove = { _, v -> v.modifiers.removeAll(modifiers) }
         )
 
-        fun <V : HandledValue> modifierSpec(values: () -> Collection<V>): PluggableSpec<Modifier> = PluggableSpec(
-            afterAdd = { mod -> values().mapNotNull { it as? ModifiableValue }.forEach { it.modifiers.add(mod) } },
-            afterRemove = { mod -> values().mapNotNull { it as? ModifiableValue }.forEach { it.modifiers.remove(mod) } }
+        fun modifierSpec(values: () -> Collection<ModifiableValue>): PluggableSpec<Modifier> = PluggableSpec(
+            afterAdd = { mod -> values().map { it }.forEach { it.modifiers.add(mod) } },
+            afterRemove = { mod -> values().map { it }.forEach { it.modifiers.remove(mod) } }
         )
     }
 }

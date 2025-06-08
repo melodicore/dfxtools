@@ -17,6 +17,7 @@
 package me.datafox.dfxtools.values
 
 import me.datafox.dfxtools.handles.Handle
+import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.property.InvalidatedProperty
 import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
@@ -35,7 +36,7 @@ class ModifiableValue(
     override val handle: Handle,
     value: BigDecimal = BigDecimal.ZERO,
     vararg modifiers: Modifier,
-) : AbstractObservableObserver(), HandledValue {
+) : AbstractObservableObserver(), Value, Handled {
     var base: BigDecimal by InvalidatorProperty(value) {
         (this::value.getDelegate() as InvalidatedProperty<*>).invalidate()
     }
