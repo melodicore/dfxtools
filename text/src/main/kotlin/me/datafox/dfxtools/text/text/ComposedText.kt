@@ -49,7 +49,8 @@ class ComposedText @JvmOverloads constructor(
      * determined by [useListDelimiter].
      */
     override fun generate(configuration: Configuration?): String {
-        val configuration = applyConfiguration(configuration)
-        return texts.map { it.generate(configuration) }.join(useListDelimiter, configuration)
+        val configuration = combineNullable(configuration)
+        val own = applyConfiguration(configuration, useListDelimiter)
+        return texts.map { it.generate(configuration) }.join(useListDelimiter, own)
     }
 }

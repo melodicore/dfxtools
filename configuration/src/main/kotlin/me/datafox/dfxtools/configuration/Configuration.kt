@@ -73,8 +73,13 @@ class Configuration() {
      * Copies all values of the [configuration] to this configuration, overriding existing values.
      *
      * @param configuration Configuration to copy values from.
+     * @param keys [ConfigurationKeys][ConfigurationKey] to be copied from [configuration], or empty is all keys should
+     * be copied. Keys that are not present will be ignored.
      */
-    fun append(configuration: Configuration) { map.putAll(configuration.map) }
+    fun append(configuration: Configuration, vararg keys: ConfigurationKey<*>) {
+        if(keys.isEmpty()) map.putAll(configuration.map)
+        else map.putAll(keys.mapNotNull { it to (configuration.map[it] ?: return@mapNotNull null) })
+    }
 
     /**
      * Copies all values of the [configuration] to this configuration, overriding existing values. Alias for [append].

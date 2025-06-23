@@ -23,6 +23,7 @@ version = libs.versions.text.get()
 
 dependencies {
     implementation(project(":configuration"))
+    implementation(project(":handles"))
     implementation(project(":utils"))
     implementation(libs.logging)
     implementation(libs.bigmath)

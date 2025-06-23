@@ -50,7 +50,7 @@ object ExponentSuffixFormatter : NumberSuffixFormatter {
     override val infinite = true
 
     override fun format(number: BigDecimal, configuration: Configuration?): Output {
-        val configuration = ConfigurationManager[configuration]
+        val configuration = ConfigurationManager[configuration, interval, exponentPlus]
         val interval = configuration[interval]
         validateConfiguration(interval)
         var shift = 0

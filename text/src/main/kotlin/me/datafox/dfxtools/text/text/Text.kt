@@ -17,6 +17,7 @@
 package me.datafox.dfxtools.text.text
 
 import me.datafox.dfxtools.configuration.Configuration
+import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
 
 /**
@@ -33,13 +34,21 @@ interface Text {
      * Generates text based on the implementation and [configuration].
      *
      * @param configuration Extra [Configuration] for this generation.
+     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all keys should be
+     * included.
      * @return Generated text.
      */
     fun generate(configuration: Configuration? = null): String
 
-    fun applyConfiguration(funConfiguration: Configuration?): Configuration {
-        val final = ConfigurationManager[configuration]
+    fun applyConfiguration(funConfiguration: Configuration?, vararg keys: ConfigurationKey<*>): Configuration {
+        val final = ConfigurationManager.get(configuration, *keys)
         if(funConfiguration != null) final.append(funConfiguration)
         return final
+    }
+
+    fun combineNullable(funConfiguration: Configuration?): Configuration? {
+        if(configuration == null) return funConfiguration
+        if(funConfiguration == null) return configuration
+        return Configuration(configuration!!).apply { append(funConfiguration) }
     }
 }

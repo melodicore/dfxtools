@@ -68,7 +68,7 @@ object CharDigitSuffixFormatter : NumberSuffixFormatter {
         number: BigDecimal,
         configuration: Configuration?
     ): Output {
-        val configuration = ConfigurationManager[configuration]
+        val configuration = ConfigurationManager[configuration, characters, interval, exponentPlus]
         val interval = configuration[interval]
         val characters = configuration[characters]
         validateConfiguration(interval, characters)

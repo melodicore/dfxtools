@@ -18,27 +18,28 @@ package me.datafox.dfxtools.text.text
 
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
+import me.datafox.dfxtools.text.TextManager
 
 /**
- * A [Text] implementation that returns the value of [key] transformed to a string with [transformer].
+ * A simple [Text] implementation that always returns the output of [singular].
  *
- * @property key [ConfigurationKey] to be used for generation.
- * @property configuration [Configuration] for this text.
- * @property transformer Lambda that transforms the value of [key] to a string.
+ * @property configuration Ignored [Configuration].
+ * @property singular Lambda that returns the text to be "generated".
  *
  * @author Lauri "datafox" Heino
  */
-class ConfigurationText<T> @JvmOverloads constructor(
-    val key: ConfigurationKey<T>,
+class PluralText @JvmOverloads constructor(
     override val configuration: Configuration? = null,
-    val transformer: (T) -> String
+    val singular: Text,
+    val plural: Text = SimpleText { TextManager.pluralConverter(singular.generate(it)) },
 ) : Text {
-    /**
-     * Returns the value of [key] transformed to a string with [transformer].
-     *
-     * @param configuration Extra [Configuration] for this text.
-     * @return Value of [key] transformed to a string with [transformer].
-     */
-    override fun generate(configuration: Configuration?) =
-        transformer(applyConfiguration(configuration, key)[key])
+    override fun generate(configuration: Configuration?): String {
+        val configuration = combineNullable(configuration)
+        val own = applyConfiguration(configuration, usePlural)
+        return if(own[usePlural]) plural.generate(configuration) else singular.generate(configuration)
+    }
+
+    companion object {
+        val usePlural: ConfigurationKey<Boolean> = ConfigurationKey(false)
+    }
 }

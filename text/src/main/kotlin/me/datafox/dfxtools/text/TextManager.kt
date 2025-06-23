@@ -56,4 +56,16 @@ object TextManager {
     val numberFormatter: ConfigurationKey<NumberFormatter> = ConfigurationKey(SimpleNumberFormatter)
     val numberSuffixFormatter: ConfigurationKey<NumberSuffixFormatter> = ConfigurationKey(ExponentSuffixFormatter)
     var fallbackNumberSuffixFormatter: NumberSuffixFormatter by ConditionalReadWriteProperty(value = ExponentSuffixFormatter) { it.infinite }
+    var pluralConverter: (String) -> String = { defaultPluralConverter(it) }
+
+    private val vowelsWithY = listOf("ay", "ey", "iy", "oy", "uy", "yy")
+    private val esPrefixes = listOf("s", "x", "z", "ch", "sh", "zh")
+
+    fun defaultPluralConverter(str: String): String {
+        if(str.isBlank()) return str
+        if(str.endsWith("y", true) &&
+            vowelsWithY.none { str.endsWith(it, true) }) return str.substring(0, str.length - 1) + "ies"
+        if(esPrefixes.any { str.endsWith(it, true) }) return "${str}es"
+        return "${str}s"
+    }
 }

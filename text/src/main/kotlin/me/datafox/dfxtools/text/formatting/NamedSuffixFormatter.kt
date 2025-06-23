@@ -81,14 +81,15 @@ object NamedSuffixFormatter : NumberSuffixFormatter {
     override val infinite = false
 
     override fun format(number: BigDecimal, configuration: Configuration?): Output {
-        val configuration = ConfigurationManager[configuration]
+        val original = configuration
+        val configuration = ConfigurationManager[configuration, suffixes, interval]
         val interval: Int = configuration[interval]
         validateConfiguration(interval)
         val exponent = BigDecimalMath.exponent(number)
         val index = Math.floorDiv(exponent, interval)
         val suffixes = configuration[suffixes]
         if(number.abs() < BigDecimal.ONE || index < 0 || index >= suffixes.size) {
-            return TextManager.fallbackNumberSuffixFormatter.format(number, configuration)
+            return TextManager.fallbackNumberSuffixFormatter.format(number, original)
         }
         val shift = Math.floorMod(exponent, interval)
         var mantissa = BigDecimalMath.mantissa(number)

@@ -21,7 +21,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
-import me.datafox.dfxtools.text.TextManager
+import me.datafox.dfxtools.text.TextManager.numberSuffixFormatter
 import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.length
 import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.minExponent
 import me.datafox.dfxtools.text.formatting.EvenLengthNumberFormatter.padZeros
@@ -64,7 +64,8 @@ object EvenLengthNumberFormatter : NumberFormatter {
         number: BigDecimal,
         configuration: Configuration?
     ): String {
-        val configuration = ConfigurationManager[configuration]
+        val original = configuration
+        val configuration = ConfigurationManager[configuration, numberSuffixFormatter, length, minExponent, padZeros]
         val actualLength = configuration[length]
         var length = actualLength
         val minExponent = configuration[minExponent]
@@ -75,7 +76,7 @@ object EvenLengthNumberFormatter : NumberFormatter {
         if(number.signum() == -1) length--
         if(exponent == length - 1 && length == minExponent) out = getNumberString(number, length, actualLength)
         else if(abs(exponent) >= minExponent) {
-            val output = configuration[TextManager.numberSuffixFormatter].format(number, configuration)
+            val output = configuration[numberSuffixFormatter].format(number, original)
             suffix = output.suffix
             val exp = abs(BigDecimalMath.exponent(output.scaled))
             out = if(exp == length - suffix.length - 1) {

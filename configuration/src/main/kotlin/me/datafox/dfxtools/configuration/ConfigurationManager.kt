@@ -41,11 +41,13 @@ object ConfigurationManager {
     /**
      * Returns a *copy* of the [Configuration] associated with this manager and appends [configuration] to it.
      *
-     * @param configuration [Configuration] to be appended
+     * @param configuration [Configuration] to be appended.
+     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all keys should be
+     * included.
      * @return Copy of the [Configuration] associated with this manager with [configuration] appended to it.
      */
-    operator fun get(configuration: Configuration?): Configuration =
-        get().apply { if(configuration != null) append(configuration) }
+    operator fun get(configuration: Configuration?, vararg keys: ConfigurationKey<*>): Configuration =
+        get().apply { if(configuration != null) append(configuration, *keys) }
 
     /**
      * Returns the value associated with the [key].

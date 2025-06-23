@@ -38,6 +38,9 @@ class NumberText @JvmOverloads constructor(
      * @param configuration Extra [Configuration] for this generation. Will be passed on to [numberFormatter].
      * @return Output of [number] formatted with [numberFormatter].
      */
-    override fun generate(configuration: Configuration?) =
-        applyConfiguration(configuration)[numberFormatter].format(number(), configuration)
+    override fun generate(configuration: Configuration?): String {
+        val configuration = combineNullable(configuration)
+        val own = applyConfiguration(configuration, numberFormatter)
+        return own[numberFormatter].format(number(), configuration)
+    }
 }

@@ -21,7 +21,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
-import me.datafox.dfxtools.text.TextManager
+import me.datafox.dfxtools.text.TextManager.numberSuffixFormatter
 import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.minExponent
 import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.precision
 import me.datafox.dfxtools.text.formatting.SimpleNumberFormatter.stripZeros
@@ -61,14 +61,15 @@ object SimpleNumberFormatter : NumberFormatter {
         number: BigDecimal,
         configuration: Configuration?
     ): String {
-        val configuration = ConfigurationManager[configuration]
+        val original = configuration
+        val configuration = ConfigurationManager[configuration, numberSuffixFormatter, precision, minExponent, stripZeros]
         val precision = configuration[precision]
         val minExponent = configuration[minExponent]
         validateConfiguration(precision, minExponent)
         var number = number
         var suffix = ""
         if(abs(BigDecimalMath.exponent(number)) >= minExponent) {
-            val output = configuration[TextManager.numberSuffixFormatter].format(number, configuration)
+            val output = configuration[numberSuffixFormatter].format(number, original)
             number = output.scaled
             suffix = output.suffix
         }

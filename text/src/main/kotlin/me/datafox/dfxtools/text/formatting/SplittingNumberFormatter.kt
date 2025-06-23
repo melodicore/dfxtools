@@ -94,14 +94,15 @@ object SplittingNumberFormatter : NumberFormatter {
         number: BigDecimal,
         configuration: Configuration?
     ): String {
-        var number = number
-        val configuration = ConfigurationManager[configuration]
+        val original = configuration
+        val configuration = ConfigurationManager[configuration, splits, formatter, roundSmallest, useListDelimiter]
         val delegate = configuration[formatter]
         val splits = configuration[splits]
         validateConfiguration(delegate, splits)
+        var number = number
         if(number < BigDecimal.ZERO) {
             logger.warn { SPNF_NEGATIVE }
-            return delegate.format(number, configuration)
+            return delegate.format(number, original)
         }
         val out: MutableList<String> = mutableListOf()
         for(i in splits.size - 1 downTo 0) {
@@ -110,7 +111,7 @@ object SplittingNumberFormatter : NumberFormatter {
                 val divided = if(i != 0) number.divideToIntegralValue(split.scale).setScale(0, RoundingMode.DOWN)
                 else if(configuration[roundSmallest]) number.setScale(0, RoundingMode.DOWN)
                 else number
-                val formatted = delegate.format(divided, configuration)
+                val formatted = delegate.format(divided, original)
                 if(formatted.isZero() && (i != 0 || out.isNotEmpty())) continue
                 number = number.remainder(split.scale)
                 if(formatted.isOne()) out.add(formatted + split.singular)
