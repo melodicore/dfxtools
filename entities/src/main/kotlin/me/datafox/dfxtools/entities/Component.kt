@@ -22,7 +22,7 @@ import me.datafox.dfxtools.entities.Engine.dataSpace
 import me.datafox.dfxtools.entities.Engine.schemaSpace
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
-import me.datafox.dfxtools.utils.collection.PluggableMap
+import me.datafox.dfxtools.utils.collection.ListenableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import java.util.*
 import kotlin.reflect.KClass
@@ -39,19 +39,20 @@ class Component internal constructor(
     override val handle = componentSpace.getOrCreateHandle(id)
     private val index: Long = indexCounter++
     private val identifier = Any()
-    private val _data: MutableMap<KClass<*>, HandleMap<EntityData<*>>> = mutableMapOf()
-    val data: Map<KClass<*>, Map<Handle, EntityData<*>>> = _data
-    private val _schemas: PluggableMap<Handle, Schema> = PluggableMap(
-        TreeMap(),
-        PluggableMapSpec(HandleMap.spec(schemaSpace), schemaSpec(this))
+    private val _data: ListenableMap<KClass<*>, HandleMap<EntityData<*>>> = ListenableMap()
+    val data: ListenableMap.View<KClass<*>, Map<Handle, EntityData<*>>> = _data.view
+    private val _schemas: ListenableMap<Handle, Schema> = ListenableMap(
+        HandleMap.spec(schemaSpace),
+        schemaSpec(this),
+        TreeMap()
     )
-    val schemas: Map<Handle, Schema> = _schemas
+    val schemas: ListenableMap.View<Handle, Schema> by lazy { _schemas.view }
 
     operator fun <T : Any> get(type: KClass<T>, id: String): T? = getDataMap(type)[id]?.data
 
     fun <T : Any> getData(type: KClass<T>, id: String): EntityData<T>? = getDataMap(type)[id]
 
-    fun <T : Any> getDataMap(type: KClass<T>): Map<Handle, EntityData<T>> = getDataMapInternal(type)
+    fun <T : Any> getDataMap(type: KClass<T>): ListenableMap.View<Handle, EntityData<T>> = getDataMapInternal(type).view
 
     operator fun contains(type: KClass<*>): Boolean = _data[type]?.isNotEmpty() ?: false
 

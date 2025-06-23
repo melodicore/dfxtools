@@ -24,6 +24,7 @@ import me.datafox.dfxtools.handles.internal.Strings.handleIdExists
 import me.datafox.dfxtools.handles.internal.Strings.invalidHandleId
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.ListenableSet
 
 private val logger = KotlinLogging.logger {}
 
@@ -52,7 +53,7 @@ class Handle : Comparable<Handle> {
     val index: Int
     val subindex: Int
     val parent: Handle?
-    val subhandles: Set<Handle>? by lazy { _subhandles }
+    val subhandles: ListenableSet.View<Handle>? by lazy { _subhandles?.view }
     val tags: HandleSet
     private val _subhandles: HandleSet?
     private val permitExternalSubhandleCreation: Boolean

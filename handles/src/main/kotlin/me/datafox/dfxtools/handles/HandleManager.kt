@@ -30,6 +30,7 @@ import me.datafox.dfxtools.handles.internal.Strings.invalidQualifiedHandleId
 import me.datafox.dfxtools.handles.internal.Strings.qualifiedHandleNoSpace
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.ListenableMap
 
 private val logger = KotlinLogging.logger {}
 
@@ -51,7 +52,7 @@ object HandleManager {
 
     val spaceSpace get() = _spaceSpace
     val tagSpace: Space get() = _tagSpace
-    val spaces: Map<Handle, Space> by lazy { _spaces }
+    val spaces: ListenableMap.View<Handle, Space> by lazy { _spaces.view }
     private var _spaceSpace: Space = Space(true)
     private var _tagSpace: Space = Space(false)
     private val _spaces: HandleMap<Space> by lazy { HandleMap(spaceSpace) }

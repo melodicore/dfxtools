@@ -22,6 +22,8 @@ import me.datafox.dfxtools.handles.internal.Strings.handleIdExists
 import me.datafox.dfxtools.handles.internal.Strings.invalidHandleId
 import me.datafox.dfxtools.handles.internal.Utils.checkHandleId
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.ListenableMap
+import me.datafox.dfxtools.utils.collection.ListenableSet
 
 private val logger = KotlinLogging.logger {}
 
@@ -36,8 +38,8 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class Space : ComparableHandled {
-    val handles: Set<Handle> by lazy { _handles }
-    val groups: Map<Handle, Group> by lazy { _groups }
+    val handles: ListenableSet.View<Handle> by lazy { _handles.view }
+    val groups: ListenableMap.View<Handle, Group> by lazy { _groups.view }
     override val handle: Handle get() = _handle
     private lateinit var _handle: Handle
     private val _handles: HandleSet = HandleSet(this)

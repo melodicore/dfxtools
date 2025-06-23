@@ -39,20 +39,23 @@ private val logger = KotlinLogging.logger {}
  */
 class ValueMap private constructor(
     private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap()
-): AbstractObservableObserver(), MutableMap<Handle, ModifiableValue> by map {
+): AbstractObservableObserver(), ListenableMap<Handle, ModifiableValue>, MutableMap<Handle, ModifiableValue> by map {
+    private lateinit var delegate: ListenableMap<Handle, ModifiableValue>
     val modifiers: MutableSet<Modifier> = PluggableSet(sortedSetOf(), modifierSpec { values })
+
+    override val view: ListenableMap.View<Handle, ModifiableValue>
+        get() = delegate.view
 
     /**
      * Creates a new empty value map backed by a [SortedMap].
      */
     constructor() : this(LateDelegatedMap()) {
-        map.delegate = PluggableMap(
-            TreeMap(),
-            PluggableMapSpec(
-                spec(modifiers),
-                ObservableMap.spec(this, true, Any())
-            )
+        delegate = ListenableMap(
+            spec(modifiers),
+            ObservableMap.spec(this, true, Any()),
+            TreeMap()
         )
+        map.delegate = delegate
     }
 
     /**
@@ -61,15 +64,17 @@ class ValueMap private constructor(
      * @param space [Space] for the [HandleMap].
      */
     constructor(space: Space) : this(LateDelegatedMap()) {
-        map.delegate = PluggableMap(
-            TreeMap(),
-            PluggableMapSpec(
-                HandleMap.spec(space),
-                spec(modifiers),
-                ObservableMap.spec(this, true, Any())
-            )
+        delegate = ListenableMap(
+            PluggableMapSpec(HandleMap.spec(space), spec(modifiers)),
+            ObservableMap.spec(this, true, Any()),
+            TreeMap()
         )
+        map.delegate = delegate
     }
+
+    override fun addListener(listener: MapListener<Handle, ModifiableValue>): Boolean = delegate.addListener(listener)
+
+    override fun removeListener(listener: MapListener<Handle, ModifiableValue>): Boolean = delegate.removeListener(listener)
 
     companion object {
         fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> = PluggableMapSpec(

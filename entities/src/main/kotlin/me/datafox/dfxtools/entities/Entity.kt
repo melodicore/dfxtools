@@ -21,7 +21,7 @@ import me.datafox.dfxtools.entities.Engine.componentSpace
 import me.datafox.dfxtools.entities.Engine.entitySpace
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.PluggableMap
+import me.datafox.dfxtools.utils.collection.ListenableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import me.datafox.dfxtools.utils.collection.toCollection
 import java.util.*
@@ -40,13 +40,14 @@ class Entity(
     val added get() = _added
     private var _removed = false
     val removed get() = _removed
-    private val _components: PluggableMap<Handle, Component> = PluggableMap(
-        TreeMap(),
-        PluggableMapSpec(HandleMap.spec(componentSpace), componentSpec(this))
+    private val _components: ListenableMap<Handle, Component> = ListenableMap(
+        HandleMap.spec(componentSpace),
+        componentSpec(this),
+        TreeMap()
     )
-    val components: Map<Handle, Component> get() {
+    val components: ListenableMap.View<Handle, Component> get() {
         checkRemoved()
-        return _components
+        return _components.view
     }
 
     fun createComponent(id: String): Component {

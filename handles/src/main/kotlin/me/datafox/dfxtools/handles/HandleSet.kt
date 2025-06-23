@@ -21,6 +21,7 @@ import me.datafox.dfxtools.handles.HandleSet.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.ListenableSet
 import me.datafox.dfxtools.utils.collection.PluggableSet
 import me.datafox.dfxtools.utils.collection.PluggableSpec
 import java.util.*
@@ -38,11 +39,15 @@ private val logger = KotlinLogging.logger {}
  *
  * @author Lauri "datafox" Heino
  */
+@Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
 class HandleSet private constructor(
     ignored: Any?,
     private val _space: Space,
-    private val set: PluggableSet<Handle> = PluggableSet(TreeSet(), spec(_space))
-) : MutableSet<Handle> by set {
+    private val set: ListenableSet<Handle> = ListenableSet(
+        beforeSpec = spec(_space),
+        delegate = TreeSet()
+    )
+) : ListenableSet<Handle> by set {
     val space: Space get() = _space
 
     /**

@@ -23,9 +23,9 @@ import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.HandleMap
 import me.datafox.dfxtools.handles.Space
 import me.datafox.dfxtools.utils.Logging.logThrow
-import me.datafox.dfxtools.utils.collection.PluggableMap
+import me.datafox.dfxtools.utils.collection.ListenableMap
+import me.datafox.dfxtools.utils.collection.ListenableSet
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
-import me.datafox.dfxtools.utils.collection.PluggableSet
 import me.datafox.dfxtools.utils.collection.PluggableSpec
 import java.util.*
 
@@ -41,15 +41,17 @@ object Engine {
     val componentSpace: Space = HandleManager.getOrCreateSpace("components")
     val dataSpace: Space = HandleManager.getOrCreateSpace("data")
 
-    val schemas: MutableMap<Handle, Schema> = PluggableMap(
-        TreeMap(),
-        PluggableMapSpec(HandleMap.spec(schemaSpace), schemaSpec { schemas.keys })
+    val schemas: ListenableMap<Handle, Schema> = ListenableMap(
+        PluggableMapSpec(HandleMap.spec(schemaSpace), schemaBeforeSpec { schemas.keys }),
+        schemaAfterSpec(),
+        TreeMap()
     )
-    val entities: MutableMap<Handle, Entity> = PluggableMap(
-        TreeMap(),
-        PluggableMapSpec(HandleMap.spec(entitySpace), entitySpec())
+    val entities: ListenableMap<Handle, Entity> = ListenableMap(
+        HandleMap.spec(entitySpace),
+        entitySpec(),
+        TreeMap()
     )
-    val systems: MutableSet<EntitySystem> = PluggableSet(TreeSet(), systemSpec())
+    val systems: ListenableSet<EntitySystem> = ListenableSet(beforeSpec = systemSpec(), delegate = TreeSet())
 
     fun update(delta: Float) = systems.forEach { it.update(delta) }
 
@@ -61,9 +63,12 @@ object Engine {
     @JvmOverloads
     fun save(saveAll: Boolean = false): EngineDefinition = EngineDefinition(saveAll)
 
-    fun schemaSpec(lambda: () -> Set<Handle>): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
+    fun schemaBeforeSpec(lambda: () -> Set<Handle>): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
         beforeAdd = { k, _ -> if(k in lambda()) logThrow(logger, "Definition with handle $k already exists") { IllegalArgumentException(it) } },
-        beforeRemove = { _, _ -> throw UnsupportedOperationException() },
+        beforeRemove = { _, _ -> throw UnsupportedOperationException() }
+    )
+
+    fun schemaAfterSpec(): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
         afterOperation = { entities.values.forEach { it.components.values.forEach { c -> c.refreshSchemas() } } }
     )
 

@@ -21,6 +21,7 @@ import me.datafox.dfxtools.handles.HandleMap.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
 import me.datafox.dfxtools.utils.Logging.logThrow
+import me.datafox.dfxtools.utils.collection.ListenableMap
 import me.datafox.dfxtools.utils.collection.PluggableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 import java.util.*
@@ -41,8 +42,11 @@ private val logger = KotlinLogging.logger {}
 class HandleMap<V> private constructor(
     ignored: Any?,
     private val _space: Space,
-    private val map: PluggableMap<Handle, V> = PluggableMap(TreeMap(), spec(_space)),
-) : MutableMap<Handle, V> by map {
+    private val map: ListenableMap<Handle, V> = ListenableMap(
+        beforeSpec = spec(_space),
+        delegate = TreeMap()
+    ),
+) : ListenableMap<Handle, V> by map {
     val space: Space get() = _space
 
     /**
