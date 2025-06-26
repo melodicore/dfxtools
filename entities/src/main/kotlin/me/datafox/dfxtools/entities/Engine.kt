@@ -17,7 +17,7 @@
 package me.datafox.dfxtools.entities
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.entities.serialization.EngineDefinition
+import me.datafox.dfxtools.entities.definition.EngineDefinition
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.HandleMap
@@ -39,7 +39,6 @@ object Engine {
     val schemaSpace: Space = HandleManager.getOrCreateSpace("schemas")
     val entitySpace: Space = HandleManager.getOrCreateSpace("entities")
     val componentSpace: Space = HandleManager.getOrCreateSpace("components")
-    val dataSpace: Space = HandleManager.getOrCreateSpace("data")
 
     val schemas: ListenableMap<Handle, Schema> = ListenableMap(
         PluggableMapSpec(HandleMap.spec(schemaSpace), schemaBeforeSpec { schemas.keys }),
@@ -58,6 +57,7 @@ object Engine {
     fun load(def: EngineDefinition) {
         def.spaces.forEach { it.build() }
         def.entities.forEach { it.build() }
+        entities.values.forEach { initialize(it) }
     }
 
     @JvmOverloads
@@ -74,11 +74,17 @@ object Engine {
 
     fun entitySpec(): PluggableMapSpec<Handle, Entity> = PluggableMapSpec(
         afterAdd = { _, v -> v.added(); EntityCache.entityAdded(v) },
-        afterRemove = { _, v -> v.removed(); EntityCache.entityRemoved(v) }
+        afterRemove = { _, v -> v.removed(); EntityCache.entityRemoved(v) },
+        afterOperation = { entities.values.forEach { initialize(it) } }
     )
 
     fun systemSpec(): PluggableSpec<EntitySystem> = PluggableSpec(
         afterAdd = { it.onAttach() },
         afterRemove = { it.onDetach() }
     )
+
+    private fun initialize(entity: Entity) {
+        entity.initialize()
+        entity.components.values.forEach { it.initialize() }
+    }
 }

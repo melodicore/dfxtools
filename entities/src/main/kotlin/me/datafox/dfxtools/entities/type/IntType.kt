@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities.type
 
-import me.datafox.dfxtools.entities.Engine.dataTypeSpace
-import me.datafox.dfxtools.handles.Handle
-import kotlin.reflect.KClass
+import me.datafox.dfxtools.entities.Engine
+import me.datafox.dfxtools.entities.EntityData
+import me.datafox.dfxtools.entities.definition.data.IntDefinition
 
 /**
  * @author Lauri "datafox" Heino
  */
-class LambdaConverter<T : Any>(
-    handle: String,
-    override val type: KClass<T>,
-    private val convertToType: (Map<String, String>) -> T,
-    private val convertToData: (T) -> Map<String, String>
-) : Converter<T> {
-    override val handle: Handle = dataTypeSpace.getOrCreateHandle(handle)
-    override fun convert(params: Map<String, String>): T = convertToType(params)
-    override fun convert(value: T): Map<String, String> = convertToData(value)
+object IntType : DataType<Int> {
+    const val ID = "int"
+
+    override val type = Int::class
+
+    override fun convert(data: EntityData<Int>): IntDefinition = IntDefinition(data)
+
+    override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 }

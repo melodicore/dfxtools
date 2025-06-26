@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities.definition
 
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Component
+import me.datafox.dfxtools.entities.ComponentInitializer
 import me.datafox.dfxtools.entities.Entity
+import me.datafox.dfxtools.entities.Serialization
+import me.datafox.dfxtools.entities.definition.data.DataDefinition
 import me.datafox.dfxtools.handles.get
 import kotlin.reflect.KClass
 
@@ -28,23 +31,26 @@ import kotlin.reflect.KClass
 @Serializable
 data class ComponentDefinition(
     val id: String,
-    val data: List<DataDefinition>
+    val data: List<DataDefinition<*>>,
+    val initializers: List<ComponentInitializer>
 ) {
     @JvmOverloads
     constructor(component: Component, saveAll: Boolean = false) : this(
         component.handle.id,
-        component.data.keys.flatMap { dataDefinitions(component, it, saveAll) }
+        component.data.keys.flatMap { dataDefinitions(component, it, saveAll) },
+        mutableListOf()
     )
 
     fun build(entity: Entity) {
         val component = entity.components[id] ?: entity.createComponent(id)
         data.forEach { it.build(component) }
+        initializers.forEach { component.addInitializer(it) }
     }
 
     companion object {
-        private fun <T : Any> dataDefinitions(component: Component, type: KClass<T>, saveAll: Boolean): List<DataDefinition> =
+        private fun <T : Any> dataDefinitions(component: Component, type: KClass<T>, saveAll: Boolean): List<DataDefinition<*>> =
             component.getDataMap(type).mapNotNull { (_, data) ->
-                if(saveAll || data.saved) DataDefinition(type, data) else null
+                if(saveAll || data.saved) Serialization.getType(type)?.convert(data) else null
             }
     }
 }

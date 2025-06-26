@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities.definition
 
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Engine

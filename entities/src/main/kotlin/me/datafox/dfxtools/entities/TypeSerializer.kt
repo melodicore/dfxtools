@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -22,8 +22,8 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import me.datafox.dfxtools.entities.serialization.Serialization.convertersByClass
-import me.datafox.dfxtools.entities.serialization.Serialization.convertersByHandle
+import me.datafox.dfxtools.entities.Serialization.convertersByClass
+import me.datafox.dfxtools.entities.Serialization.convertersByHandle
 import me.datafox.dfxtools.handles.contains
 import me.datafox.dfxtools.handles.get
 import kotlin.reflect.KClass

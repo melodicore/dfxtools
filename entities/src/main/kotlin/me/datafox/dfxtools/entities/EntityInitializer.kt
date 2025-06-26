@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities
 
-import me.datafox.dfxtools.handles.Handled
-import kotlin.reflect.KClass
-
-interface Converter<T : Any> : Handled {
-    val type: KClass<T>
-
-    fun convert(params: Map<String, String>): T
-
-    fun convert(value: T): Map<String, String>
+/**
+ * @author Lauri "datafox" Heino
+ */
+sealed interface EntityInitializer {
+    fun initialize(entity: Entity)
 }

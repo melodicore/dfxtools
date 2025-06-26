@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities.definition
 
 import kotlinx.serialization.Serializable
-import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Space
 
 @Serializable
-data class HandleDefinition(
+data class SpaceDefinition(
     val id: String,
-    val tags: List<String>,
+    val handles: List<HandleDefinition>
 ) {
-    constructor(handle: Handle) : this(handle.id, handle.tags.map { it.id })
+    constructor(space: Space) : this(
+        space.handle.id,
+        space.handles.map { HandleDefinition(it) }
+    )
 
-    fun build(space: Space): Handle = space.getOrCreateHandle(id)
-
-    fun buildSpaceHandle(): Handle {
-        if(!id.contains(':')) return HandleManager.getOrCreateSpace(id).handle
-        val split = id.split(':')
-        if(split.size != 2) throw IllegalArgumentException("Invalid id")
-        return HandleManager.getOrCreateSpace(split[0]).getOrCreateGroup(split[1]).handle
+    fun build() {
+        if(id == HandleManager.spaceSpace.handle.id) {
+            handles.map { it to it.buildSpaceHandle() }.forEach { (def, handle) -> def.populate(handle) }
+        } else {
+            val space = HandleManager.getOrCreateSpace(id)
+            handles.map { it to it.build(space) }.forEach { (def, handle) -> def.populate(handle) }
+        }
     }
-
-    fun populate(handle: Handle) = handle.tags.addAll(tags)
 }

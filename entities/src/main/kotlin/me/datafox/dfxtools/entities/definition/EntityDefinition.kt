@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.serialization
+package me.datafox.dfxtools.entities.definition
 
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Engine.entities
 import me.datafox.dfxtools.entities.Entity
+import me.datafox.dfxtools.entities.EntityInitializer
 import me.datafox.dfxtools.handles.get
 import me.datafox.dfxtools.handles.putHandled
 
@@ -28,15 +29,18 @@ import me.datafox.dfxtools.handles.putHandled
 @Serializable
 data class EntityDefinition(
     val id: String,
-    val components: List<ComponentDefinition>
+    val components: List<ComponentDefinition>,
+    val initializers: List<EntityInitializer>
 ) {
     constructor(entity: Entity, saveAll: Boolean = false) : this(
         entity.handle.id,
-        entity.components.values.map { ComponentDefinition(it, saveAll) }
+        entity.components.values.map { ComponentDefinition(it, saveAll) },
+        listOf()
     )
 
     fun build() {
         val entity = entities[id] ?: Entity(id).apply { entities.putHandled(this) }
         components.forEach { it.build(entity) }
+        initializers.forEach { entity.addInitializer(it) }
     }
 }

@@ -19,6 +19,7 @@ package me.datafox.dfxtools.entities
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.entities.Engine.componentSpace
 import me.datafox.dfxtools.entities.Engine.entitySpace
+import me.datafox.dfxtools.entities.EntityInitializer
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ListenableMap
@@ -49,6 +50,7 @@ class Entity(
         checkRemoved()
         return _components.view
     }
+    private val initializers: MutableList<EntityInitializer> = mutableListOf()
 
     fun createComponent(id: String): Component {
         checkRemoved()
@@ -66,6 +68,10 @@ class Entity(
 
     fun hasSchemas(ids: Iterable<String>): Boolean =
         components.values.any { it.schemas.keys.containsAll(ids.toCollection()) }
+
+    fun addInitializer(initializer: EntityInitializer) {
+        initializers.add(initializer)
+    }
 
     override fun equals(other: Any?): Boolean {
         if(this === other) return true
@@ -90,6 +96,11 @@ class Entity(
 
     internal fun removed() {
         _removed = true
+    }
+
+    internal fun initialize() {
+        initializers.forEach { it.initialize(this) }
+        initializers.clear()
     }
 
     private fun checkRemoved() {
