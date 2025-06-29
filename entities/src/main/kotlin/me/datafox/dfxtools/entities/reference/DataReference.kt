@@ -18,8 +18,7 @@ package me.datafox.dfxtools.entities.reference
 
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
-import me.datafox.dfxtools.entities.type.TypeSerializer
-import kotlin.reflect.KClass
+import me.datafox.dfxtools.entities.type.SClass
 
 /**
 * @author Lauri "datafox" Heino
@@ -27,7 +26,7 @@ import kotlin.reflect.KClass
 @Serializable
 data class DataReference<T : Any>(
     val components: ComponentReference,
-    @Serializable(with = TypeSerializer::class) val dataType: KClass<T>,
+    val dataType: SClass<T>,
     val filter: DataFilter
 ) {
     fun get(): List<EntityData<T>> =

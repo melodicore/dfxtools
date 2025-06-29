@@ -21,8 +21,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Component
 import me.datafox.dfxtools.entities.Engine
+import me.datafox.dfxtools.entities.type.SClass
 import me.datafox.dfxtools.entities.type.TypeSerializer
-import kotlin.reflect.KClass
 
 @Polymorphic
 interface ComponentFilter {
@@ -44,14 +44,14 @@ interface ComponentFilter {
     @Suppress("SERIALIZER_TYPE_INCOMPATIBLE")
     @Serializable
     @SerialName("data")
-    data class Data<T : KClass<out Any>> private constructor(
+    data class Data<T : SClass<out Any>> private constructor(
         val filter: HandleFilter,
         @Serializable(with = TypeSerializer::class) val dataType: T
     ) : ComponentFilter {
         override fun matches(component: Component): Boolean = component.getDataMap(dataType).keys.any { filter.matches(it) }
 
         companion object {
-            operator fun <T : Any> invoke(type: KClass<T>, filter: HandleFilter): Data<KClass<T>> = Data(filter, type)
+            operator fun <T : Any> invoke(type: SClass<T>, filter: HandleFilter): Data<SClass<T>> = Data(filter, type)
         }
     }
 
