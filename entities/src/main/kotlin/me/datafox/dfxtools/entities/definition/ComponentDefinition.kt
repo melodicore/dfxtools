@@ -19,8 +19,8 @@ package me.datafox.dfxtools.entities.definition
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Component
 import me.datafox.dfxtools.entities.ComponentInitializer
+import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.Entity
-import me.datafox.dfxtools.entities.Serialization
 import me.datafox.dfxtools.entities.definition.data.DataDefinition
 import me.datafox.dfxtools.handles.get
 import kotlin.reflect.KClass
@@ -50,7 +50,7 @@ data class ComponentDefinition(
     companion object {
         private fun <T : Any> dataDefinitions(component: Component, type: KClass<T>, saveAll: Boolean): List<DataDefinition<*>> =
             component.getDataMap(type).mapNotNull { (_, data) ->
-                if(saveAll || data.saved) Serialization.getType(type)?.convert(data) else null
+                if(saveAll || data.saved) Engine.Serialization.getType(type)?.convert(data) else null
             }
     }
 }

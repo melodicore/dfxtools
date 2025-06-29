@@ -21,7 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Component
 import me.datafox.dfxtools.entities.Engine
-import me.datafox.dfxtools.entities.TypeSerializer
+import me.datafox.dfxtools.entities.type.TypeSerializer
 import kotlin.reflect.KClass
 
 @Polymorphic

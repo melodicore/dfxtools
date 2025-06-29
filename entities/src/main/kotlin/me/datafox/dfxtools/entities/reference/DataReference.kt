@@ -18,7 +18,7 @@ package me.datafox.dfxtools.entities.reference
 
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
-import me.datafox.dfxtools.entities.TypeSerializer
+import me.datafox.dfxtools.entities.type.TypeSerializer
 import kotlin.reflect.KClass
 
 /**

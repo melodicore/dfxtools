@@ -19,7 +19,6 @@ package me.datafox.dfxtools.entities
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.entities.Engine.componentSpace
 import me.datafox.dfxtools.entities.Engine.schemaSpace
-import me.datafox.dfxtools.entities.ComponentInitializer
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.utils.collection.ListenableMap
@@ -114,8 +113,8 @@ class Component internal constructor(
          private var indexCounter: Long = 0L
 
         fun schemaSpec(component: Component): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
-            afterAdd = { _, v -> EntityCache.schemaAdded(component.entity, component, v) },
-            afterRemove = { _, v -> EntityCache.schemaRemoved(component.entity, component, v) }
+            afterAdd = { _, v -> Engine.Cache.schemaAdded(component.entity, component, v) },
+            afterRemove = { _, v -> Engine.Cache.schemaRemoved(component.entity, component, v) }
         )
     }
 }

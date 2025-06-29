@@ -21,7 +21,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.Entity
-import me.datafox.dfxtools.entities.EntityCache
 
 @Polymorphic
 interface EntityFilter {
@@ -51,7 +50,7 @@ interface EntityFilter {
         private val _handles by lazy { Engine.schemaSpace.getOrCreateHandles(handles) }
 
         override fun matches(entity: Entity): Boolean =
-            _handles.all { EntityCache.entitiesBySchema[it]?.contains(entity) ?: false }
+            _handles.all { Engine.Cache.entitiesBySchema[it]?.contains(entity) ?: entity.hasSchemas(handles) }
     }
 
     @Serializable

@@ -19,7 +19,6 @@ package me.datafox.dfxtools.entities
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.entities.Engine.componentSpace
 import me.datafox.dfxtools.entities.Engine.entitySpace
-import me.datafox.dfxtools.entities.EntityInitializer
 import me.datafox.dfxtools.handles.*
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ListenableMap
@@ -111,8 +110,8 @@ class Entity(
         private var indexCounter: Long = 0L
 
         fun componentSpec(entity: Entity): PluggableMapSpec<Handle, Component> = PluggableMapSpec(
-            afterAdd = { _, v -> EntityCache.componentAdded(entity, v) },
-            afterRemove = { _, v -> EntityCache.componentRemoved(entity, v) }
+            afterAdd = { _, v -> Engine.Cache.componentAdded(entity, v) },
+            afterRemove = { _, v -> Engine.Cache.componentRemoved(entity, v) }
         )
     }
 }
