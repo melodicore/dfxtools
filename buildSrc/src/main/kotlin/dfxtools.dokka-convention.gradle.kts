@@ -16,14 +16,10 @@
 
 import org.gradle.internal.extensions.stdlib.capitalized
 
-plugins {
-    id("org.jetbrains.dokka")
-}
+plugins { id("org.jetbrains.dokka") }
 
 dokka {
     moduleName = project.name.capitalized()
 
-    dokkaSourceSets.all {
-        includes.from("README.md")
-    }
+    dokkaSourceSets.all { includes.from("README.md") }
 }

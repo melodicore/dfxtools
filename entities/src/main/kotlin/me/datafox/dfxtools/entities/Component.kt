@@ -28,23 +28,17 @@ import kotlin.reflect.KClass
 
 private val logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
-class Component internal constructor(
-    val entity: Entity,
-    id: String
-) : Handled, AbstractObservableObserver() {
+/** @author Lauri "datafox" Heino */
+class Component internal constructor(val entity: Entity, id: String) :
+    Handled, AbstractObservableObserver() {
     override val handle = componentSpace.getOrCreateHandle(id)
     private val index: Long = indexCounter++
     private val identifier = Any()
-    private val _data: ListenableMap<KClass<*>, ListenableMap<Handle, EntityData<*>>> = ListenableMap()
+    private val _data: ListenableMap<KClass<*>, ListenableMap<Handle, EntityData<*>>> =
+        ListenableMap()
     val data: ListenableMap.View<KClass<*>, Map<Handle, EntityData<*>>> = _data.view
-    private val _schemas: ListenableMap<Handle, Schema> = ListenableMap(
-        HandleMap.spec(schemaSpace),
-        schemaSpec(this),
-        TreeMap()
-    )
+    private val _schemas: ListenableMap<Handle, Schema> =
+        ListenableMap(HandleMap.spec(schemaSpace), schemaSpec(this), TreeMap())
     val schemas: ListenableMap.View<Handle, Schema> by lazy { _schemas.view }
     private val initializers: MutableList<ComponentInitializer> = mutableListOf()
 
@@ -52,7 +46,8 @@ class Component internal constructor(
 
     fun <T : Any> getData(type: KClass<T>, id: String): EntityData<T>? = getDataMap(type)[id]
 
-    fun <T : Any> getDataMap(type: KClass<T>): ListenableMap.View<Handle, EntityData<T>> = getDataMapInternal(type).view
+    fun <T : Any> getDataMap(type: KClass<T>): ListenableMap.View<Handle, EntityData<T>> =
+        getDataMapInternal(type).view
 
     operator fun contains(type: KClass<*>): Boolean = _data[type]?.isNotEmpty() ?: false
 
@@ -76,10 +71,10 @@ class Component internal constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if(this === other) return true
-        if(other !is Component) return false
+        if (this === other) return true
+        if (other !is Component) return false
 
-        if(index != other.index) return false
+        if (index != other.index) return false
 
         return true
     }
@@ -97,23 +92,30 @@ class Component internal constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T : Any> getDataMapInternal(type: KClass<T>): ListenableMap<Handle, EntityData<T>> =
-        _data[type] as ListenableMap<Handle, EntityData<T>>? ?: ListenableMap<Handle, EntityData<T>>().apply {
-            _data[type] = this as ListenableMap<Handle, EntityData<*>>
-        }
+    private fun <T : Any> getDataMapInternal(
+        type: KClass<T>
+    ): ListenableMap<Handle, EntityData<T>> =
+        _data[type] as ListenableMap<Handle, EntityData<T>>?
+            ?: ListenableMap<Handle, EntityData<T>>().apply {
+                _data[type] = this as ListenableMap<Handle, EntityData<*>>
+            }
 
     private fun <T : Any> putInternal(type: KClass<T>, id: String, saved: Boolean, data: T) {
         val map = getDataMapInternal(type)
-        if(id in map) map[id]!!.data = data
-        else map.putHandled(EntityData(id, data, saved).apply { observers.add(this@Component, identifier) })
+        if (id in map) map[id]!!.data = data
+        else
+            map.putHandled(
+                EntityData(id, data, saved).apply { observers.add(this@Component, identifier) }
+            )
     }
 
     companion object {
-         private var indexCounter: Long = 0L
+        private var indexCounter: Long = 0L
 
-        fun schemaSpec(component: Component): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
-            afterAdd = { _, v -> Engine.Cache.schemaAdded(component.entity, component, v) },
-            afterRemove = { _, v -> Engine.Cache.schemaRemoved(component.entity, component, v) }
-        )
+        fun schemaSpec(component: Component): PluggableMapSpec<Handle, Schema> =
+            PluggableMapSpec(
+                afterAdd = { _, v -> Engine.Cache.schemaAdded(component.entity, component, v) },
+                afterRemove = { _, v -> Engine.Cache.schemaRemoved(component.entity, component, v) },
+            )
     }
 }

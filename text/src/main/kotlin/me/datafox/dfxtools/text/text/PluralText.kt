@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,11 @@ import me.datafox.dfxtools.text.TextManager
  *
  * @property configuration Ignored [Configuration].
  * @property singular Lambda that returns the text to be "generated".
- *
  * @author Lauri "datafox" Heino
  */
-class PluralText @JvmOverloads constructor(
+class PluralText
+@JvmOverloads
+constructor(
     override val configuration: Configuration? = null,
     val singular: Text,
     val plural: Text = SimpleText { TextManager.pluralConverter(singular.generate(it)) },
@@ -36,7 +37,8 @@ class PluralText @JvmOverloads constructor(
     override fun generate(configuration: Configuration?): String {
         val configuration = combineNullable(configuration)
         val own = applyConfiguration(configuration, usePlural)
-        return if(own[usePlural]) plural.generate(configuration) else singular.generate(configuration)
+        return if (own[usePlural]) plural.generate(configuration)
+        else singular.generate(configuration)
     }
 
     companion object {

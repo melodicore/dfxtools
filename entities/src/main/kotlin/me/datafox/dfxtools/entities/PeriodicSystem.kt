@@ -16,9 +16,7 @@
 
 package me.datafox.dfxtools.entities
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 abstract class PeriodicSystem(val period: Float) : EntitySystem {
     protected var counter = 0f
 
@@ -26,7 +24,7 @@ abstract class PeriodicSystem(val period: Float) : EntitySystem {
 
     override fun update(delta: Float) {
         counter += delta
-        while(counter >= period) {
+        while (counter >= period) {
             update()
             counter -= period
         }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,12 +20,10 @@ import me.datafox.dfxtools.configuration.ConfigurationManager.append
 import me.datafox.dfxtools.configuration.ConfigurationManager.configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager.remove
 
-
 /**
  * A singleton object that manages a [Configuration].
  *
  * @property configuration [Configuration] associated with this manager.
- *
  * @author Lauri "datafox" Heino
  */
 object ConfigurationManager {
@@ -39,22 +37,26 @@ object ConfigurationManager {
     fun get(): Configuration = Configuration(configuration)
 
     /**
-     * Returns a *copy* of the [Configuration] associated with this manager and appends [configuration] to it.
+     * Returns a *copy* of the [Configuration] associated with this manager and appends
+     * [configuration] to it.
      *
      * @param configuration [Configuration] to be appended.
-     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all keys should be
-     * included.
-     * @return Copy of the [Configuration] associated with this manager with [configuration] appended to it.
+     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all
+     *   keys should be included.
+     * @return Copy of the [Configuration] associated with this manager with [configuration]
+     *   appended to it.
      */
-    operator fun get(configuration: Configuration?, vararg keys: ConfigurationKey<*>): Configuration =
-        get().apply { if(configuration != null) append(configuration, *keys) }
+    operator fun get(
+        configuration: Configuration?,
+        vararg keys: ConfigurationKey<*>,
+    ): Configuration = get().apply { if (configuration != null) append(configuration, *keys) }
 
     /**
      * Returns the value associated with the [key].
      *
      * @param key [ConfigurationKey] of the configuration value.
-     * @return Value associated with the [key], or [key.defaultValue][ConfigurationKey.defaultValue] if no value is
-     * present.
+     * @return Value associated with the [key], or [key.defaultValue][ConfigurationKey.defaultValue]
+     *   if no value is present.
      */
     operator fun <T> get(key: ConfigurationKey<T>): T = configuration[key]
 
@@ -62,11 +64,14 @@ object ConfigurationManager {
      * Associates the [key] with the [value].
      *
      * @param key [ConfigurationKey] for this configuration value.
-     * @param value Lambda that returns a value, or `null` if the association with the key should be removed.
+     * @param value Lambda that returns a value, or `null` if the association with the key should be
+     *   removed.
      * @return This manager.
      */
     operator fun <T> set(key: ConfigurationKey<T>, value: (() -> T)?): ConfigurationManager =
-        apply { configuration[key] = value }
+        apply {
+            configuration[key] = value
+        }
 
     /**
      * Removes an association with the [key].
@@ -76,30 +81,35 @@ object ConfigurationManager {
      */
     fun <T> remove(key: ConfigurationKey<T>): T? = configuration.remove(key)
 
-
     /**
      * Removes an association with the [key]. Alias for [remove].
      *
      * @param key [ConfigurationKey] to be removed.
      */
-    operator fun <T> minusAssign(key: ConfigurationKey<T>) { remove(key) }
+    operator fun <T> minusAssign(key: ConfigurationKey<T>) {
+        remove(key)
+    }
 
     /**
-     * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
-     * values.
+     * Copies all values of the [configuration] to the [Configuration] associated with this manager,
+     * overriding existing values.
      *
      * @param configuration [Configuration] to copy values from.
      * @return This manager.
      */
-    fun append(configuration: Configuration): ConfigurationManager = apply { this.configuration.append(configuration) }
+    fun append(configuration: Configuration): ConfigurationManager = apply {
+        this.configuration.append(configuration)
+    }
 
     /**
-     * Copies all values of the [configuration] to the [Configuration] associated with this manager, overriding existing
-     * values. Alias for [append].
+     * Copies all values of the [configuration] to the [Configuration] associated with this manager,
+     * overriding existing values. Alias for [append].
      *
      * @param configuration [Configuration] to copy values from.
      */
-    operator fun plusAssign(configuration: Configuration) { append(configuration) }
+    operator fun plusAssign(configuration: Configuration) {
+        append(configuration)
+    }
 
     /**
      * Replaces the [Configuration] associated with this manager with the [configuration].

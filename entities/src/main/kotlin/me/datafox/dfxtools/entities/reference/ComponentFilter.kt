@@ -44,14 +44,17 @@ interface ComponentFilter {
     @Suppress("SERIALIZER_TYPE_INCOMPATIBLE")
     @Serializable
     @SerialName("data")
-    data class Data<T : SClass<out Any>> private constructor(
+    data class Data<T : SClass<out Any>>
+    private constructor(
         val filter: HandleFilter,
-        @Serializable(with = TypeSerializer::class) val dataType: T
+        @Serializable(with = TypeSerializer::class) val dataType: T,
     ) : ComponentFilter {
-        override fun matches(component: Component): Boolean = component.getDataMap(dataType).keys.any { filter.matches(it) }
+        override fun matches(component: Component): Boolean =
+            component.getDataMap(dataType).keys.any { filter.matches(it) }
 
         companion object {
-            operator fun <T : Any> invoke(type: SClass<T>, filter: HandleFilter): Data<SClass<T>> = Data(filter, type)
+            operator fun <T : Any> invoke(type: SClass<T>, filter: HandleFilter): Data<SClass<T>> =
+                Data(filter, type)
         }
     }
 
@@ -60,7 +63,8 @@ interface ComponentFilter {
     data class Schema(val handles: List<String>) : ComponentFilter {
         private val _handles by lazy { Engine.schemaSpace.getOrCreateHandles(handles) }
 
-        override fun matches(component: Component): Boolean = _handles.all { Engine.schemas[it]?.isSchema(component) ?: false }
+        override fun matches(component: Component): Boolean =
+            _handles.all { Engine.schemas[it]?.isSchema(component) ?: false }
     }
 
     @Serializable

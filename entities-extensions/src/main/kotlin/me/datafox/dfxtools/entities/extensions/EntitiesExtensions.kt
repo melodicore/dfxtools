@@ -17,6 +17,7 @@
 package me.datafox.dfxtools.entities.extensions
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlin.reflect.KClass
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -29,16 +30,15 @@ import me.datafox.dfxtools.entities.extensions.modifier.ModifierInitializer
 import me.datafox.dfxtools.entities.extensions.type.ModifiableValueType
 import me.datafox.dfxtools.entities.extensions.type.ValueMapType
 import me.datafox.dfxtools.values.operation.Operation
-import kotlin.reflect.KClass
 
 private var logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object EntitiesExtensions {
-    private val modifierQueue: MutableList<PolymorphicModuleBuilder<ModifierFactory>.() -> Unit> = mutableListOf()
-    private val operationQueue: MutableList<PolymorphicModuleBuilder<Operation>.() -> Unit> = mutableListOf()
+    private val modifierQueue: MutableList<PolymorphicModuleBuilder<ModifierFactory>.() -> Unit> =
+        mutableListOf()
+    private val operationQueue: MutableList<PolymorphicModuleBuilder<Operation>.() -> Unit> =
+        mutableListOf()
 
     fun register(lastModifier: Boolean = true, lastRegistration: Boolean = true) {
         Engine.Serialization.registerType(ModifiableValueType, ModifiableValueDefinition::class)
@@ -75,22 +75,22 @@ object EntitiesExtensions {
     inline fun <reified T : ModifierFactory> registerModifier(
         type: KClass<T>,
         lastPolymorphic: Boolean = false,
-        lastRegistration: Boolean = false
+        lastRegistration: Boolean = false,
     ) {
         queueModifier { subclass(type) }
-        if(lastPolymorphic) registerPolymorphics(lastRegistration)
-        else if(lastRegistration) warn { "lastPolymorphic is false, lastRegistration is ignored" }
+        if (lastPolymorphic) registerPolymorphics(lastRegistration)
+        else if (lastRegistration) warn { "lastPolymorphic is false, lastRegistration is ignored" }
     }
 
     @OptIn(InternalEntitiesSerializationApi::class)
     inline fun <reified T : Operation> registerOperation(
         type: KClass<T>,
         lastPolymorphic: Boolean = false,
-        lastRegistration: Boolean = false
+        lastRegistration: Boolean = false,
     ) {
         queueOperation { subclass(type) }
-        if(lastPolymorphic) registerPolymorphics(lastRegistration)
-        else if(lastRegistration) warn { "lastPolymorphic is false, lastRegistration is ignored" }
+        if (lastPolymorphic) registerPolymorphics(lastRegistration)
+        else if (lastRegistration) warn { "lastPolymorphic is false, lastRegistration is ignored" }
     }
 
     @InternalEntitiesSerializationApi
@@ -106,17 +106,12 @@ object EntitiesExtensions {
     @InternalEntitiesSerializationApi
     fun registerPolymorphics(last: Boolean) {
         Engine.Serialization.registerExtraSerializers(last) {
-            polymorphic(ModifierFactory::class) {
-                modifierQueue.forEach { this.it() }
-            }
-            polymorphic(Operation::class) {
-                operationQueue.forEach { this.it() }
-            }
+            polymorphic(ModifierFactory::class) { modifierQueue.forEach { this.it() } }
+            polymorphic(Operation::class) { operationQueue.forEach { this.it() } }
         }
         modifierQueue.clear()
         operationQueue.clear()
     }
 
-    @InternalEntitiesSerializationApi
-    fun warn(block: () -> String) = logger.warn(block)
+    @InternalEntitiesSerializationApi fun warn(block: () -> String) = logger.warn(block)
 }

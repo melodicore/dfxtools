@@ -21,18 +21,14 @@ import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Space
 
 @Serializable
-data class SpaceDefinition(
-    val id: String,
-    val handles: List<HandleDefinition>
-) {
-    constructor(space: Space) : this(
-        space.handle.id,
-        space.handles.map { HandleDefinition(it) }
-    )
+data class SpaceDefinition(val id: String, val handles: List<HandleDefinition>) {
+    constructor(space: Space) : this(space.handle.id, space.handles.map { HandleDefinition(it) })
 
     fun build() {
-        if(id == HandleManager.spaceSpace.handle.id) {
-            handles.map { it to it.buildSpaceHandle() }.forEach { (def, handle) -> def.populate(handle) }
+        if (id == HandleManager.spaceSpace.handle.id) {
+            handles
+                .map { it to it.buildSpaceHandle() }
+                .forEach { (def, handle) -> def.populate(handle) }
         } else {
             val space = HandleManager.getOrCreateSpace(id)
             handles.map { it to it.build(space) }.forEach { (def, handle) -> def.populate(handle) }

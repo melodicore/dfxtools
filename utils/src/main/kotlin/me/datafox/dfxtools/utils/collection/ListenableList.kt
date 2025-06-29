@@ -16,9 +16,7 @@
 
 package me.datafox.dfxtools.utils.collection
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 interface ListenableList<E> : MutableList<E> {
     val view: View<E>
 
@@ -31,7 +29,7 @@ interface ListenableList<E> : MutableList<E> {
         operator fun <E> invoke(
             beforeSpec: PluggableSpec<E>? = null,
             afterSpec: PluggableSpec<E>? = null,
-            delegate: MutableList<E> = mutableListOf()
+            delegate: MutableList<E> = mutableListOf(),
         ): ListenableList<E> = Impl(delegate, beforeSpec, afterSpec, mutableSetOf())
     }
 
@@ -40,16 +38,15 @@ interface ListenableList<E> : MutableList<E> {
         private val beforeSpec: PluggableSpec<E>?,
         private val afterSpec: PluggableSpec<E>?,
         private val listeners: MutableSet<CollectionListener<E>>,
-        private val list: PluggableList<E> = PluggableList(
-            delegate,
-            ListenableSet.spec(beforeSpec, afterSpec, listeners)
-        )
+        private val list: PluggableList<E> =
+            PluggableList(delegate, ListenableSet.spec(beforeSpec, afterSpec, listeners)),
     ) : ListenableList<E>, MutableList<E> by list {
         override val view by lazy { View(this) }
 
         override fun addListener(listener: CollectionListener<E>): Boolean = listeners.add(listener)
 
-        override fun removeListener(listener: CollectionListener<E>): Boolean = listeners.remove(listener)
+        override fun removeListener(listener: CollectionListener<E>): Boolean =
+            listeners.remove(listener)
 
         override fun equals(other: Any?): Boolean = delegate == other
 
@@ -60,9 +57,11 @@ interface ListenableList<E> : MutableList<E> {
 
     @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
     class View<out E>(private val owner: ListenableList<E>) : List<E> by owner {
-        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.addListener(listener)
+        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
+            owner.addListener(listener)
 
-        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.removeListener(listener)
+        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
+            owner.removeListener(listener)
 
         override fun equals(other: Any?): Boolean = owner == other
 

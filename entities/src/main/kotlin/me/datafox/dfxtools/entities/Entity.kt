@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,27 +28,26 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
-class Entity(
-    id: String
-) : Handled {
+/** @author Lauri "datafox" Heino */
+class Entity(id: String) : Handled {
     override val handle: Handle = entitySpace.getOrCreateHandle(id)
     private val index: Long = indexCounter++
     private var _added = false
-    val added get() = _added
+    val added
+        get() = _added
+
     private var _removed = false
-    val removed get() = _removed
-    private val _components: ListenableMap<Handle, Component> = ListenableMap(
-        HandleMap.spec(componentSpace),
-        componentSpec(this),
-        TreeMap()
-    )
-    val components: ListenableMap.View<Handle, Component> get() {
-        checkRemoved()
-        return _components.view
-    }
+    val removed
+        get() = _removed
+
+    private val _components: ListenableMap<Handle, Component> =
+        ListenableMap(HandleMap.spec(componentSpace), componentSpec(this), TreeMap())
+    val components: ListenableMap.View<Handle, Component>
+        get() {
+            checkRemoved()
+            return _components.view
+        }
+
     private val initializers: MutableList<EntityInitializer> = mutableListOf()
 
     fun createComponent(id: String): Component {
@@ -73,11 +72,9 @@ class Entity(
     }
 
     override fun equals(other: Any?): Boolean {
-        if(this === other) return true
-        if(other !is Entity) return false
-
-        if(index != other.index) return false
-
+        if (this === other) return true
+        if (other !is Entity) return false
+        if (index != other.index) return false
         return true
     }
 
@@ -103,15 +100,19 @@ class Entity(
     }
 
     private fun checkRemoved() {
-        if(_removed) logThrow(logger, "This entity has been removed and cannot be accessed anymore") { IllegalStateException(it) }
+        if (_removed)
+            logThrow(logger, "This entity has been removed and cannot be accessed anymore") {
+                IllegalStateException(it)
+            }
     }
 
     companion object {
         private var indexCounter: Long = 0L
 
-        fun componentSpec(entity: Entity): PluggableMapSpec<Handle, Component> = PluggableMapSpec(
-            afterAdd = { _, v -> Engine.Cache.componentAdded(entity, v) },
-            afterRemove = { _, v -> Engine.Cache.componentRemoved(entity, v) }
-        )
+        fun componentSpec(entity: Entity): PluggableMapSpec<Handle, Component> =
+            PluggableMapSpec(
+                afterAdd = { _, v -> Engine.Cache.componentAdded(entity, v) },
+                afterRemove = { _, v -> Engine.Cache.componentRemoved(entity, v) },
+            )
     }
 }

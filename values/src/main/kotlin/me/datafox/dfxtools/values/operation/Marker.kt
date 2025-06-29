@@ -17,17 +17,16 @@
 package me.datafox.dfxtools.values.operation
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 private val logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 class Marker(val value: Int) : BigDecimal(0) {
     init {
-        if(value < 0) logThrow(logger, "Marker value cannot be negative") { IllegalArgumentException(it) }
+        if (value < 0)
+            logThrow(logger, "Marker value cannot be negative") { IllegalArgumentException(it) }
     }
 
     override fun toShort(): Short = 0

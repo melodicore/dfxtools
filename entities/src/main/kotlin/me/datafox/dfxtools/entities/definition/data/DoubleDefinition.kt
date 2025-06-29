@@ -26,7 +26,7 @@ import me.datafox.dfxtools.entities.type.DoubleType
 data class DoubleDefinition(
     override val id: String,
     override val saved: Boolean,
-    override val value: Double
+    override val value: Double,
 ) : SerializableDataDefinition<Double> {
     override val dataType = Double::class
 

@@ -19,19 +19,19 @@ package me.datafox.dfxtools.text.text
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.text.isOne
 
-/**
- * @author Lauri "datafox" Heino
- */
-class NumberPluralText @JvmOverloads constructor(
+/** @author Lauri "datafox" Heino */
+class NumberPluralText
+@JvmOverloads
+constructor(
     override val configuration: Configuration? = null,
     val number: NumberText,
     val text: PluralText,
-    val separator: String = " "
+    val separator: String = " ",
 ) : Text {
     override fun generate(configuration: Configuration?): String {
         var configuration = combineNullable(configuration)
         val number = number.generate(configuration)
-        if(configuration == null) configuration = Configuration()
+        if (configuration == null) configuration = Configuration()
         configuration[PluralText.usePlural] = { !number.isOne() }
         val text = text.generate(configuration)
         return "$number$separator$text"

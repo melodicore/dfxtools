@@ -22,19 +22,22 @@ import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Handled
 import kotlin.reflect.KClass
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 data class Schema(override val handle: Handle, val data: Map<KClass<*>, Set<Handle>>) : Handled {
-    constructor(id: String, data: Map<KClass<*>, Set<String>>) : this(
+    constructor(
+        id: String,
+        data: Map<KClass<*>, Set<String>>,
+    ) : this(
         schemaSpace.getOrCreateHandle(id),
-        data.map { (type, set) ->
-            type to set.map { HandleManager.getOrCreateQualifiedHandle(it) }.toSet()
-        }.toMap()
+        data
+            .map { (type, set) ->
+                type to set.map { HandleManager.getOrCreateQualifiedHandle(it) }.toSet()
+            }
+            .toMap(),
     )
 
     init {
-        if(handle.space != schemaSpace) throw IllegalArgumentException()
+        if (handle.space != schemaSpace) throw IllegalArgumentException()
     }
 
     fun isSchema(component: Component): Boolean =

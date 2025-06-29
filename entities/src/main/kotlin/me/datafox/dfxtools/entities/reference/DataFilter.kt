@@ -16,15 +16,13 @@
 
 package me.datafox.dfxtools.entities.reference
 
+import kotlin.reflect.KClass
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
-import kotlin.reflect.KClass
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 @Polymorphic
 interface DataFilter {
     fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean
@@ -38,30 +36,35 @@ interface DataFilter {
     @Serializable
     @SerialName("handle")
     data class Handle(val filter: HandleFilter) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = filter.matches(data.handle)
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
+            filter.matches(data.handle)
     }
 
     @Serializable
     @SerialName("saved")
     data class Saved(val saved: Boolean) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = saved == data.saved
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
+            saved == data.saved
     }
 
     @Serializable
     @SerialName("and")
     data class And(val filters: List<DataFilter>) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = filters.all { it.matches(type, data) }
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
+            filters.all { it.matches(type, data) }
     }
 
     @Serializable
     @SerialName("or")
     data class Or(val filters: List<DataFilter>) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = filters.any { it.matches(type, data) }
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
+            filters.any { it.matches(type, data) }
     }
 
     @Serializable
     @SerialName("not")
     data class Not(val filter: DataFilter) : DataFilter {
-        override fun<T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = !filter.matches(type, data)
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
+            !filter.matches(type, data)
     }
 }

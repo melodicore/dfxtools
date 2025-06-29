@@ -23,19 +23,20 @@ import me.datafox.dfxtools.entities.EntityInitializer
 import me.datafox.dfxtools.handles.get
 import me.datafox.dfxtools.handles.putHandled
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 @Serializable
 data class EntityDefinition(
     val id: String,
     val components: List<ComponentDefinition>,
-    val initializers: List<EntityInitializer>
+    val initializers: List<EntityInitializer>,
 ) {
-    constructor(entity: Entity, saveAll: Boolean = false) : this(
+    constructor(
+        entity: Entity,
+        saveAll: Boolean = false,
+    ) : this(
         entity.handle.id,
         entity.components.values.map { ComponentDefinition(it, saveAll) },
-        listOf()
+        listOf(),
     )
 
     fun build() {

@@ -33,7 +33,7 @@ interface ModifierFactory {
     data class Operation(
         val priority: Int,
         val operation: me.datafox.dfxtools.values.operation.Operation,
-        val params: List<ModifierParameter>
+        val params: List<ModifierParameter>,
     ) : ModifierFactory {
         override fun build(): Modifier =
             OperationModifier(priority, operation, *params.map { it.get() }.toTypedArray())
@@ -43,21 +43,27 @@ interface ModifierFactory {
     @SerialName("chained")
     data class Chained(
         val priority: Int,
-        val operations: List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
+        val operations:
+            List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
-        override fun build(): Modifier = ChainedModifier(priority, *operations.map {
-                (op, params) -> op to params.map { it.get() }
-        }.toTypedArray())
+        override fun build(): Modifier =
+            ChainedModifier(
+                priority,
+                *operations.map { (op, params) -> op to params.map { it.get() } }.toTypedArray(),
+            )
     }
 
     @Serializable
     @SerialName("mapping")
     data class Mapping(
         val priority: Int,
-        val operations: List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
+        val operations:
+            List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
-        override fun build(): Modifier = MappingModifier(priority, *operations.map {
-                (op, params) -> op to params.map { it.get() }
-        }.toTypedArray())
+        override fun build(): Modifier =
+            MappingModifier(
+                priority,
+                *operations.map { (op, params) -> op to params.map { it.get() } }.toTypedArray(),
+            )
     }
 }

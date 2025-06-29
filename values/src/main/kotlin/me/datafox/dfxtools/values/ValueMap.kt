@@ -17,6 +17,7 @@
 package me.datafox.dfxtools.values
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.*
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleMap
 import me.datafox.dfxtools.handles.Space
@@ -24,36 +25,35 @@ import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.collection.ObservableMap
 import me.datafox.dfxtools.utils.collection.*
 import me.datafox.dfxtools.values.modifier.Modifier
-import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
 /**
- * A map for [ModifiableValues][ModifiableValue]. May be backed with a regular [SortedMap] or a [HandleMap] to limit
- * values to a single [Space]. If any [ModifiableValue] is invalidated, it also invalidates this map and all of its
- * [observers]. [Modifiers][Modifier] can also be added to this map through [modifiers], and all of these modifiers will
- * be added to all values in the map retro- and proactively. Removing a modifier will also remove it from all modifiable
- * values in this map, and removing a value will remove all this map's modifiers from the removed value.
+ * A map for [ModifiableValues][ModifiableValue]. May be backed with a regular [SortedMap] or a
+ * [HandleMap] to limit values to a single [Space]. If any [ModifiableValue] is invalidated, it also
+ * invalidates this map and all of its [observers]. [Modifiers][Modifier] can also be added to this
+ * map through [modifiers], and all of these modifiers will be added to all values in the map retro-
+ * and proactively. Removing a modifier will also remove it from all modifiable values in this map,
+ * and removing a value will remove all this map's modifiers from the removed value.
  *
  * @author Lauri "datafox" Heino
  */
-class ValueMap private constructor(
+class ValueMap
+private constructor(
     private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap(),
-    val space: Space? = null
-): AbstractObservableObserver(), ListenableMap<Handle, ModifiableValue>, MutableMap<Handle, ModifiableValue> by map {
+    val space: Space? = null,
+) :
+    AbstractObservableObserver(),
+    ListenableMap<Handle, ModifiableValue>,
+    MutableMap<Handle, ModifiableValue> by map {
     private lateinit var delegate: ListenableMap<Handle, ModifiableValue>
     val modifiers: MutableSet<Modifier> = PluggableSet(sortedSetOf(), modifierSpec { values })
-    override val view: ListenableMap.View<Handle, ModifiableValue> get() = delegate.view
+    override val view: ListenableMap.View<Handle, ModifiableValue>
+        get() = delegate.view
 
-    /**
-     * Creates a new empty value map backed by a [SortedMap].
-     */
+    /** Creates a new empty value map backed by a [SortedMap]. */
     constructor() : this(LateDelegatedMap()) {
-        delegate = ListenableMap(
-            spec(modifiers),
-            ObservableMap.spec(this, true, Any()),
-            TreeMap()
-        )
+        delegate = ListenableMap(spec(modifiers), ObservableMap.spec(this, true, Any()), TreeMap())
         map.delegate = delegate
     }
 
@@ -63,27 +63,32 @@ class ValueMap private constructor(
      * @param space [Space] for the [HandleMap].
      */
     constructor(space: Space) : this(LateDelegatedMap(), space) {
-        delegate = ListenableMap(
-            PluggableMapSpec(HandleMap.spec(space), spec(modifiers)),
-            ObservableMap.spec(this, true, Any()),
-            TreeMap()
-        )
+        delegate =
+            ListenableMap(
+                PluggableMapSpec(HandleMap.spec(space), spec(modifiers)),
+                ObservableMap.spec(this, true, Any()),
+                TreeMap(),
+            )
         map.delegate = delegate
     }
 
-    override fun addListener(listener: MapListener<Handle, ModifiableValue>): Boolean = delegate.addListener(listener)
+    override fun addListener(listener: MapListener<Handle, ModifiableValue>): Boolean =
+        delegate.addListener(listener)
 
-    override fun removeListener(listener: MapListener<Handle, ModifiableValue>): Boolean = delegate.removeListener(listener)
+    override fun removeListener(listener: MapListener<Handle, ModifiableValue>): Boolean =
+        delegate.removeListener(listener)
 
     companion object {
-        fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> = PluggableMapSpec(
-            beforeAdd = { _, v -> v.modifiers.addAll(modifiers) },
-            beforeRemove = { _, v -> v.modifiers.removeAll(modifiers) }
-        )
+        fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> =
+            PluggableMapSpec(
+                beforeAdd = { _, v -> v.modifiers.addAll(modifiers) },
+                beforeRemove = { _, v -> v.modifiers.removeAll(modifiers) },
+            )
 
-        fun modifierSpec(values: () -> Collection<ModifiableValue>): PluggableSpec<Modifier> = PluggableSpec(
-            afterAdd = { mod -> values().map { it }.forEach { it.modifiers.add(mod) } },
-            afterRemove = { mod -> values().map { it }.forEach { it.modifiers.remove(mod) } }
-        )
+        fun modifierSpec(values: () -> Collection<ModifiableValue>): PluggableSpec<Modifier> =
+            PluggableSpec(
+                afterAdd = { mod -> values().map { it }.forEach { it.modifiers.add(mod) } },
+                afterRemove = { mod -> values().map { it }.forEach { it.modifiers.remove(mod) } },
+            )
     }
 }

@@ -16,9 +16,7 @@
 
 package me.datafox.dfxtools.entities
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 interface ComponentInitializer {
     fun initialize(component: Component)
 }

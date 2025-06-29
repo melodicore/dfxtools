@@ -20,28 +20,27 @@ import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.handles.HandleManager
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 @Serializable
 data class EngineDefinition(
     val spaces: List<SpaceDefinition>,
-    val entities: List<EntityDefinition>
+    val entities: List<EntityDefinition>,
 ) {
     @JvmOverloads
-    constructor(saveAll: Boolean = false) : this(
-        getSpaces(),
-        Engine.entities.values.map { EntityDefinition(it, saveAll) }
-    )
+    constructor(
+        saveAll: Boolean = false
+    ) : this(getSpaces(), Engine.entities.values.map { EntityDefinition(it, saveAll) })
 
     companion object {
         private fun getSpaces(): List<SpaceDefinition> {
             val spaces = mutableListOf<SpaceDefinition>()
             spaces.add(SpaceDefinition(HandleManager.tagSpace))
             spaces.add(SpaceDefinition(HandleManager.spaceSpace))
-            spaces.addAll(HandleManager.spaces.values.filterNot {
-                it == HandleManager.tagSpace || it == HandleManager.spaceSpace
-            }.map { SpaceDefinition(it) })
+            spaces.addAll(
+                HandleManager.spaces.values
+                    .filterNot { it == HandleManager.tagSpace || it == HandleManager.spaceSpace }
+                    .map { SpaceDefinition(it) }
+            )
             return spaces
         }
     }

@@ -24,14 +24,12 @@ import me.datafox.dfxtools.entities.reference.DataReference
 import me.datafox.dfxtools.values.ModifiableValue
 import me.datafox.dfxtools.values.ValueMap
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 @Serializable
 data class ModifierInitializer(
     val modifier: ModifierFactory,
     val targetValues: DataReference<@Contextual ModifiableValue>,
-    val targetMaps: DataReference<@Contextual ValueMap>
+    val targetMaps: DataReference<@Contextual ValueMap>,
 ) : ComponentInitializer {
     override fun initialize(component: Component) {
         val mod = modifier.build()

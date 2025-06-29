@@ -16,14 +16,12 @@
 
 package me.datafox.dfxtools.entities.type
 
+import java.math.BigInteger
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.BigIntegerDefinition
-import java.math.BigInteger
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object BigIntegerType : DataType<BigInteger> {
     const val ID = "bigInteger"
 
@@ -31,5 +29,6 @@ object BigIntegerType : DataType<BigInteger> {
 
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition = BigIntegerDefinition(data)
+    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition =
+        BigIntegerDefinition(data)
 }

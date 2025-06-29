@@ -16,6 +16,7 @@
 
 package me.datafox.dfxtools.entities.extensions.modifier
 
+import java.math.BigDecimal
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
@@ -24,7 +25,6 @@ import me.datafox.dfxtools.values.MarkerValue
 import me.datafox.dfxtools.values.ModifiableValue
 import me.datafox.dfxtools.values.SimpleValue
 import me.datafox.dfxtools.values.Value
-import java.math.BigDecimal
 
 @Polymorphic
 sealed interface ModifierParameter {

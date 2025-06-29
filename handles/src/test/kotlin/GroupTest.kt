@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import me.datafox.dfxtools.handles.Group
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Purge
@@ -21,9 +24,6 @@ import me.datafox.dfxtools.handles.Space
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 /**
  * Tests for [Group].

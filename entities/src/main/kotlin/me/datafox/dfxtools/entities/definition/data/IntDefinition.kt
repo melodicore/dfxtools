@@ -26,7 +26,7 @@ import me.datafox.dfxtools.entities.type.IntType
 data class IntDefinition(
     override val id: String,
     override val saved: Boolean,
-    override val value: Int
+    override val value: Int,
 ) : SerializableDataDefinition<Int> {
     override val dataType = Int::class
 

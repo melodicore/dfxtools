@@ -32,6 +32,7 @@ mavenPublishing {
     coordinates(group.toString(), name, version.toString())
     pom {
         name = "DFXTools Invalidation"
-        description = "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
+        description =
+            "Dynamic enum-like values to use for identification, such as map keys, and tools to manipulate them"
     }
 }

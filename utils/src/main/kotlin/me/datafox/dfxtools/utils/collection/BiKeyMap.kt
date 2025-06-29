@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,15 +16,17 @@
 
 package me.datafox.dfxtools.utils.collection
 
-/**
- * @author Lauri "datafox" Heino
- */
-class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
+/** @author Lauri "datafox" Heino */
+class BiKeyMap<K1, K2, V>
+@JvmOverloads
+constructor(
     first: MutableMap<K1, V> = mutableMapOf(),
     second: MutableMap<K2, V> = mutableMapOf(),
-    entries: Map<Pair<K1, K2>, V> = emptyMap()
+    entries: Map<Pair<K1, K2>, V> = emptyMap(),
 ) {
-    val size get() = first.size
+    val size
+        get() = first.size
+
     private val _first: MutableMap<K1, V> = mutableMapOf()
     val first: Map<K1, V> = _first
     private val _second: MutableMap<K2, V> = mutableMapOf()
@@ -61,7 +63,7 @@ class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
     operator fun set(key1: K1, key2: K2, value: V) = put(key1, key2, value)
 
     fun remove(key1: K1, key2: K2): V? {
-        if(firstToSecond[key1] != key2 || secondToFirst[key2] != key1) {
+        if (firstToSecond[key1] != key2 || secondToFirst[key2] != key1) {
             throw IllegalArgumentException("Keys do not match")
         }
         val last = _first.remove(key1)
@@ -73,19 +75,21 @@ class BiKeyMap<K1, K2, V> @JvmOverloads constructor(
 
     fun remove1(key1: K1): V? {
         val last = first[key1]
-        if(last == null) return null
+        if (last == null) return null
         return remove(key1, firstToSecond[key1]!!)
     }
 
     fun remove2(key2: K2): V? {
         val last = second[key2]
-        if(last == null) return null
+        if (last == null) return null
         return remove(secondToFirst[key2]!!, key2)
     }
 
     fun putAll(from: Map<Pair<K1, K2>, V>) {
-        if(from.keys.map { first }.toSet().size != from.size ||
-            from.keys.map { second }.toSet().size != from.size) {
+        if (
+            from.keys.map { first }.toSet().size != from.size ||
+                from.keys.map { second }.toSet().size != from.size
+        ) {
             throw IllegalArgumentException("All keys must be unique.")
         }
         from.forEach { (first, second), value -> put(first, second, value) }

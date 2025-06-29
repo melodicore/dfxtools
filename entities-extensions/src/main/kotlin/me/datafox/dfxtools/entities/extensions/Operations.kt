@@ -23,87 +23,49 @@ import me.datafox.dfxtools.values.operation.Operation
 import me.datafox.dfxtools.values.operation.SingleParameterOperation
 import me.datafox.dfxtools.values.operation.SourceOperation
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object Operations {
-    @Serializable
-    @SerialName("add")
-    class Add : SingleParameterOperation by Operation.add
+    @Serializable @SerialName("add") class Add : SingleParameterOperation by Operation.add
 
-    @Serializable
-    @SerialName("sub")
-    class Sub : SingleParameterOperation by Operation.sub
+    @Serializable @SerialName("sub") class Sub : SingleParameterOperation by Operation.sub
 
-    @Serializable
-    @SerialName("subInv")
-    class SubInv : SingleParameterOperation by Operation.subInv
+    @Serializable @SerialName("subInv") class SubInv : SingleParameterOperation by Operation.subInv
 
-    @Serializable
-    @SerialName("mul")
-    class Mul : SingleParameterOperation by Operation.mul
+    @Serializable @SerialName("mul") class Mul : SingleParameterOperation by Operation.mul
 
-    @Serializable
-    @SerialName("div")
-    class Div : SingleParameterOperation by Operation.div
+    @Serializable @SerialName("div") class Div : SingleParameterOperation by Operation.div
 
-    @Serializable
-    @SerialName("divInv")
-    class DivInv : SingleParameterOperation by Operation.divInv
+    @Serializable @SerialName("divInv") class DivInv : SingleParameterOperation by Operation.divInv
 
-    @Serializable
-    @SerialName("pow")
-    class Pow : SingleParameterOperation by Operation.pow
+    @Serializable @SerialName("pow") class Pow : SingleParameterOperation by Operation.pow
 
-    @Serializable
-    @SerialName("powInv")
-    class PowInv : SingleParameterOperation by Operation.powInv
+    @Serializable @SerialName("powInv") class PowInv : SingleParameterOperation by Operation.powInv
 
-    @Serializable
-    @SerialName("abs")
-    class Abs : SourceOperation by Operation.abs
+    @Serializable @SerialName("abs") class Abs : SourceOperation by Operation.abs
 
-    @Serializable
-    @SerialName("inv")
-    class Inv : SourceOperation by Operation.inv
+    @Serializable @SerialName("inv") class Inv : SourceOperation by Operation.inv
 
-    @Serializable
-    @SerialName("sqrt")
-    class Sqrt : SourceOperation by Operation.sqrt
+    @Serializable @SerialName("sqrt") class Sqrt : SourceOperation by Operation.sqrt
 
-    @Serializable
-    @SerialName("cbrt")
-    class Cbrt : SourceOperation by Operation.cbrt
+    @Serializable @SerialName("cbrt") class Cbrt : SourceOperation by Operation.cbrt
 
-    @Serializable
-    @SerialName("root")
-    class Root : SingleParameterOperation by Operation.root
+    @Serializable @SerialName("root") class Root : SingleParameterOperation by Operation.root
 
     @Serializable
     @SerialName("rootInv")
     class RootInv : SingleParameterOperation by Operation.rootInv
 
-    @Serializable
-    @SerialName("log")
-    class Log : SourceOperation by Operation.log
+    @Serializable @SerialName("log") class Log : SourceOperation by Operation.log
 
-    @Serializable
-    @SerialName("log2")
-    class Log2 : SourceOperation by Operation.log2
+    @Serializable @SerialName("log2") class Log2 : SourceOperation by Operation.log2
 
-    @Serializable
-    @SerialName("log10")
-    class Log10 : SourceOperation by Operation.log10
+    @Serializable @SerialName("log10") class Log10 : SourceOperation by Operation.log10
 
-    @Serializable
-    @SerialName("logN")
-    class LogN : SingleParameterOperation by Operation.logN
+    @Serializable @SerialName("logN") class LogN : SingleParameterOperation by Operation.logN
 
     @Serializable
     @SerialName("logNInv")
     class LogNInv : SingleParameterOperation by Operation.logNInv
 
-    @Serializable
-    @SerialName("lerp")
-    class Lerp : DualParameterOperation by Operation.lerp
+    @Serializable @SerialName("lerp") class Lerp : DualParameterOperation by Operation.lerp
 }

@@ -41,6 +41,4 @@ mavenPublishing {
     }
 }
 
-dokka {
-    moduleName = "Entities Extensions"
-}
+dokka { moduleName = "Entities Extensions" }

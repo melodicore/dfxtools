@@ -27,9 +27,7 @@ plugins {
 
 group = "me.datafox.dfxtools"
 
-dependencies {
-    testImplementation(kotlin("test"))
-}
+dependencies { testImplementation(kotlin("test")) }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -38,21 +36,13 @@ java {
 
 kotlin {
     jvmToolchain(24)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-    }
+    compilerOptions { jvmTarget = JvmTarget.JVM_11 }
 }
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 
-    testLogging {
-        events(
-            TestLogEvent.FAILED,
-            TestLogEvent.PASSED,
-            TestLogEvent.SKIPPED
-        )
-    }
+    testLogging { events(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED) }
 }
 
 tasks.jar {
@@ -62,7 +52,7 @@ tasks.jar {
         attributes(
             "Implementation-Title" to moduleName,
             "Implementation-Version" to moduleVersion,
-            "Automatic-Module-Name" to "dfxtools.$moduleName"
+            "Automatic-Module-Name" to "dfxtools.$moduleName",
         )
     }
 }
@@ -103,6 +93,6 @@ mavenPublishing {
 }
 
 signing {
-    //Bouncy Castle is not working properly
+    // Bouncy Castle is not working properly
     useGpgCmd()
 }

@@ -22,18 +22,15 @@ import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Space
 
 @Serializable
-data class HandleDefinition(
-    val id: String,
-    val tags: List<String>,
-) {
+data class HandleDefinition(val id: String, val tags: List<String>) {
     constructor(handle: Handle) : this(handle.id, handle.tags.map { it.id })
 
     fun build(space: Space): Handle = space.getOrCreateHandle(id)
 
     fun buildSpaceHandle(): Handle {
-        if(!id.contains(':')) return HandleManager.getOrCreateSpace(id).handle
+        if (!id.contains(':')) return HandleManager.getOrCreateSpace(id).handle
         val split = id.split(':')
-        if(split.size != 2) throw IllegalArgumentException("Invalid id")
+        if (split.size != 2) throw IllegalArgumentException("Invalid id")
         return HandleManager.getOrCreateSpace(split[0]).getOrCreateGroup(split[1]).handle
     }
 

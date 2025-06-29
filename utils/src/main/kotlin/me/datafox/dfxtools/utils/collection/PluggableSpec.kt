@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,7 @@ package me.datafox.dfxtools.utils.collection
 import me.datafox.dfxtools.utils.collection.PluggableSpec.Companion.convertKey
 import me.datafox.dfxtools.utils.collection.PluggableSpec.Companion.convertValue
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 sealed interface PluggableSpec<E> {
     val beforeAdd: (E) -> Unit
     val afterAdd: (E) -> Unit
@@ -42,21 +40,22 @@ sealed interface PluggableSpec<E> {
             beforeRemove: ((E) -> Unit)? = null,
             afterRemove: ((E) -> Unit)? = null,
             beforeOperation: (() -> Unit)? = null,
-            afterOperation: (() -> Unit)? = null
-        ): PluggableSpec<E> = PluggableSpecImpl(
-            beforeAdd = beforeAdd,
-            afterAdd = afterAdd,
-            beforeRemove = beforeRemove,
-            afterRemove = afterRemove,
-            beforeOperation = beforeOperation,
-            afterOperation = afterOperation
-        )
+            afterOperation: (() -> Unit)? = null,
+        ): PluggableSpec<E> =
+            PluggableSpecImpl(
+                beforeAdd = beforeAdd,
+                afterAdd = afterAdd,
+                beforeRemove = beforeRemove,
+                afterRemove = afterRemove,
+                beforeOperation = beforeOperation,
+                afterOperation = afterOperation,
+            )
 
         operator fun <E> invoke(vararg specs: PluggableSpec<E>): PluggableSpec<E> {
-            if(specs.isEmpty()) return PluggableSpecImpl()
-            if(specs.size == 1) return specs[0]
+            if (specs.isEmpty()) return PluggableSpecImpl()
+            if (specs.size == 1) return specs[0]
             val first = specs[0]
-            if(first is ConcatenatedPluggableSpec) {
+            if (first is ConcatenatedPluggableSpec) {
                 first.addSpecs(*specs.copyOfRange(1, specs.size))
                 return first
             }
@@ -65,11 +64,15 @@ sealed interface PluggableSpec<E> {
 
         internal fun <E, V> convertKey(lambda: (E) -> Unit): (E, V) -> Unit = { k, _ -> lambda(k) }
 
-        internal fun <E, V> convertKey(list: List<(E) -> Unit>): Collection<(E, V) -> Unit> = list.map { convertKey(it) }
+        internal fun <E, V> convertKey(list: List<(E) -> Unit>): Collection<(E, V) -> Unit> =
+            list.map { convertKey(it) }
 
-        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit = { _, v -> lambda(v) }
+        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit = { _, v ->
+            lambda(v)
+        }
 
-        internal fun <K, E> convertValue(list: List<(E) -> Unit>): Collection<(K, E) -> Unit> = list.map { convertValue(it) }
+        internal fun <K, E> convertValue(list: List<(E) -> Unit>): Collection<(K, E) -> Unit> =
+            list.map { convertValue(it) }
     }
 }
 
@@ -79,7 +82,7 @@ internal class PluggableSpecImpl<E>(
     beforeRemove: ((E) -> Unit)? = null,
     afterRemove: ((E) -> Unit)? = null,
     beforeOperation: (() -> Unit)? = null,
-    afterOperation: (() -> Unit)? = null
+    afterOperation: (() -> Unit)? = null,
 ) : PluggableSpec<E> {
     internal val beforeAddInternal = beforeAdd
     internal val afterAddInternal = afterAdd
@@ -101,7 +104,7 @@ internal class PluggableSpecImpl<E>(
             beforeRemove = convertKey(beforeRemove),
             afterRemove = convertKey(afterRemove),
             beforeOperation = beforeOperation,
-            afterOperation = afterOperation
+            afterOperation = afterOperation,
         )
     }
 
@@ -112,7 +115,7 @@ internal class PluggableSpecImpl<E>(
             beforeRemove = convertValue(beforeRemove),
             afterRemove = convertValue(afterRemove),
             beforeOperation = beforeOperation,
-            afterOperation = afterOperation
+            afterOperation = afterOperation,
         )
     }
 }
@@ -132,11 +135,11 @@ internal class ConcatenatedPluggableSpec<E>(vararg specs: PluggableSpec<E>) : Pl
     override val afterOperation: () -> Unit = { afterOperationList.forEach { it() } }
 
     init {
-        if(specs.isNotEmpty()) addSpecs(*specs)
+        if (specs.isNotEmpty()) addSpecs(*specs)
     }
 
     fun addSpec(spec: PluggableSpec<E>) {
-        when(spec) {
+        when (spec) {
             is PluggableSpecImpl -> {
                 beforeAddList.addIfNotNull(spec.beforeAddInternal)
                 afterAddList.addIfNotNull(spec.afterAddInternal)

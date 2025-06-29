@@ -31,30 +31,31 @@ class ValueMapDefinition(
     override val id: String,
     override val saved: Boolean,
     val space: String?,
-    val values: List<ModifiableValueDefinition>
+    val values: List<ModifiableValueDefinition>,
 ) : MutableDataDefinition<ValueMap> {
     override val dataType = ValueMap::class
 
-    constructor(data: EntityData<ValueMap>) : this(
+    constructor(
+        data: EntityData<ValueMap>
+    ) : this(
         data.handle.toString(),
         data.saved,
         data.data.space?.handle?.id,
         data.data.values.map {
             ModifiableValueDefinition(it.handle.toString(), data.saved, it.base.toString())
-        }
+        },
     )
 
     override fun create(): ValueMap {
-        val map = if(space == null) ValueMap() else ValueMap(HandleManager.getOrCreateSpace(space))
-        values.forEach {  map.putHandled(it.create()) }
+        val map = if (space == null) ValueMap() else ValueMap(HandleManager.getOrCreateSpace(space))
+        values.forEach { map.putHandled(it.create()) }
         return map
     }
 
     override fun set(value: ValueMap) {
         values.forEach {
             val handle = HandleManager.getOrCreateQualifiedHandle(it.id)
-            if(handle in value) it.set(value[handle]!!)
-            else value.putHandled(it.create())
+            if (handle in value) it.set(value[handle]!!) else value.putHandled(it.create())
         }
     }
 }

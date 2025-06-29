@@ -16,22 +16,24 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
+import java.math.BigInteger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.type.BigIntegerType
-import java.math.BigInteger
 
 @Serializable
 @SerialName(BigIntegerType.ID)
 data class BigIntegerDefinition(
     override val id: String,
     override val saved: Boolean,
-    val state: String
+    val state: String,
 ) : DataDefinition<BigInteger> {
     override val dataType = BigInteger::class
 
-    constructor(data: EntityData<BigInteger>) : this(data.handle.toString(), data.saved, data.data.toString())
+    constructor(
+        data: EntityData<BigInteger>
+    ) : this(data.handle.toString(), data.saved, data.data.toString())
 
     override fun create() = BigInteger(state)
 }

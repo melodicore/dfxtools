@@ -1,12 +1,12 @@
 /*
  * Copyright 2025 Lauri "datafox" Heino
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import me.datafox.dfxtools.invalidation.AbstractObservable
 import me.datafox.dfxtools.invalidation.AbstractObserver
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.property.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 /**
  * Tests for [properties][me.datafox.dfxtools.invalidation.property].
@@ -129,11 +129,12 @@ class PropertyTest {
         assertEquals(5, test.counter)
     }
 
-
     private class TestInvalidatedProperty : AbstractObserver() {
         val counter: Int by InvalidatedProperty { it?.plus(1) ?: 0 }
 
-        override fun onInvalidated() { /* no-op */ }
+        override fun onInvalidated() {
+            /* no-op */
+        }
     }
 
     private class TestInvalidatorProperty : AbstractObservable() {
@@ -143,14 +144,18 @@ class PropertyTest {
     private class TestObserver : AbstractObserver() {
         var counter = 0
 
-        override fun onInvalidated() { counter++ }
+        override fun onInvalidated() {
+            counter++
+        }
     }
 
     private class TestObservableProperty(observable: Observable) : AbstractObserver() {
         val observable by ObservableProperty(observable)
         var counter = 0
 
-        override fun onInvalidated() { counter++ }
+        override fun onInvalidated() {
+            counter++
+        }
     }
 
     private class TestObservable : AbstractObservable()
@@ -159,24 +164,35 @@ class PropertyTest {
         val observables: MutableList<TestObservable> by ObservableListProperty()
         var counter = 0
 
-        override fun onInvalidated() { counter++ }
+        override fun onInvalidated() {
+            counter++
+        }
     }
 
     private class TestObservableSetProperty : AbstractObserver() {
         val observables: MutableSet<TestObservable> by ObservableSetProperty()
         var counter = 0
 
-        override fun onInvalidated() { counter++ }
+        override fun onInvalidated() {
+            counter++
+        }
     }
 
     private class TestObservableSortedSetProperty : AbstractObserver() {
-        val observables: MutableSet<TestComparableObservable> by ObservableSortedSetProperty { e1, e2 -> e1.compareTo(e2) }
+        val observables: MutableSet<TestComparableObservable> by ObservableSortedSetProperty {
+            e1,
+            e2 ->
+            e1.compareTo(e2)
+        }
         var counter = 0
 
-        override fun onInvalidated() { counter++ }
+        override fun onInvalidated() {
+            counter++
+        }
     }
 
-    private class TestComparableObservable(val i: Int) : AbstractObservable(), Comparable<TestComparableObservable> {
+    private class TestComparableObservable(val i: Int) :
+        AbstractObservable(), Comparable<TestComparableObservable> {
         override fun compareTo(other: TestComparableObservable): Int = i.compareTo(other.i)
     }
 }

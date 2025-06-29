@@ -23,9 +23,7 @@ import me.datafox.dfxtools.entities.type.DataType
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.values.ValueMap
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object ValueMapType : DataType<ValueMap> {
     const val ID = "valueMap"
 

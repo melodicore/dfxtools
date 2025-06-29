@@ -21,9 +21,7 @@ plugins {
 
 version = libs.versions.utils.get()
 
-dependencies {
-    implementation(libs.logging)
-}
+dependencies { implementation(libs.logging) }
 
 mavenPublishing {
     coordinates(group.toString(), name, version.toString())

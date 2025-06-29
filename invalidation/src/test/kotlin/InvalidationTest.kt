@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import me.datafox.dfxtools.invalidation.AbstractObservableObserver
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import me.datafox.dfxtools.invalidation.AbstractObservableObserver
+import org.junit.jupiter.api.assertThrows
 
 /**
  * Tests for general invalidation

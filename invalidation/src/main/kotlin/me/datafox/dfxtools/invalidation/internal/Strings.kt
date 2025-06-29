@@ -13,5 +13,5 @@ internal object Strings {
 
     fun cyclicDependency(current: Observable, original: Observable, owner: Observer) =
         "$original cannot observe $owner because it would cause a cyclic dependency " +
-                "($owner observes $current which either directly or indirectly observes $original)"
+            "($owner observes $current which either directly or indirectly observes $original)"
 }

@@ -16,6 +16,7 @@
 
 package me.datafox.dfxtools.entities.extensions.definition
 
+import java.math.BigDecimal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
@@ -23,19 +24,19 @@ import me.datafox.dfxtools.entities.definition.data.MutableDataDefinition
 import me.datafox.dfxtools.entities.extensions.type.ModifiableValueType
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.values.ModifiableValue
-import java.math.BigDecimal
 
 @Serializable
 @SerialName(ModifiableValueType.ID)
 class ModifiableValueDefinition(
     override val id: String,
     override val saved: Boolean,
-    val value: String
+    val value: String,
 ) : MutableDataDefinition<ModifiableValue> {
     override val dataType = ModifiableValue::class
 
-    constructor(data: EntityData<ModifiableValue>) :
-            this(data.handle.toString(), data.saved, data.data.base.toString())
+    constructor(
+        data: EntityData<ModifiableValue>
+    ) : this(data.handle.toString(), data.saved, data.data.base.toString())
 
     override fun create(): ModifiableValue =
         ModifiableValue(HandleManager.getOrCreateQualifiedHandle(id), BigDecimal(value))

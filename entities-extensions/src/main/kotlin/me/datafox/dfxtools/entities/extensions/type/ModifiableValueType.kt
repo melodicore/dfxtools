@@ -23,9 +23,7 @@ import me.datafox.dfxtools.entities.type.DataType
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.values.ModifiableValue
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object ModifiableValueType : DataType<ModifiableValue> {
     const val ID = "value"
 
@@ -33,5 +31,6 @@ object ModifiableValueType : DataType<ModifiableValue> {
 
     override val handle: Handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<ModifiableValue>): ModifiableValueDefinition = ModifiableValueDefinition(data)
+    override fun convert(data: EntityData<ModifiableValue>): ModifiableValueDefinition =
+        ModifiableValueDefinition(data)
 }

@@ -17,34 +17,37 @@
 package me.datafox.dfxtools.values.operation
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import me.datafox.dfxtools.utils.Logging.logThrow
 import java.math.BigDecimal
+import me.datafox.dfxtools.utils.Logging.logThrow
 
 private val logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 class ChainedOperation(vararg operations: Operation) : Operation {
     val operations: List<Operation> = operations.toList()
     override val parameterCount: Int = operations.sumOf { it.parameterCount }
 
     init {
-        if(operations.isEmpty()) logThrow(logger, "Operations must not be empty") { IllegalArgumentException(it) }
+        if (operations.isEmpty())
+            logThrow(logger, "Operations must not be empty") { IllegalArgumentException(it) }
     }
 
     override fun apply(source: BigDecimal, vararg params: BigDecimal): BigDecimal {
-        if(params.size < parameterCount) {
-            logThrow(logger, "Too few parameters given to $this, $parameterCount are required") { IllegalArgumentException(it) }
+        if (params.size < parameterCount) {
+            logThrow(logger, "Too few parameters given to $this, $parameterCount are required") {
+                IllegalArgumentException(it)
+            }
         }
-        if(params.size > parameterCount) {
-            logger.warn { "More than $parameterCount parameters given to $this, some parameters will be ignored" }
+        if (params.size > parameterCount) {
+            logger.warn {
+                "More than $parameterCount parameters given to $this, some parameters will be ignored"
+            }
         }
         var index = 0
         var number = source
         operations.forEach {
             val list = ArrayList<BigDecimal>(it.parameterCount)
-            for(i in 0 until it.parameterCount) list.add(params[index + i])
+            for (i in 0 until it.parameterCount) list.add(params[index + i])
             number = it.apply(number, *list.toTypedArray())
             index += it.parameterCount
         }

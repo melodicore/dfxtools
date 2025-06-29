@@ -20,9 +20,7 @@ import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.IntDefinition
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object IntType : DataType<Int> {
     const val ID = "int"
 

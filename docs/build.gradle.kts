@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-plugins {
-    id("org.jetbrains.dokka")
-}
+plugins { id("org.jetbrains.dokka") }
 
-dokka {
-    moduleName = "DFXTools"
-}
+dokka { moduleName = "DFXTools" }
 
 dependencies {
     dokka(project(":configuration"))

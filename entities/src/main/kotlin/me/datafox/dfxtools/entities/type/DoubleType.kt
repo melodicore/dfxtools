@@ -20,9 +20,7 @@ import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.DoubleDefinition
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object DoubleType : DataType<Double> {
     const val ID = "double"
 

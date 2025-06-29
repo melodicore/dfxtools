@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 /**
- * Just a very simple [`configuration test`] case since the module is tiny and barebones, leveraging [HashMap] for
- * functionality.
+ * Just a very simple [`configuration test`] case since the module is tiny and barebones, leveraging
+ * [HashMap] for functionality.
  *
  * @author Lauri "datafox" Heino
  */
@@ -48,7 +48,7 @@ class ConfigurationTest {
         assertEquals(string2, config[stringKey])
         var first = true
         config[intKey] = {
-            if(first) {
+            if (first) {
                 first = false
                 int2
             } else int3

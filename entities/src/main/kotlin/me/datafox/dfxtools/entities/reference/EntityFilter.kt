@@ -41,7 +41,8 @@ interface EntityFilter {
     @Serializable
     @SerialName("component")
     data class Component(val filters: List<ComponentFilter>) : EntityFilter {
-        override fun matches(entity: Entity): Boolean = filters.all { entity.components.values.any(it::matches) }
+        override fun matches(entity: Entity): Boolean =
+            filters.all { entity.components.values.any(it::matches) }
     }
 
     @Serializable
@@ -50,7 +51,9 @@ interface EntityFilter {
         private val _handles by lazy { Engine.schemaSpace.getOrCreateHandles(handles) }
 
         override fun matches(entity: Entity): Boolean =
-            _handles.all { Engine.Cache.entitiesBySchema[it]?.contains(entity) ?: entity.hasSchemas(handles) }
+            _handles.all {
+                Engine.Cache.entitiesBySchema[it]?.contains(entity) ?: entity.hasSchemas(handles)
+            }
     }
 
     @Serializable

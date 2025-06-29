@@ -16,9 +16,7 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 interface SerializableDataDefinition<T : Any> : DataDefinition<T> {
     val value: T
 

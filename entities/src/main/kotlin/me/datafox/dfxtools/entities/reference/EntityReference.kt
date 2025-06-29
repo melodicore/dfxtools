@@ -20,9 +20,7 @@ import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.Entity
 
-/**
-* @author Lauri "datafox" Heino
-*/
+/** @author Lauri "datafox" Heino */
 @Serializable
 data class EntityReference(val filter: EntityFilter) {
     fun get(): List<Entity> = Engine.entities.values.filter(filter::matches)

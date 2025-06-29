@@ -20,15 +20,16 @@ import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.type.SClass
 
-/**
-* @author Lauri "datafox" Heino
-*/
+/** @author Lauri "datafox" Heino */
 @Serializable
 data class DataReference<T : Any>(
     val components: ComponentReference,
     val dataType: SClass<T>,
-    val filter: DataFilter
+    val filter: DataFilter,
 ) {
     fun get(): List<EntityData<T>> =
-        components.get().flatMap { it.getDataMap(dataType).values }.filter { filter.matches(dataType, it) }
+        components
+            .get()
+            .flatMap { it.getDataMap(dataType).values }
+            .filter { filter.matches(dataType, it) }
 }

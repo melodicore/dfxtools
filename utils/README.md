@@ -8,7 +8,7 @@ A utility object for logging, currently only has a function for logging and thro
 
 ## Immutable Collection views
 
-Simple delegated classes that allow to pass an immutable view to a mutable collection. Currently consists of 
+Simple delegated classes that allow to pass an immutable view to a mutable collection. Currently consists of
 `ImmutableListView`, `ImmutableMapView` and `ImmutableSetView`.
 
 ## ConditionalReadWriteProperty

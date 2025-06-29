@@ -18,12 +18,10 @@ package me.datafox.dfxtools.entities.definition.data
 
 import me.datafox.dfxtools.entities.Component
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 interface MutableDataDefinition<T : Any> : DataDefinition<T> {
     override fun build(component: Component) {
-        if(component.contains(dataType, id)) {
+        if (component.contains(dataType, id)) {
             set(component[dataType, id]!!)
         } else {
             component[dataType, id, saved] = create()

@@ -16,9 +16,7 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-plugins {
-    `kotlin-dsl`
-}
+plugins { `kotlin-dsl` }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_22
@@ -27,9 +25,7 @@ java {
 
 kotlin {
     jvmToolchain(24)
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_22
-    }
+    compilerOptions { jvmTarget = JvmTarget.JVM_22 }
 }
 
 dependencies {

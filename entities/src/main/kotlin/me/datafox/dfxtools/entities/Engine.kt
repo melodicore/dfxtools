@@ -37,26 +37,23 @@ import kotlin.reflect.KClass
 
 private val logger = KotlinLogging.logger {}
 
-/**
- * @author Lauri "datafox" Heino
- */
+/** @author Lauri "datafox" Heino */
 object Engine {
     val dataTypeSpace: Space = HandleManager.getOrCreateSpace("types")
     val schemaSpace: Space = HandleManager.getOrCreateSpace("schemas")
     val entitySpace: Space = HandleManager.getOrCreateSpace("entities")
     val componentSpace: Space = HandleManager.getOrCreateSpace("components")
 
-    val schemas: ListenableMap<Handle, Schema> = ListenableMap(
-        PluggableMapSpec(HandleMap.spec(schemaSpace), schemaBeforeSpec { schemas.keys }),
-        schemaAfterSpec(),
-        TreeMap()
-    )
-    val entities: ListenableMap<Handle, Entity> = ListenableMap(
-        HandleMap.spec(entitySpace),
-        entitySpec(),
-        TreeMap()
-    )
-    val systems: ListenableSet<EntitySystem> = ListenableSet(beforeSpec = systemSpec(), delegate = TreeSet())
+    val schemas: ListenableMap<Handle, Schema> =
+        ListenableMap(
+            PluggableMapSpec(HandleMap.spec(schemaSpace), schemaBeforeSpec { schemas.keys }),
+            schemaAfterSpec(),
+            TreeMap(),
+        )
+    val entities: ListenableMap<Handle, Entity> =
+        ListenableMap(HandleMap.spec(entitySpace), entitySpec(), TreeMap())
+    val systems: ListenableSet<EntitySystem> =
+        ListenableSet(beforeSpec = systemSpec(), delegate = TreeSet())
 
     init {
         Serialization.registerDefaultTypes()
@@ -74,58 +71,93 @@ object Engine {
         entities.values.forEach { it.initialize() }
     }
 
-    @JvmOverloads
-    fun save(saveAll: Boolean = false): EngineDefinition = EngineDefinition(saveAll)
+    @JvmOverloads fun save(saveAll: Boolean = false): EngineDefinition = EngineDefinition(saveAll)
 
-    fun schemaBeforeSpec(lambda: () -> Set<Handle>): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
-        beforeAdd = { k, _ -> if(k in lambda()) logThrow(logger, "Definition with handle $k already exists") { IllegalArgumentException(it) } },
-        beforeRemove = { _, _ -> throw UnsupportedOperationException() }
-    )
+    fun schemaBeforeSpec(lambda: () -> Set<Handle>): PluggableMapSpec<Handle, Schema> =
+        PluggableMapSpec(
+            beforeAdd = { k, _ ->
+                if (k in lambda())
+                    logThrow(logger, "Definition with handle $k already exists") {
+                        IllegalArgumentException(it)
+                    }
+            },
+            beforeRemove = { _, _ -> throw UnsupportedOperationException() },
+        )
 
-    fun schemaAfterSpec(): PluggableMapSpec<Handle, Schema> = PluggableMapSpec(
-        afterOperation = { entities.values.forEach { it.components.values.forEach { c -> c.refreshSchemas() } } }
-    )
+    fun schemaAfterSpec(): PluggableMapSpec<Handle, Schema> =
+        PluggableMapSpec(
+            afterOperation = {
+                entities.values.forEach { it.components.values.forEach { c -> c.refreshSchemas() } }
+            }
+        )
 
-    fun entitySpec(): PluggableMapSpec<Handle, Entity> = PluggableMapSpec(
-        afterAdd = { _, v -> v.added(); Cache.entityAdded(v) },
-        afterRemove = { _, v -> v.removed(); Cache.entityRemoved(v) },
-        afterOperation = { entities.values.forEach { it.initialize() } }
-    )
+    fun entitySpec(): PluggableMapSpec<Handle, Entity> =
+        PluggableMapSpec(
+            afterAdd = { _, v ->
+                v.added()
+                Cache.entityAdded(v)
+            },
+            afterRemove = { _, v ->
+                v.removed()
+                Cache.entityRemoved(v)
+            },
+            afterOperation = { entities.values.forEach { it.initialize() } },
+        )
 
-    fun systemSpec(): PluggableSpec<EntitySystem> = PluggableSpec(
-        afterAdd = { it.onAttach() },
-        afterRemove = { it.onDetach() }
-    )
+    fun systemSpec(): PluggableSpec<EntitySystem> =
+        PluggableSpec(afterAdd = { it.onAttach() }, afterRemove = { it.onDetach() })
 
     object Cache {
         init {
             Engine
         }
 
-        private val _entitiesByComponent: HandleMap<ListenableSet<Entity>> = HandleMap(Engine.componentSpace)
+        private val _entitiesByComponent: HandleMap<ListenableSet<Entity>> =
+            HandleMap(Engine.componentSpace)
         val entitiesByComponent: Map<Handle, Set<Entity>> = _entitiesByComponent
-        private val _entitiesBySchema: HandleMap<ListenableSet<Entity>> = HandleMap(Engine.schemaSpace)
+        private val _entitiesBySchema: HandleMap<ListenableSet<Entity>> =
+            HandleMap(Engine.schemaSpace)
         val entitiesBySchema: Map<Handle, Set<Entity>> = _entitiesBySchema
-        private val _componentsBySchema: HandleMap<ListenableSet<Component>> = HandleMap(Engine.schemaSpace)
+        private val _componentsBySchema: HandleMap<ListenableSet<Component>> =
+            HandleMap(Engine.schemaSpace)
         val componentsBySchema: Map<Handle, Set<Component>> = _componentsBySchema
 
-        fun addEntityByComponentListener(id: String, listener: CollectionListener<Entity>): Boolean =
-            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id)).addListener(listener)
+        fun addEntityByComponentListener(
+            id: String,
+            listener: CollectionListener<Entity>,
+        ): Boolean =
+            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id))
+                .addListener(listener)
 
-        fun removeEntityByComponentListener(id: String, listener: CollectionListener<Entity>): Boolean =
-            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id)).removeListener(listener)
+        fun removeEntityByComponentListener(
+            id: String,
+            listener: CollectionListener<Entity>,
+        ): Boolean =
+            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id))
+                .removeListener(listener)
 
         fun addEntityBySchemaListener(id: String, listener: CollectionListener<Entity>): Boolean =
             get(_entitiesBySchema, Engine.schemaSpace.getOrCreateHandle(id)).addListener(listener)
 
-        fun removeEntityBySchemaListener(id: String, listener: CollectionListener<Entity>): Boolean =
-            get(_entitiesBySchema, Engine.schemaSpace.getOrCreateHandle(id)).removeListener(listener)
+        fun removeEntityBySchemaListener(
+            id: String,
+            listener: CollectionListener<Entity>,
+        ): Boolean =
+            get(_entitiesBySchema, Engine.schemaSpace.getOrCreateHandle(id))
+                .removeListener(listener)
 
-        fun addComponentBySchemaListener(id: String, listener: CollectionListener<Component>): Boolean =
+        fun addComponentBySchemaListener(
+            id: String,
+            listener: CollectionListener<Component>,
+        ): Boolean =
             get(_componentsBySchema, Engine.schemaSpace.getOrCreateHandle(id)).addListener(listener)
 
-        fun removeComponentBySchemaListener(id: String, listener: CollectionListener<Component>): Boolean =
-            get(_componentsBySchema, Engine.schemaSpace.getOrCreateHandle(id)).removeListener(listener)
+        fun removeComponentBySchemaListener(
+            id: String,
+            listener: CollectionListener<Component>,
+        ): Boolean =
+            get(_componentsBySchema, Engine.schemaSpace.getOrCreateHandle(id))
+                .removeListener(listener)
 
         internal fun entityAdded(entity: Entity) =
             entity.components.values.forEach { componentAdded(entity, it) }
@@ -134,7 +166,7 @@ object Engine {
             entity.components.values.forEach { componentRemoved(entity, it) }
 
         internal fun componentAdded(entity: Entity, component: Component) {
-            if(!entity.added) return
+            if (!entity.added) return
             get(_entitiesByComponent, component.handle).add(entity)
             component.schemas.values.forEach { schemaAdded(entity, component, it) }
         }
@@ -145,7 +177,7 @@ object Engine {
         }
 
         internal fun schemaAdded(entity: Entity, component: Component, schema: Schema) {
-            if(!entity.added) return
+            if (!entity.added) return
             get(_entitiesBySchema, schema.handle).add(entity)
             get(_componentsBySchema, schema.handle).add(component)
         }
@@ -165,20 +197,35 @@ object Engine {
             Engine
         }
 
-        private val dataDefinitionQueue: MutableList<PolymorphicModuleBuilder<DataDefinition<*>>.() -> Unit> = mutableListOf()
-        private val handleFilterQueue: MutableList<PolymorphicModuleBuilder<HandleFilter>.() -> Unit> = mutableListOf()
-        private val entityFilterQueue: MutableList<PolymorphicModuleBuilder<EntityFilter>.() -> Unit> = mutableListOf()
-        private val componentFilterQueue: MutableList<PolymorphicModuleBuilder<ComponentFilter>.() -> Unit> = mutableListOf()
-        private val dataFilterQueue: MutableList<PolymorphicModuleBuilder<DataFilter>.() -> Unit> = mutableListOf()
-        private val entityInitializerQueue: MutableList<PolymorphicModuleBuilder<EntityInitializer>.() -> Unit> = mutableListOf()
-        private val componentInitializerQueue: MutableList<PolymorphicModuleBuilder<ComponentInitializer>.() -> Unit> = mutableListOf()
-        private val extraSerializersQueue: MutableList<SerializersModuleBuilder.() -> Unit> = mutableListOf()
+        private val dataDefinitionQueue:
+            MutableList<PolymorphicModuleBuilder<DataDefinition<*>>.() -> Unit> =
+            mutableListOf()
+        private val handleFilterQueue:
+            MutableList<PolymorphicModuleBuilder<HandleFilter>.() -> Unit> =
+            mutableListOf()
+        private val entityFilterQueue:
+            MutableList<PolymorphicModuleBuilder<EntityFilter>.() -> Unit> =
+            mutableListOf()
+        private val componentFilterQueue:
+            MutableList<PolymorphicModuleBuilder<ComponentFilter>.() -> Unit> =
+            mutableListOf()
+        private val dataFilterQueue: MutableList<PolymorphicModuleBuilder<DataFilter>.() -> Unit> =
+            mutableListOf()
+        private val entityInitializerQueue:
+            MutableList<PolymorphicModuleBuilder<EntityInitializer>.() -> Unit> =
+            mutableListOf()
+        private val componentInitializerQueue:
+            MutableList<PolymorphicModuleBuilder<ComponentInitializer>.() -> Unit> =
+            mutableListOf()
+        private val extraSerializersQueue: MutableList<SerializersModuleBuilder.() -> Unit> =
+            mutableListOf()
         private var serializersModule: SerializersModule = EmptySerializersModule()
-        private var _json = Json {
-            serializersModule = this@Serialization.serializersModule
-        }
-        val json: Json get() = _json
-        private val _types: BiKeyMap<Handle, KClass<*>, DataType<*>> = BiKeyMap(HandleMap(dataTypeSpace))
+        private var _json = Json { serializersModule = this@Serialization.serializersModule }
+        val json: Json
+            get() = _json
+
+        private val _types: BiKeyMap<Handle, KClass<*>, DataType<*>> =
+            BiKeyMap(HandleMap(dataTypeSpace))
         val typesByHandle: Map<Handle, DataType<*>> = _types.first
         val typesByClass: Map<KClass<*>, DataType<*>> = _types.second
 
@@ -186,53 +233,74 @@ object Engine {
         inline fun <T : Any, reified D : DataDefinition<T>> registerType(
             dataType: DataType<T>,
             definition: KClass<D>,
-            last: Boolean = false
+            last: Boolean = false,
         ) {
             registerType(dataType)
             queueDefinition { subclass(definition) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : HandleFilter> registerHandleFilter(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : HandleFilter> registerHandleFilter(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueHandleFilter { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : EntityFilter> registerEntityFilter(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : EntityFilter> registerEntityFilter(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueEntityFilter { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : ComponentFilter> registerComponentFilter(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : ComponentFilter> registerComponentFilter(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueComponentFilter { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : DataFilter> registerDataFilter(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : DataFilter> registerDataFilter(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueDataFilter { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : EntityInitializer> registerEntityInitializer(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : EntityInitializer> registerEntityInitializer(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueEntityInitializer { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        inline fun <reified T : ComponentInitializer> registerComponentInitializer(type: KClass<T>, last: Boolean = false) {
+        inline fun <reified T : ComponentInitializer> registerComponentInitializer(
+            type: KClass<T>,
+            last: Boolean = false,
+        ) {
             queueComponentInitializer { subclass(type) }
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @OptIn(InternalEntitiesSerializationApi::class)
-        fun registerExtraSerializers(last: Boolean = false, extra: SerializersModuleBuilder.() -> Unit) {
+        fun registerExtraSerializers(
+            last: Boolean = false,
+            extra: SerializersModuleBuilder.() -> Unit,
+        ) {
             extraSerializersQueue.add(extra)
-            if(last) registerSerializers()
+            if (last) registerSerializers()
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -276,36 +344,35 @@ object Engine {
         }
 
         @InternalEntitiesSerializationApi
-        fun queueComponentInitializer(block: PolymorphicModuleBuilder<ComponentInitializer>.() -> Unit) {
+        fun queueComponentInitializer(
+            block: PolymorphicModuleBuilder<ComponentInitializer>.() -> Unit
+        ) {
             componentInitializerQueue.add(block)
         }
 
         @InternalEntitiesSerializationApi
         fun registerSerializers() {
-            serializersModule = serializersModule.overwriteWith(SerializersModule {
-                polymorphic(DataDefinition::class) {
-                    dataDefinitionQueue.forEach { this.it() }
-                }
-                polymorphic(HandleFilter::class) {
-                    handleFilterQueue.forEach { this.it() }
-                }
-                polymorphic(EntityFilter::class) {
-                    entityFilterQueue.forEach { this.it() }
-                }
-                polymorphic(ComponentFilter::class) {
-                    componentFilterQueue.forEach { this.it() }
-                }
-                polymorphic(DataFilter::class) {
-                    dataFilterQueue.forEach { this.it() }
-                }
-                polymorphic(EntityInitializer::class) {
-                    entityInitializerQueue.forEach { this.it() }
-                }
-                polymorphic(ComponentInitializer::class) {
-                    componentInitializerQueue.forEach { this.it() }
-                }
-                extraSerializersQueue.forEach { this.it() }
-            })
+            serializersModule =
+                serializersModule.overwriteWith(
+                    SerializersModule {
+                        polymorphic(DataDefinition::class) {
+                            dataDefinitionQueue.forEach { this.it() }
+                        }
+                        polymorphic(HandleFilter::class) { handleFilterQueue.forEach { this.it() } }
+                        polymorphic(EntityFilter::class) { entityFilterQueue.forEach { this.it() } }
+                        polymorphic(ComponentFilter::class) {
+                            componentFilterQueue.forEach { this.it() }
+                        }
+                        polymorphic(DataFilter::class) { dataFilterQueue.forEach { this.it() } }
+                        polymorphic(EntityInitializer::class) {
+                            entityInitializerQueue.forEach { this.it() }
+                        }
+                        polymorphic(ComponentInitializer::class) {
+                            componentInitializerQueue.forEach { this.it() }
+                        }
+                        extraSerializersQueue.forEach { this.it() }
+                    }
+                )
             dataDefinitionQueue.clear()
             handleFilterQueue.clear()
             entityFilterQueue.clear()
@@ -361,8 +428,7 @@ object Engine {
             registerDataFilter(DataFilter.Or::class)
             registerDataFilter(DataFilter.Not::class, true)
 
-            registerExtraSerializers {
-            }
+            registerExtraSerializers {}
         }
     }
 }
