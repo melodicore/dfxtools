@@ -52,6 +52,11 @@ object Engine {
     )
     val systems: ListenableSet<EntitySystem> = ListenableSet(beforeSpec = systemSpec(), delegate = TreeSet())
 
+    init {
+        EntityCache
+        Serialization
+    }
+
     fun update(delta: Float) = systems.forEach { it.update(delta) }
 
     fun load(def: EngineDefinition) {

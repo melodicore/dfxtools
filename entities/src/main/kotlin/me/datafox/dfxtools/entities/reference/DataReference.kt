@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.definition.data
+package me.datafox.dfxtools.entities.reference
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
-import me.datafox.dfxtools.entities.type.BigDecimalType
-import java.math.BigDecimal
+import me.datafox.dfxtools.entities.TypeSerializer
+import kotlin.reflect.KClass
 
+/**
+* @author Lauri "datafox" Heino
+*/
 @Serializable
-@SerialName(BigDecimalType.ID)
-data class BigDecimalDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    val state: String
-) : DataDefinition<BigDecimal> {
-    override val dataType = BigDecimal::class
-
-    constructor(data: EntityData<BigDecimal>) : this(data.handle.toString(), data.saved, data.data.toString())
-
-    override fun create() = BigDecimal(state)
+data class DataReference<T : Any>(
+    val components: ComponentReference,
+    @Serializable(with = TypeSerializer::class) val dataType: KClass<T>,
+    val filter: DataFilter
+) {
+    fun get(): List<EntityData<T>> =
+        components.get().flatMap { it.getDataMap(dataType).values }.filter { filter.matches(dataType, it) }
 }

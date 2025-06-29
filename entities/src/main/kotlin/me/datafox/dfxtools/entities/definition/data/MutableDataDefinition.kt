@@ -16,22 +16,19 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import me.datafox.dfxtools.entities.EntityData
-import me.datafox.dfxtools.entities.type.BigDecimalType
-import java.math.BigDecimal
+import me.datafox.dfxtools.entities.Component
 
-@Serializable
-@SerialName(BigDecimalType.ID)
-data class BigDecimalDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    val state: String
-) : DataDefinition<BigDecimal> {
-    override val dataType = BigDecimal::class
+/**
+ * @author Lauri "datafox" Heino
+ */
+interface MutableDataDefinition<T : Any> : DataDefinition<T> {
+    override fun build(component: Component) {
+        if(component.contains(dataType, id)) {
+            set(component[dataType, id]!!)
+        } else {
+            component[dataType, id, saved] = create()
+        }
+    }
 
-    constructor(data: EntityData<BigDecimal>) : this(data.handle.toString(), data.saved, data.data.toString())
-
-    override fun create() = BigDecimal(state)
+    fun set(value: T)
 }

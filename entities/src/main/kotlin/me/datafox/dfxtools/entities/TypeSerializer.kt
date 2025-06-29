@@ -22,8 +22,8 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import me.datafox.dfxtools.entities.Serialization.convertersByClass
-import me.datafox.dfxtools.entities.Serialization.convertersByHandle
+import me.datafox.dfxtools.entities.Serialization.typesByClass
+import me.datafox.dfxtools.entities.Serialization.typesByHandle
 import me.datafox.dfxtools.handles.contains
 import me.datafox.dfxtools.handles.get
 import kotlin.reflect.KClass
@@ -35,13 +35,13 @@ class TypeSerializer() : KSerializer<KClass<out Any>> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("type", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: KClass<out Any>) {
-        if(value !in convertersByClass) throw IllegalStateException()
-        encoder.encodeString(convertersByClass[value]!!.handle.id)
+        if(value !in typesByClass) throw IllegalStateException()
+        encoder.encodeString(typesByClass[value]!!.handle.id)
     }
 
     override fun deserialize(decoder: Decoder): KClass<out Any> {
         val str = decoder.decodeString()
-        if(str !in convertersByHandle) throw IllegalStateException()
-        return convertersByHandle[str] as KClass<out Any>
+        if(str !in typesByHandle) throw IllegalStateException()
+        return typesByHandle[str]!!.type
     }
 }

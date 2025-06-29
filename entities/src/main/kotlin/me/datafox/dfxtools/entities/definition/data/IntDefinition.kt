@@ -23,14 +23,12 @@ import me.datafox.dfxtools.entities.type.IntType
 
 @Serializable
 @SerialName(IntType.ID)
-class IntDefinition(
+data class IntDefinition(
     override val id: String,
     override val saved: Boolean,
-    val state: Int
-) : DataDefinition<Int> {
+    override val value: Int
+) : SerializableDataDefinition<Int> {
     override val dataType = Int::class
 
     constructor(data: EntityData<Int>) : this(data.handle.toString(), data.saved, data.data)
-
-    override fun create() = state
 }

@@ -23,14 +23,12 @@ import me.datafox.dfxtools.entities.type.BooleanType
 
 @Serializable
 @SerialName(BooleanType.ID)
-class BooleanDefinition(
+data class BooleanDefinition(
     override val id: String,
     override val saved: Boolean,
-    val state: Boolean
-) : DataDefinition<Boolean> {
+    override val value: Boolean
+) : SerializableDataDefinition<Boolean> {
     override val dataType = Boolean::class
 
     constructor(data: EntityData<Boolean>) : this(data.handle.toString(), data.saved, data.data)
-
-    override fun create() = state
 }

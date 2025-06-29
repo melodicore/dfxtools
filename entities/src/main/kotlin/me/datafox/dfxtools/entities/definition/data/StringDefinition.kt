@@ -23,14 +23,12 @@ import me.datafox.dfxtools.entities.type.StringType
 
 @Serializable
 @SerialName(StringType.ID)
-class StringDefinition(
+data class StringDefinition(
     override val id: String,
     override val saved: Boolean,
-    val state: String
-) : DataDefinition<String> {
+    override val value: String
+) : SerializableDataDefinition<String> {
     override val dataType = String::class
 
     constructor(data: EntityData<String>) : this(data.handle.toString(), data.saved, data.data)
-
-    override fun create() = state
 }

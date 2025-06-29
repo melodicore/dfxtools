@@ -24,7 +24,7 @@ import java.math.BigInteger
 
 @Serializable
 @SerialName(BigIntegerType.ID)
-class BigIntegerDefinition(
+data class BigIntegerDefinition(
     override val id: String,
     override val saved: Boolean,
     val state: String
