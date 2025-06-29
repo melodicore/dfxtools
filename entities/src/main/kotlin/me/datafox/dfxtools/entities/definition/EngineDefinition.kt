@@ -28,8 +28,12 @@ data class EngineDefinition(
 ) {
     @JvmOverloads
     constructor(
-        saveAll: Boolean = false
-    ) : this(getSpaces(), Engine.entities.values.map { EntityDefinition(it, saveAll) })
+        saveAll: Boolean = false,
+        saveInitializers: Boolean = false,
+    ) : this(
+        getSpaces(),
+        Engine.entities.values.map { EntityDefinition(it, saveAll, saveInitializers) },
+    )
 
     companion object {
         private fun getSpaces(): List<SpaceDefinition> {

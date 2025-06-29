@@ -40,7 +40,9 @@ class Component internal constructor(val entity: Entity, id: String) :
     private val _schemas: ListenableMap<Handle, Schema> =
         ListenableMap(HandleMap.spec(schemaSpace), schemaSpec(this), TreeMap())
     val schemas: ListenableMap.View<Handle, Schema> by lazy { _schemas.view }
-    private val initializers: MutableList<ComponentInitializer> = mutableListOf()
+    private val _initializers: MutableSet<ComponentInitializer> = mutableSetOf()
+    val initializers: Set<ComponentInitializer>
+        get() = _initializers
 
     operator fun <T : Any> get(type: KClass<T>, id: String): T? = getDataMap(type)[id]?.data
 
@@ -67,15 +69,13 @@ class Component internal constructor(val entity: Entity, id: String) :
     }
 
     fun addInitializer(initializer: ComponentInitializer) {
-        initializers.add(initializer)
+        _initializers.add(initializer)
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Component) return false
-
         if (index != other.index) return false
-
         return true
     }
 
@@ -88,7 +88,7 @@ class Component internal constructor(val entity: Entity, id: String) :
     }
 
     internal fun initialize() {
-        initializers.forEach { it.initialize(this) }
+        _initializers.forEach { it.initialize(this) }
     }
 
     @Suppress("UNCHECKED_CAST")

@@ -31,10 +31,8 @@ constructor(id: String, data: T, val saved: Boolean = true) : Handled, AbstractO
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is EntityData<*>) return false
-
         if (handle != other.handle) return false
         if (data != other.data) return false
-
         return true
     }
 

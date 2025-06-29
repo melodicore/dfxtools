@@ -16,10 +16,10 @@
 
 package me.datafox.dfxtools.entities.type
 
-import java.math.BigInteger
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.BigIntegerDefinition
+import java.math.BigInteger
 
 /** @author Lauri "datafox" Heino */
 object BigIntegerType : DataType<BigInteger> {

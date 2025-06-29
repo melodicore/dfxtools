@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
-import kotlin.reflect.KClass
 import kotlinx.serialization.Polymorphic
 import me.datafox.dfxtools.entities.Component
+import kotlin.reflect.KClass
 
 @Polymorphic
 interface DataDefinition<T : Any> {

@@ -61,17 +61,20 @@ object Engine {
 
     fun update(delta: Float) = systems.forEach { it.update(delta) }
 
-    fun load(def: EngineDefinition) {
+    @JvmOverloads
+    fun load(def: EngineDefinition, allowInitializers: Boolean = false) {
         def.spaces.forEach { it.build() }
-        def.entities.forEach { it.build() }
-        runInitializers()
+        def.entities.forEach { it.build(allowInitializers) }
+        if (allowInitializers) runInitializers()
     }
 
     fun runInitializers() {
         entities.values.forEach { it.initialize() }
     }
 
-    @JvmOverloads fun save(saveAll: Boolean = false): EngineDefinition = EngineDefinition(saveAll)
+    @JvmOverloads
+    fun save(saveAll: Boolean = false, saveInitializers: Boolean = false): EngineDefinition =
+        EngineDefinition(saveAll, saveInitializers)
 
     fun schemaBeforeSpec(lambda: () -> Set<Handle>): PluggableMapSpec<Handle, Schema> =
         PluggableMapSpec(

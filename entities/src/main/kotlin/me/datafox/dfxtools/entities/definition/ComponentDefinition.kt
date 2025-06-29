@@ -16,7 +16,7 @@
 
 package me.datafox.dfxtools.entities.definition
 
-import kotlin.reflect.KClass
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.Component
 import me.datafox.dfxtools.entities.ComponentInitializer
@@ -24,28 +24,36 @@ import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.Entity
 import me.datafox.dfxtools.entities.definition.data.DataDefinition
 import me.datafox.dfxtools.handles.get
+import kotlin.reflect.KClass
+
+private val logger = KotlinLogging.logger {}
 
 /** @author Lauri "datafox" Heino */
 @Serializable
 data class ComponentDefinition(
     val id: String,
     val data: List<DataDefinition<*>>,
-    val initializers: List<ComponentInitializer>,
+    val initializers: Set<ComponentInitializer>,
 ) {
     @JvmOverloads
     constructor(
         component: Component,
         saveAll: Boolean = false,
+        saveInitializers: Boolean = false,
     ) : this(
         component.handle.id,
         component.data.keys.flatMap { dataDefinitions(component, it, saveAll) },
-        mutableListOf(),
+        if (saveInitializers) component.initializers.toSet() else setOf(),
     )
 
-    fun build(entity: Entity) {
+    fun build(entity: Entity, allowInitializers: Boolean) {
         val component = entity.components[id] ?: entity.createComponent(id)
         data.forEach { it.build(component) }
-        initializers.forEach { component.addInitializer(it) }
+        if (allowInitializers) {
+            initializers.forEach { component.addInitializer(it) }
+        } else if (initializers.isNotEmpty()) {
+            logger.warn { "Initializers are not allowed but found in definition" }
+        }
     }
 
     companion object {

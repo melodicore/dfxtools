@@ -16,10 +16,10 @@
 
 package me.datafox.dfxtools.entities.type
 
-import kotlin.reflect.KClass
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.DataDefinition
 import me.datafox.dfxtools.handles.Handled
+import kotlin.reflect.KClass
 
 interface DataType<T : Any> : Handled {
     val type: KClass<T>

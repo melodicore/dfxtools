@@ -16,7 +16,6 @@
 
 package me.datafox.dfxtools.entities.type
 
-import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -27,6 +26,7 @@ import kotlinx.serialization.encoding.Encoder
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.handles.contains
 import me.datafox.dfxtools.handles.get
+import kotlin.reflect.KClass
 
 /** @author Lauri "datafox" Heino */
 class TypeSerializer() : KSerializer<SClass<out Any>> {

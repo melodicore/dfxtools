@@ -48,7 +48,9 @@ class Entity(id: String) : Handled {
             return _components.view
         }
 
-    private val initializers: MutableList<EntityInitializer> = mutableListOf()
+    private val _initializers: MutableSet<EntityInitializer> = mutableSetOf()
+    val initializers: Set<EntityInitializer>
+        get() = _initializers
 
     fun createComponent(id: String): Component {
         checkRemoved()
@@ -68,7 +70,7 @@ class Entity(id: String) : Handled {
         components.values.any { it.schemas.keys.containsAll(ids.toCollection()) }
 
     fun addInitializer(initializer: EntityInitializer) {
-        initializers.add(initializer)
+        _initializers.add(initializer)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -95,7 +97,7 @@ class Entity(id: String) : Handled {
     }
 
     internal fun initialize() {
-        initializers.forEach { it.initialize(this) }
+        _initializers.forEach { it.initialize(this) }
         components.values.forEach { it.initialize() }
     }
 

@@ -16,10 +16,10 @@
 
 package me.datafox.dfxtools.entities.type
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.BigDecimalDefinition
+import java.math.BigDecimal
 
 /** @author Lauri "datafox" Heino */
 object BigDecimalType : DataType<BigDecimal> {

@@ -16,11 +16,11 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
-import java.math.BigInteger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.type.BigIntegerType
+import java.math.BigInteger
 
 @Serializable
 @SerialName(BigIntegerType.ID)
