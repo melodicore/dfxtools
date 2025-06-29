@@ -22,9 +22,9 @@ plugins {
 version = libs.versions.values.get()
 
 dependencies {
-    implementation(project(":handles"))
-    implementation(project(":invalidation"))
-    implementation(project(":utils"))
+    api(project(":handles"))
+    api(project(":invalidation"))
+    api(project(":utils"))
     implementation(libs.logging)
     implementation(libs.slf4j.api)
     implementation(libs.bigmath)

@@ -22,9 +22,9 @@ plugins {
 version = libs.versions.text.get()
 
 dependencies {
-    implementation(project(":configuration"))
-    implementation(project(":handles"))
-    implementation(project(":utils"))
+    api(project(":configuration"))
+    api(project(":handles"))
+    api(project(":utils"))
     implementation(libs.logging)
     implementation(libs.bigmath)
     implementation(libs.bigmath.kotlin)

@@ -23,9 +23,9 @@ plugins {
 version = libs.versions.entities.get()
 
 dependencies {
-    implementation(project(":handles"))
-    implementation(project(":invalidation"))
-    implementation(project(":utils"))
+    api(project(":handles"))
+    api(project(":invalidation"))
+    api(project(":utils"))
     implementation(kotlin("reflect"))
     implementation(libs.logging)
     implementation(libs.slf4j.api)

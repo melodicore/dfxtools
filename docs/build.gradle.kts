@@ -25,6 +25,7 @@ dokka {
 dependencies {
     dokka(project(":configuration"))
     dokka(project(":entities"))
+    dokka(project(":entities-extensions"))
     dokka(project(":handles"))
     dokka(project(":invalidation"))
     dokka(project(":text"))
