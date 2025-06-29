@@ -28,7 +28,7 @@ object StringType : DataType<String> {
 
     override val type = String::class
 
-    override fun convert(data: EntityData<String>): StringDefinition = StringDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<String>): StringDefinition = StringDefinition(data)
 }

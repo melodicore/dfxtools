@@ -94,7 +94,6 @@ class Component internal constructor(
 
     internal fun initialize() {
         initializers.forEach { it.initialize(this) }
-        initializers.clear()
     }
 
     @Suppress("UNCHECKED_CAST")

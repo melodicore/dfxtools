@@ -28,7 +28,7 @@ object IntType : DataType<Int> {
 
     override val type = Int::class
 
-    override fun convert(data: EntityData<Int>): IntDefinition = IntDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<Int>): IntDefinition = IntDefinition(data)
 }

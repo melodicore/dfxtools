@@ -29,7 +29,7 @@ object BigIntegerType : DataType<BigInteger> {
 
     override val type = BigInteger::class
 
-    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition = BigIntegerDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition = BigIntegerDefinition(data)
 }

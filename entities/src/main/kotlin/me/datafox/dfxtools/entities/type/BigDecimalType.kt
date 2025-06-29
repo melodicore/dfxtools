@@ -29,7 +29,7 @@ object BigDecimalType : DataType<BigDecimal> {
 
     override val type = BigDecimal::class
 
-    override fun convert(data: EntityData<BigDecimal>): BigDecimalDefinition = BigDecimalDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<BigDecimal>): BigDecimalDefinition = BigDecimalDefinition(data)
 }

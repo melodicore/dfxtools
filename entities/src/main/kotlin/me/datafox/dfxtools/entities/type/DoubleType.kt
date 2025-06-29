@@ -28,7 +28,7 @@ object DoubleType : DataType<Double> {
 
     override val type = Double::class
 
-    override fun convert(data: EntityData<Double>): DoubleDefinition = DoubleDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<Double>): DoubleDefinition = DoubleDefinition(data)
 }

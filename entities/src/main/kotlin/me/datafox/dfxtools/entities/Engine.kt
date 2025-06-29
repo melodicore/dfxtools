@@ -67,7 +67,11 @@ object Engine {
     fun load(def: EngineDefinition) {
         def.spaces.forEach { it.build() }
         def.entities.forEach { it.build() }
-        entities.values.forEach { initialize(it) }
+        runInitializers()
+    }
+
+    fun runInitializers() {
+        entities.values.forEach { it.initialize() }
     }
 
     @JvmOverloads
@@ -85,7 +89,7 @@ object Engine {
     fun entitySpec(): PluggableMapSpec<Handle, Entity> = PluggableMapSpec(
         afterAdd = { _, v -> v.added(); Cache.entityAdded(v) },
         afterRemove = { _, v -> v.removed(); Cache.entityRemoved(v) },
-        afterOperation = { entities.values.forEach { initialize(it) } }
+        afterOperation = { entities.values.forEach { it.initialize() } }
     )
 
     fun systemSpec(): PluggableSpec<EntitySystem> = PluggableSpec(
@@ -93,12 +97,11 @@ object Engine {
         afterRemove = { it.onDetach() }
     )
 
-    private fun initialize(entity: Entity) {
-        entity.initialize()
-        entity.components.values.forEach { it.initialize() }
-    }
-
     object Cache {
+        init {
+            Engine
+        }
+
         private val _entitiesByComponent: HandleMap<ListenableSet<Entity>> = HandleMap(Engine.componentSpace)
         val entitiesByComponent: Map<Handle, Set<Entity>> = _entitiesByComponent
         private val _entitiesBySchema: HandleMap<ListenableSet<Entity>> = HandleMap(Engine.schemaSpace)
@@ -158,6 +161,10 @@ object Engine {
     }
 
     object Serialization {
+        init {
+            Engine
+        }
+
         private val dataDefinitionQueue: MutableList<PolymorphicModuleBuilder<DataDefinition<*>>.() -> Unit> = mutableListOf()
         private val handleFilterQueue: MutableList<PolymorphicModuleBuilder<HandleFilter>.() -> Unit> = mutableListOf()
         private val entityFilterQueue: MutableList<PolymorphicModuleBuilder<EntityFilter>.() -> Unit> = mutableListOf()
@@ -167,9 +174,11 @@ object Engine {
         private val componentInitializerQueue: MutableList<PolymorphicModuleBuilder<ComponentInitializer>.() -> Unit> = mutableListOf()
         private val extraSerializersQueue: MutableList<SerializersModuleBuilder.() -> Unit> = mutableListOf()
         private var serializersModule: SerializersModule = EmptySerializersModule()
-        private var _json = Json { serializersModule = this@Serialization.serializersModule }
+        private var _json = Json {
+            serializersModule = this@Serialization.serializersModule
+        }
         val json: Json get() = _json
-        private val _types: BiKeyMap<Handle, KClass<*>, DataType<*>> = BiKeyMap(HandleMap(Engine.dataTypeSpace))
+        private val _types: BiKeyMap<Handle, KClass<*>, DataType<*>> = BiKeyMap(HandleMap(dataTypeSpace))
         val typesByHandle: Map<Handle, DataType<*>> = _types.first
         val typesByClass: Map<KClass<*>, DataType<*>> = _types.second
 
@@ -353,7 +362,6 @@ object Engine {
             registerDataFilter(DataFilter.Not::class, true)
 
             registerExtraSerializers {
-
             }
         }
     }

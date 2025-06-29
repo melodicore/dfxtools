@@ -28,7 +28,7 @@ object LongType : DataType<Long> {
 
     override val type = Long::class
 
-    override fun convert(data: EntityData<Long>): LongDefinition = LongDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<Long>): LongDefinition = LongDefinition(data)
 }

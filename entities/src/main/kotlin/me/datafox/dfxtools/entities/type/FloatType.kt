@@ -28,7 +28,7 @@ object FloatType : DataType<Float> {
 
     override val type = Float::class
 
-    override fun convert(data: EntityData<Float>): FloatDefinition = FloatDefinition(data)
-
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+
+    override fun convert(data: EntityData<Float>): FloatDefinition = FloatDefinition(data)
 }

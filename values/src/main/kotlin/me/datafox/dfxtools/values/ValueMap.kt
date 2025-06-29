@@ -38,13 +38,12 @@ private val logger = KotlinLogging.logger {}
  * @author Lauri "datafox" Heino
  */
 class ValueMap private constructor(
-    private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap()
+    private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap(),
+    val space: Space? = null
 ): AbstractObservableObserver(), ListenableMap<Handle, ModifiableValue>, MutableMap<Handle, ModifiableValue> by map {
     private lateinit var delegate: ListenableMap<Handle, ModifiableValue>
     val modifiers: MutableSet<Modifier> = PluggableSet(sortedSetOf(), modifierSpec { values })
-
-    override val view: ListenableMap.View<Handle, ModifiableValue>
-        get() = delegate.view
+    override val view: ListenableMap.View<Handle, ModifiableValue> get() = delegate.view
 
     /**
      * Creates a new empty value map backed by a [SortedMap].
@@ -63,7 +62,7 @@ class ValueMap private constructor(
      *
      * @param space [Space] for the [HandleMap].
      */
-    constructor(space: Space) : this(LateDelegatedMap()) {
+    constructor(space: Space) : this(LateDelegatedMap(), space) {
         delegate = ListenableMap(
             PluggableMapSpec(HandleMap.spec(space), spec(modifiers)),
             ObservableMap.spec(this, true, Any()),

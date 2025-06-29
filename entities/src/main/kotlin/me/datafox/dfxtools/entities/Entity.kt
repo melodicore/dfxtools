@@ -99,7 +99,7 @@ class Entity(
 
     internal fun initialize() {
         initializers.forEach { it.initialize(this) }
-        initializers.clear()
+        components.values.forEach { it.initialize() }
     }
 
     private fun checkRemoved() {

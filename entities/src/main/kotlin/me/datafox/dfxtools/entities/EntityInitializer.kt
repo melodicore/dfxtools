@@ -19,6 +19,6 @@ package me.datafox.dfxtools.entities
 /**
  * @author Lauri "datafox" Heino
  */
-sealed interface EntityInitializer {
+interface EntityInitializer {
     fun initialize(entity: Entity)
 }

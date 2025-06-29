@@ -29,6 +29,7 @@ rootProject.name = "dfxtools"
 include("configuration")
 include("docs")
 include("entities")
+include("entities-extensions")
 include("handles")
 include("invalidation")
 include("text")

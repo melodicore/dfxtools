@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package me.datafox.dfxtools.entities.type
+package me.datafox.dfxtools.entities.extensions.type
 
 import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
-import me.datafox.dfxtools.entities.definition.data.BooleanDefinition
+import me.datafox.dfxtools.entities.extensions.definition.ValueMapDefinition
+import me.datafox.dfxtools.entities.type.DataType
+import me.datafox.dfxtools.handles.Handle
+import me.datafox.dfxtools.values.ValueMap
 
 /**
  * @author Lauri "datafox" Heino
  */
-object BooleanType : DataType<Boolean> {
-    const val ID = "boolean"
+object ValueMapType : DataType<ValueMap> {
+    const val ID = "valueMap"
 
-    override val type = Boolean::class
+    override val type = ValueMap::class
 
-    override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
+    override val handle: Handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<Boolean>): BooleanDefinition = BooleanDefinition(data)
+    override fun convert(data: EntityData<ValueMap>): ValueMapDefinition = ValueMapDefinition(data)
 }
