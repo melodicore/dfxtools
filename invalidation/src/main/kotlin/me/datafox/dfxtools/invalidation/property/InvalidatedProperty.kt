@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.invalidation.property
 
+import me.datafox.dfxtools.invalidation.Observer
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import me.datafox.dfxtools.invalidation.Observer
 
 /**
  * A property that can be invalidated and recalculated.

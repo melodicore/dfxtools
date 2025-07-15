@@ -109,6 +109,8 @@ class Component internal constructor(val entity: Entity, id: String) :
             )
     }
 
+    override fun onInvalidated() { }
+
     companion object {
         private var indexCounter: Long = 0L
 

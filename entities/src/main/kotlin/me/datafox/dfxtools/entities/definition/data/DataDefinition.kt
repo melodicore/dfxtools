@@ -16,13 +16,15 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Polymorphic
 import me.datafox.dfxtools.entities.Component
+import me.datafox.dfxtools.entities.type.SClass
 import kotlin.reflect.KClass
 
 @Polymorphic
 interface DataDefinition<T : Any> {
-    val dataType: KClass<T>
+    val dataType: SClass<@Contextual T>
     val id: String
     val saved: Boolean
 

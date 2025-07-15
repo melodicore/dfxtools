@@ -18,9 +18,12 @@ package me.datafox.dfxtools.text
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import me.datafox.dfxtools.configuration.ConfigurationKey
+import me.datafox.dfxtools.text.TextManager.delimiter
 import me.datafox.dfxtools.text.TextManager.fallbackNumberSuffixFormatter
 import me.datafox.dfxtools.text.TextManager.listDelimiter
 import me.datafox.dfxtools.text.TextManager.listLastDelimiter
+import me.datafox.dfxtools.text.TextManager.numberFormatter
+import me.datafox.dfxtools.text.TextManager.numberSuffixFormatter
 import me.datafox.dfxtools.text.formatting.ExponentSuffixFormatter
 import me.datafox.dfxtools.text.formatting.NumberFormatter
 import me.datafox.dfxtools.text.formatting.NumberSuffixFormatter

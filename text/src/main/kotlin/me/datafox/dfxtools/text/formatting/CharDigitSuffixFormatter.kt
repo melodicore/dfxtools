@@ -18,8 +18,6 @@ package me.datafox.dfxtools.text.formatting
 
 import ch.obermuhlner.math.big.BigDecimalMath
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
-import kotlin.math.abs
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
@@ -31,6 +29,8 @@ import me.datafox.dfxtools.text.internal.Strings.CDSF_EMPTY_CHARACTERS
 import me.datafox.dfxtools.text.internal.Strings.CDSF_NOT_DISTINCT_CHARACTERS
 import me.datafox.dfxtools.text.internal.Strings.cdsfInterval
 import me.datafox.dfxtools.utils.Logging.logThrow
+import java.math.BigDecimal
+import kotlin.math.abs
 
 private val logger = KotlinLogging.logger {}
 

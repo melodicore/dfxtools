@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Tests for general invalidation
@@ -86,7 +86,6 @@ class InvalidationTest {
 
         override fun onInvalidated() {
             counter++
-            onChanged()
         }
 
         override fun toString(): String = str ?: super.toString()

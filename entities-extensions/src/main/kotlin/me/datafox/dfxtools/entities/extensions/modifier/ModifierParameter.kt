@@ -16,36 +16,38 @@
 
 package me.datafox.dfxtools.entities.extensions.modifier
 
-import java.math.BigDecimal
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
-import me.datafox.dfxtools.entities.reference.DataReference
+import me.datafox.dfxtools.entities.Component
+import me.datafox.dfxtools.entities.reference.SingleDataReference
 import me.datafox.dfxtools.values.MarkerValue
 import me.datafox.dfxtools.values.ModifiableValue
 import me.datafox.dfxtools.values.SimpleValue
 import me.datafox.dfxtools.values.Value
+import java.math.BigDecimal
 
 @Polymorphic
 sealed interface ModifierParameter {
-    fun get(): Value
+    fun get(component: Component): Value
 
     @Serializable
     data class Simple(val value: String) : ModifierParameter {
-        private val _value by lazy { SimpleValue(BigDecimal(value)) }
+        private val _value: Value by lazy { SimpleValue(BigDecimal(value)) }
 
-        override fun get(): Value = _value
+        override fun get(component: Component): Value = _value
     }
 
     @Serializable
     data class Marker(val value: Int) : ModifierParameter {
-        private val _value by lazy { MarkerValue(value) }
+        private val _value: Value by lazy { MarkerValue(value) }
 
-        override fun get(): Value = _value
+        override fun get(component: Component): Value = _value
     }
 
     @Serializable
-    data class Reference(val ref: DataReference<@Contextual ModifiableValue>) : ModifierParameter {
-        override fun get(): Value = ref.get()[0].data
+    data class Reference(val ref: SingleDataReference<@Contextual ModifiableValue>) :
+        ModifierParameter {
+        override fun get(component: Component): Value = ref.get(component.entity, component).data
     }
 }

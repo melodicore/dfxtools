@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.text.text
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.text.TextManager.numberFormatter
+import java.math.BigDecimal
 
 /**
  * A [Text] implementation that returns the output of [number] formatted with [numberFormatter].

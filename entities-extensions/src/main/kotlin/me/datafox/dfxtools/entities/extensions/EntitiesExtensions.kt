@@ -17,7 +17,6 @@
 package me.datafox.dfxtools.entities.extensions
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlin.reflect.KClass
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -30,17 +29,22 @@ import me.datafox.dfxtools.entities.extensions.modifier.ModifierInitializer
 import me.datafox.dfxtools.entities.extensions.type.ModifiableValueType
 import me.datafox.dfxtools.entities.extensions.type.ValueMapType
 import me.datafox.dfxtools.values.operation.Operation
+import kotlin.reflect.KClass
 
 private var logger = KotlinLogging.logger {}
 
 /** @author Lauri "datafox" Heino */
 object EntitiesExtensions {
+    init {
+        Engine
+    }
+
     private val modifierQueue: MutableList<PolymorphicModuleBuilder<ModifierFactory>.() -> Unit> =
         mutableListOf()
     private val operationQueue: MutableList<PolymorphicModuleBuilder<Operation>.() -> Unit> =
         mutableListOf()
 
-    fun register(lastModifier: Boolean = true, lastRegistration: Boolean = true) {
+    fun register(lastPolymorphic: Boolean = true, lastRegistration: Boolean = true) {
         Engine.Serialization.registerType(ModifiableValueType, ModifiableValueDefinition::class)
         Engine.Serialization.registerType(ValueMapType, ValueMapDefinition::class)
         Engine.Serialization.registerComponentInitializer(ModifierInitializer::class)
@@ -68,7 +72,7 @@ object EntitiesExtensions {
         registerOperation(Operations.Log10::class)
         registerOperation(Operations.LogN::class)
         registerOperation(Operations.LogNInv::class)
-        registerOperation(Operations.Lerp::class)
+        registerOperation(Operations.Lerp::class, lastPolymorphic, lastRegistration)
     }
 
     @OptIn(InternalEntitiesSerializationApi::class)

@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.values
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.invalidation.AbstractObservable
 import me.datafox.dfxtools.values.operation.Marker
+import java.math.BigDecimal
 
 /** @author Lauri "datafox" Heino */
 class MarkerValue(value: Int) : AbstractObservable(), Value {

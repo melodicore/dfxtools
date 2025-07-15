@@ -32,7 +32,7 @@ data class ModifierInitializer(
     val targetMaps: DataReference<@Contextual ValueMap>,
 ) : ComponentInitializer {
     override fun initialize(component: Component) {
-        val mod = modifier.build()
+        val mod = modifier.build(component)
         targetValues.get().forEach { it.data.modifiers.add(mod) }
         targetMaps.get().forEach { it.data.modifiers.add(mod) }
     }

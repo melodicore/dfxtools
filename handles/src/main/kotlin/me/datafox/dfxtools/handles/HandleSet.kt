@@ -17,7 +17,6 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.*
 import me.datafox.dfxtools.handles.HandleSet.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.SET_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.setHandleNotInSpace
@@ -25,6 +24,7 @@ import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ListenableSet
 import me.datafox.dfxtools.utils.collection.PluggableSet
 import me.datafox.dfxtools.utils.collection.PluggableSpec
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 

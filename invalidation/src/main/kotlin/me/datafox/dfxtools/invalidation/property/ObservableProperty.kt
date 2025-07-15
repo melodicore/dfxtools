@@ -16,10 +16,10 @@
 
 package me.datafox.dfxtools.invalidation.property
 
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /**
  * Property that automatically adds its owner to its value's [Observable.observers].
@@ -28,15 +28,15 @@ import me.datafox.dfxtools.invalidation.Observer
  * @property invalidateOwner If `true`, setting the value calls [Observer.invalidate].
  * @author Lauri "datafox" Heino
  */
-class ObservableProperty
+class ObservableProperty<T : Observable>
 @JvmOverloads
-constructor(var value: Observable, private val invalidateOwner: Boolean = true) :
-    ReadWriteProperty<Observer, Observable> {
+constructor(var value: T, private val invalidateOwner: Boolean = true) :
+    ReadWriteProperty<Observer, T> {
     private val identifier = Any()
 
-    override fun getValue(thisRef: Observer, property: KProperty<*>): Observable = value
+    override fun getValue(thisRef: Observer, property: KProperty<*>): T = value
 
-    override fun setValue(thisRef: Observer, property: KProperty<*>, value: Observable) {
+    override fun setValue(thisRef: Observer, property: KProperty<*>, value: T) {
         if (value === this.value) return
         this.value.observers.remove(thisRef, identifier)
         value.observers.add(thisRef, identifier)
@@ -47,7 +47,7 @@ constructor(var value: Observable, private val invalidateOwner: Boolean = true) 
     operator fun provideDelegate(
         thisRef: Observer,
         property: KProperty<*>,
-    ): ReadWriteProperty<Observer, Observable> {
+    ): ReadWriteProperty<Observer, T> {
         value.observers.add(thisRef, identifier)
         if (invalidateOwner) thisRef.invalidate()
         return this

@@ -20,7 +20,7 @@ plugins {
     id("dfxtools.serialization-convention")
 }
 
-version = libs.versions.entities.get()
+version = libs.versions.entities.extensions.get()
 
 dependencies {
     api(project(":entities"))

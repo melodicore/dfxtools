@@ -19,6 +19,7 @@ package me.datafox.dfxtools.entities.extensions.modifier
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import me.datafox.dfxtools.entities.Component
 import me.datafox.dfxtools.values.modifier.ChainedModifier
 import me.datafox.dfxtools.values.modifier.MappingModifier
 import me.datafox.dfxtools.values.modifier.Modifier
@@ -26,7 +27,7 @@ import me.datafox.dfxtools.values.modifier.OperationModifier
 
 @Polymorphic
 interface ModifierFactory {
-    fun build(): Modifier
+    fun build(component: Component): Modifier
 
     @Serializable
     @SerialName("operation")
@@ -35,8 +36,8 @@ interface ModifierFactory {
         val operation: me.datafox.dfxtools.values.operation.Operation,
         val params: List<ModifierParameter>,
     ) : ModifierFactory {
-        override fun build(): Modifier =
-            OperationModifier(priority, operation, *params.map { it.get() }.toTypedArray())
+        override fun build(component: Component): Modifier =
+            OperationModifier(priority, operation, *params.map { it.get(component) }.toTypedArray())
     }
 
     @Serializable
@@ -46,10 +47,12 @@ interface ModifierFactory {
         val operations:
             List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
-        override fun build(): Modifier =
+        override fun build(component: Component): Modifier =
             ChainedModifier(
                 priority,
-                *operations.map { (op, params) -> op to params.map { it.get() } }.toTypedArray(),
+                *operations
+                    .map { (op, params) -> op to params.map { it.get(component) } }
+                    .toTypedArray(),
             )
     }
 
@@ -60,10 +63,12 @@ interface ModifierFactory {
         val operations:
             List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
-        override fun build(): Modifier =
+        override fun build(component: Component): Modifier =
             MappingModifier(
                 priority,
-                *operations.map { (op, params) -> op to params.map { it.get() } }.toTypedArray(),
+                *operations
+                    .map { (op, params) -> op to params.map { it.get(component) } }
+                    .toTypedArray(),
             )
     }
 }

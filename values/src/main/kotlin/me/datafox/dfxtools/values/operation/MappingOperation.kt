@@ -17,8 +17,8 @@
 package me.datafox.dfxtools.values.operation
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
 import me.datafox.dfxtools.utils.Logging.logThrow
+import java.math.BigDecimal
 
 private val logger = KotlinLogging.logger {}
 

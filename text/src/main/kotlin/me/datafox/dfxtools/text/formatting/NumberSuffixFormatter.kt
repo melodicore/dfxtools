@@ -16,10 +16,10 @@
 
 package me.datafox.dfxtools.text.formatting
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager
 import me.datafox.dfxtools.text.TextManager
+import java.math.BigDecimal
 
 /**
  * Interface for formatting suffixes used by [NumberFormatters][NumberFormatter]. Generates

@@ -17,11 +17,11 @@
 package me.datafox.dfxtools.values.modifier
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.values.Value
 import me.datafox.dfxtools.values.operation.Operation
 import me.datafox.dfxtools.values.operation.SourceOperation
+import java.math.BigDecimal
 
 private val logger = KotlinLogging.logger {}
 
@@ -46,6 +46,8 @@ class ChainedModifier(priority: Int = 0, vararg operations: Pair<Operation, List
         }
         return number
     }
+
+    override fun onInvalidated() { }
 
     class Builder internal constructor(private val priority: Int) {
         private val operations: MutableList<Pair<Operation, List<Value>>> = mutableListOf()

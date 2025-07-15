@@ -16,11 +16,11 @@
 
 package me.datafox.dfxtools.entities.reference
 
-import kotlin.reflect.KClass
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
+import kotlin.reflect.KClass
 
 /** @author Lauri "datafox" Heino */
 @Polymorphic

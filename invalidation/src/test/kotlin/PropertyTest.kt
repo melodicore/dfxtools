@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import me.datafox.dfxtools.invalidation.AbstractObservable
 import me.datafox.dfxtools.invalidation.AbstractObserver
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.property.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Tests for [properties][me.datafox.dfxtools.invalidation.property].

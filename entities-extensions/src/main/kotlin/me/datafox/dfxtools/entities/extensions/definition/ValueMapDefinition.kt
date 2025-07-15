@@ -16,13 +16,16 @@
 
 package me.datafox.dfxtools.entities.extensions.definition
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.MutableDataDefinition
 import me.datafox.dfxtools.entities.extensions.type.ValueMapType
+import me.datafox.dfxtools.entities.type.SClass
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.putHandled
+import me.datafox.dfxtools.values.ModifiableValue
 import me.datafox.dfxtools.values.ValueMap
 
 @Serializable
@@ -33,7 +36,7 @@ class ValueMapDefinition(
     val space: String?,
     val values: List<ModifiableValueDefinition>,
 ) : MutableDataDefinition<ValueMap> {
-    override val dataType = ValueMap::class
+    override val dataType: SClass<@Contextual ValueMap> = ValueMap::class
 
     constructor(
         data: EntityData<ValueMap>
@@ -52,10 +55,10 @@ class ValueMapDefinition(
         return map
     }
 
-    override fun set(value: ValueMap) {
+    override fun set(existing: ValueMap) {
         values.forEach {
             val handle = HandleManager.getOrCreateQualifiedHandle(it.id)
-            if (handle in value) it.set(value[handle]!!) else value.putHandled(it.create())
+            if (handle in existing) it.set(existing[handle]!!) else existing.putHandled(it.create())
         }
     }
 }

@@ -16,10 +16,12 @@
 
 package me.datafox.dfxtools.entities.definition.data
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.type.BigDecimalType
+import me.datafox.dfxtools.entities.type.SClass
 import java.math.BigDecimal
 
 @Serializable
@@ -29,7 +31,7 @@ data class BigDecimalDefinition(
     override val saved: Boolean,
     val state: String,
 ) : DataDefinition<BigDecimal> {
-    override val dataType = BigDecimal::class
+    override val dataType: SClass<@Contextual BigDecimal> = BigDecimal::class
 
     constructor(
         data: EntityData<BigDecimal>

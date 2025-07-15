@@ -17,7 +17,6 @@
 package me.datafox.dfxtools.handles
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.*
 import me.datafox.dfxtools.handles.HandleMap.Companion.spec
 import me.datafox.dfxtools.handles.internal.Strings.MAP_SPACE_INFER
 import me.datafox.dfxtools.handles.internal.Strings.mapHandleNotInSpace
@@ -25,6 +24,7 @@ import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.utils.collection.ListenableMap
 import me.datafox.dfxtools.utils.collection.PluggableMap
 import me.datafox.dfxtools.utils.collection.PluggableMapSpec
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import kotlin.test.Test
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Purge
 import me.datafox.dfxtools.handles.Space
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
 
 /**
  * Tests for [Space].

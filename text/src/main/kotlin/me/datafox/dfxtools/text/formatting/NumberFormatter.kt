@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.text.formatting
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager
+import java.math.BigDecimal
 
 /**
  * Interface for formatting [BigDecimal] numbers.

@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.invalidation.property
 
+import me.datafox.dfxtools.invalidation.Observable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import me.datafox.dfxtools.invalidation.Observable
 
 /**
  * A property that will call [Observable.onChanged] when set.

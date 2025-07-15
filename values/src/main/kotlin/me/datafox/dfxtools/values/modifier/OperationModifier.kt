@@ -17,13 +17,13 @@
 package me.datafox.dfxtools.values.modifier
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
 import me.datafox.dfxtools.utils.Logging.logThrow
 import me.datafox.dfxtools.values.Value
 import me.datafox.dfxtools.values.operation.DualParameterOperation
 import me.datafox.dfxtools.values.operation.Operation
 import me.datafox.dfxtools.values.operation.SingleParameterOperation
 import me.datafox.dfxtools.values.operation.SourceOperation
+import java.math.BigDecimal
 
 private val logger = KotlinLogging.logger {}
 
@@ -58,4 +58,6 @@ class OperationModifier(priority: Int = 0, private val operation: Operation, var
         }
         return operation.apply(value, *params.map { it.value }.toTypedArray())
     }
+
+    override fun onInvalidated() { }
 }

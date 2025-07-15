@@ -17,7 +17,6 @@
 package me.datafox.dfxtools.values
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.util.*
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleMap
 import me.datafox.dfxtools.handles.Space
@@ -25,6 +24,7 @@ import me.datafox.dfxtools.invalidation.AbstractObservableObserver
 import me.datafox.dfxtools.invalidation.collection.ObservableMap
 import me.datafox.dfxtools.utils.collection.*
 import me.datafox.dfxtools.values.modifier.Modifier
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -77,6 +77,8 @@ private constructor(
 
     override fun removeListener(listener: MapListener<Handle, ModifiableValue>): Boolean =
         delegate.removeListener(listener)
+
+    override fun onInvalidated() { }
 
     companion object {
         fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> =

@@ -16,7 +16,6 @@
 
 package me.datafox.dfxtools.values
 
-import java.math.BigDecimal
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
@@ -28,6 +27,7 @@ import me.datafox.dfxtools.values.operation.DualParameterOperation
 import me.datafox.dfxtools.values.operation.Operation
 import me.datafox.dfxtools.values.operation.SingleParameterOperation
 import me.datafox.dfxtools.values.operation.SourceOperation
+import java.math.BigDecimal
 
 /** @author Lauri "datafox" Heino */
 class ModifiableValue(
@@ -73,4 +73,6 @@ class ModifiableValue(
         modifiers.forEach { temp = it.apply(temp) }
         return base
     }
+
+    override fun onInvalidated() { }
 }

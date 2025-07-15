@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import me.datafox.dfxtools.handles.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Tests for [HandleMap].

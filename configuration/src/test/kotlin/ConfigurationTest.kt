@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 /**
  * Just a very simple [`configuration test`] case since the module is tiny and barebones, leveraging

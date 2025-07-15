@@ -16,11 +16,11 @@
 
 package me.datafox.dfxtools.invalidation.property
 
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 import me.datafox.dfxtools.invalidation.Observable
 import me.datafox.dfxtools.invalidation.Observer
 import me.datafox.dfxtools.invalidation.collection.ObservableSet
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  * Property wrapper for [ObservableSet], may only be owned by [Observer].

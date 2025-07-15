@@ -1,7 +1,8 @@
 [versions]
 # Internal module versions
 configuration = "1.0.0"
-entities = "1.0.0"
+entities-base = "1.0.0"
+entities-extensions = "1.0.0"
 handles = "1.0.0"
 invalidation = "1.0.0"
 text = "1.0.0"
@@ -9,7 +10,7 @@ utils = "1.0.0"
 values = "1.0.0"
 
 # External dependency versions
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 mavenPublish = "0.30.0"
 dokka = "2.0.0"
 logging = "7.0.7"

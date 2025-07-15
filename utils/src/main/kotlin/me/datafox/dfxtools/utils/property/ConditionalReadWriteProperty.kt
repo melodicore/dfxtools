@@ -17,9 +17,9 @@
 package me.datafox.dfxtools.utils.property
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import me.datafox.dfxtools.utils.Logging.logThrow
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import me.datafox.dfxtools.utils.Logging.logThrow
 
 private val logger = KotlinLogging.logger {}
 

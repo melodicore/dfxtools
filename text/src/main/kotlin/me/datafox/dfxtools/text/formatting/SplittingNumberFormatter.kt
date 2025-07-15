@@ -17,8 +17,6 @@
 package me.datafox.dfxtools.text.formatting
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
-import java.math.RoundingMode
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 import me.datafox.dfxtools.configuration.ConfigurationManager
@@ -38,6 +36,8 @@ import me.datafox.dfxtools.text.isOne
 import me.datafox.dfxtools.text.isZero
 import me.datafox.dfxtools.text.join
 import me.datafox.dfxtools.utils.Logging.logThrow
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 private val logger = KotlinLogging.logger {}
 
