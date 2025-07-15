@@ -17,12 +17,13 @@
 package me.datafox.dfxtools.entities.definition
 
 import kotlinx.serialization.Serializable
+import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Space
 
 @Serializable
 data class SpaceDefinition(val id: String, val handles: List<HandleDefinition>) {
-    constructor(space: Space) : this(space.handle.id, space.handles.map { HandleDefinition(it) })
+    constructor(space: Space) : this(space.handle.id, getHandles(space))
 
     fun build() {
         if (id == HandleManager.spaceSpace.handle.id) {
@@ -32,6 +33,14 @@ data class SpaceDefinition(val id: String, val handles: List<HandleDefinition>) 
         } else {
             val space = HandleManager.getOrCreateSpace(id)
             handles.map { it to it.build(space) }.forEach { (def, handle) -> def.populate(handle) }
+        }
+    }
+
+    companion object {
+        fun getHandles(space: Space): List<HandleDefinition> {
+            return space.handles
+                .map { HandleDefinition(it) }
+                .filter { it.tags.isNotEmpty() || "${it.id}@${space.handle.id}" !in Engine.presetHandles }
         }
     }
 }

@@ -55,11 +55,40 @@ object Engine {
     val systems: ListenableSet<EntitySystem> =
         ListenableSet(beforeSpec = systemSpec(), delegate = TreeSet())
 
+    private val _presetHandles: MutableSet<String> = mutableSetOf()
+    val presetHandles: Set<String> get() = _presetHandles
+
     init {
         Serialization.registerDefaultTypes()
+        registerPresetSpaces(
+            listOf(
+                HandleManager.spaceSpace,
+                HandleManager.tagSpace,
+                dataTypeSpace,
+                schemaSpace,
+                entitySpace,
+                componentSpace
+            )
+        )
     }
 
     fun update(delta: Float) = systems.forEach { it.update(delta) }
+
+    fun registerPresetHandle(handle: Handle) {
+        _presetHandles.add(handle.toString())
+    }
+
+    fun registerPresetHandles(handles: Iterable<Handle>) {
+        _presetHandles.addAll(handles.map { it.toString() })
+    }
+
+    fun registerPresetSpace(space: Space) {
+        _presetHandles.add(space.handle.toString())
+    }
+
+    fun registerPresetSpaces(spaces: Iterable<Space>) {
+        _presetHandles.addAll(spaces.map { it.handle.toString() })
+    }
 
     @JvmOverloads
     fun load(def: EngineDefinition, allowInitializers: Boolean = false) {
@@ -314,6 +343,7 @@ object Engine {
         @InternalEntitiesSerializationApi
         fun <T : Any> registerType(dataType: DataType<T>) {
             _types[dataType.handle, dataType.type] = dataType
+            registerPresetHandle(dataType.handle)
         }
 
         @InternalEntitiesSerializationApi

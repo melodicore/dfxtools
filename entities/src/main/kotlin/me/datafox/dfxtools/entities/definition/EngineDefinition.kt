@@ -37,15 +37,8 @@ data class EngineDefinition(
 
     companion object {
         private fun getSpaces(): List<SpaceDefinition> {
-            val spaces = mutableListOf<SpaceDefinition>()
-            spaces.add(SpaceDefinition(HandleManager.tagSpace))
-            spaces.add(SpaceDefinition(HandleManager.spaceSpace))
-            spaces.addAll(
-                HandleManager.spaces.values
-                    .filterNot { it == HandleManager.tagSpace || it == HandleManager.spaceSpace }
-                    .map { SpaceDefinition(it) }
-            )
-            return spaces
+            return HandleManager.spaces.values
+                .map { SpaceDefinition(it) }.filter { it.handles.isNotEmpty() }
         }
     }
 }
