@@ -43,7 +43,7 @@ class ModifiableValue(
         ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
     override val value: BigDecimal by InvalidatedProperty { calculate() }
 
-    fun apply(operation: Operation, useValue: Boolean = false, vararg params: BigDecimal) {
+    fun apply(operation: Operation, vararg params: BigDecimal, useValue: Boolean = false) {
         base = operation.apply(if (useValue) value else base, *params)
     }
 
@@ -53,17 +53,17 @@ class ModifiableValue(
 
     fun apply(
         operation: SingleParameterOperation,
-        useValue: Boolean = false,
         parameter: BigDecimal,
+        useValue: Boolean = false,
     ) {
         base = operation.apply(if (useValue) value else base, parameter)
     }
 
     fun apply(
         operation: DualParameterOperation,
-        useValue: Boolean = false,
         parameter1: BigDecimal,
         parameter2: BigDecimal,
+        useValue: Boolean = false,
     ) {
         base = operation.apply(if (useValue) value else base, parameter1, parameter2)
     }
