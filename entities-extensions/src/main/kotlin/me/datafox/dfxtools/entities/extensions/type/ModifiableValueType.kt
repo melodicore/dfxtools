@@ -31,6 +31,5 @@ object ModifiableValueType : DataType<ModifiableValue> {
 
     override val handle: Handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<ModifiableValue>): ModifiableValueDefinition =
-        ModifiableValueDefinition(data)
+    override fun convert(data: EntityData<ModifiableValue>): ModifiableValueDefinition = ModifiableValueDefinition(data)
 }

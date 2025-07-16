@@ -30,32 +30,24 @@ import me.datafox.dfxtools.utils.Logging.logThrow
 object Utils {
     /**
      * Checks for cyclic dependencies between [Observer] and [Observable] classes, and throws an
-     * [IllegalArgumentException] if any are found. Cyclic dependencies are only detected on classes
-     * that implement both [Observable] and [Observer], preferably by implementing
-     * [ObservableObserver]. This function is called automatically by [CyclicAwareCollection]. If
-     * called manually, do it before adding the [observer] to [Observable.observers].
+     * [IllegalArgumentException] if any are found. Cyclic dependencies are only detected on classes that implement both
+     * [Observable] and [Observer], preferably by implementing [ObservableObserver]. This function is called
+     * automatically by [CyclicAwareCollection]. If called manually, do it before adding the [observer] to
+     * [Observable.observers].
      *
      * @param observer [Observer] to be added.
      * @param observable [Observable] that [observer] is to be added to.
      * @param logger [KLogger] used if a cyclic dependency is detected.
      */
     fun checkCyclic(observer: Observer, observable: Observable, logger: KLogger) {
-        if (observer == observable)
-            logThrow(logger, selfDependency(observer)) { IllegalArgumentException(it) }
+        if (observer == observable) logThrow(logger, selfDependency(observer)) { IllegalArgumentException(it) }
         if (observer !is Observable || observable !is Observer) return
         checkCyclicRecursive(observer, observer, observable, logger)
     }
 
-    private fun checkCyclicRecursive(
-        current: Observable,
-        original: Observable,
-        owner: Observer,
-        logger: KLogger,
-    ) {
+    private fun checkCyclicRecursive(current: Observable, original: Observable, owner: Observer, logger: KLogger) {
         if (owner in current.observers) {
-            logThrow(logger, cyclicDependency(current, original, owner)) {
-                IllegalArgumentException(it)
-            }
+            logThrow(logger, cyclicDependency(current, original, owner)) { IllegalArgumentException(it) }
         }
         current.observers.forEach {
             if (it !is Observable) return@forEach

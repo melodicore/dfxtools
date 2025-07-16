@@ -30,8 +30,7 @@ import kotlin.reflect.KClass
 
 /** @author Lauri "datafox" Heino */
 class TypeSerializer() : KSerializer<SClass<out Any>> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("type", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("type", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: SClass<out Any>) {
         if (value !in Engine.Serialization.typesByClass) throw IllegalStateException()

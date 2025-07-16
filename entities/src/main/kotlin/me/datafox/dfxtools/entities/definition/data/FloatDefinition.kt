@@ -23,11 +23,8 @@ import me.datafox.dfxtools.entities.type.FloatType
 
 @Serializable
 @SerialName(FloatType.ID)
-data class FloatDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    override val value: Float,
-) : SerializableDataDefinition<Float> {
+data class FloatDefinition(override val id: String, override val saved: Boolean, override val value: Float) :
+    SerializableDataDefinition<Float> {
     override val dataType = Float::class
 
     constructor(data: EntityData<Float>) : this(data.handle.toString(), data.saved, data.data)

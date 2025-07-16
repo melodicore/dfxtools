@@ -59,5 +59,5 @@ class OperationModifier(priority: Int = 0, private val operation: Operation, var
         return operation.apply(value, *params.map { it.value }.toTypedArray())
     }
 
-    override fun onInvalidated() { }
+    override fun onInvalidated() {}
 }

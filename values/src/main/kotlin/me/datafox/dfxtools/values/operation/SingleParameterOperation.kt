@@ -29,14 +29,10 @@ fun interface SingleParameterOperation : Operation {
 
     override fun apply(source: BigDecimal, vararg params: BigDecimal): BigDecimal {
         if (params.isEmpty()) {
-            logThrow(logger, "No parameters given to $this, one is required") {
-                IllegalArgumentException(it)
-            }
+            logThrow(logger, "No parameters given to $this, one is required") { IllegalArgumentException(it) }
         }
         if (params.size > 1) {
-            logger.warn {
-                "More than one parameter given to $this, some parameters will be ignored"
-            }
+            logger.warn { "More than one parameter given to $this, some parameters will be ignored" }
         }
         return apply(source, params[0])
     }

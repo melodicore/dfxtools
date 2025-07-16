@@ -42,32 +42,27 @@ import java.math.RoundingMode
 private val logger = KotlinLogging.logger {}
 
 /**
- * A [NumberFormatter] that splits a number into multiple parts, like when formatting time in
- * multiple units. Iterates over each [Split] in [splits] in reverse order. If the number is greater
- * than [Split.scale], the number will be divided and floored and the resulting number is added to
- * the output list. The remainder of this division is then passed to the previous split and this
- * process is repeated until all splits have been processed. Because of this, the splits must have
- * their scales in numerical order and the first split in the array (last to be processed) must have
- * its scale be exactly [BigDecimal.ONE]. Each output will be formatted with [formatter], and
- * [Split.singular] or [Split.plural] will be added as a suffix, singular if the output is exactly
- * one. The last output can be formatted as a decimal or rounded down to the nearest integer,
- * determined by [roundSmallest]. Finally, all outputs are joined by using either [delimiter], or
- * [listDelimiter] and [listLastDelimiter], determined by [useListDelimiter].
+ * A [NumberFormatter] that splits a number into multiple parts, like when formatting time in multiple units. Iterates
+ * over each [Split] in [splits] in reverse order. If the number is greater than [Split.scale], the number will be
+ * divided and floored and the resulting number is added to the output list. The remainder of this division is then
+ * passed to the previous split and this process is repeated until all splits have been processed. Because of this, the
+ * splits must have their scales in numerical order and the first split in the array (last to be processed) must have
+ * its scale be exactly [BigDecimal.ONE]. Each output will be formatted with [formatter], and [Split.singular] or
+ * [Split.plural] will be added as a suffix, singular if the output is exactly one. The last output can be formatted as
+ * a decimal or rounded down to the nearest integer, determined by [roundSmallest]. Finally, all outputs are joined by
+ * using either [delimiter], or [listDelimiter] and [listLastDelimiter], determined by [useListDelimiter].
  *
- * @property shortTime [Splits][Split] for formatting time in seconds. Uses a single character for
- *   all units except for months, which use `mo` to prevent ambiguity with minutes.
+ * @property shortTime [Splits][Split] for formatting time in seconds. Uses a single character for all units except for
+ *   months, which use `mo` to prevent ambiguity with minutes.
  * @property longTime [Splits][Split] for formatting time in seconds. Uses full names for all units.
- * @property splits [ConfigurationKey] that determines the array of [Splits][Split] to be used for
- *   formatting. [Split.scale] values must be in ascending numerical order. Default value is
- *   [longTime].
- * @property formatter [ConfigurationKey] that determines the delegate [NumberFormatter] to be used
- *   for each individual split. Must not be [SplittingNumberFormatter]. Default value is
- *   [SimpleNumberFormatter].
- * @property roundSmallest [ConfigurationKey] that determines if the last split should be rounded
- *   down to the nearest integer. Default value is `true`.
- * @property useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and
- *   [listLastDelimiter] or [delimiter] should be used for joining the [splits]. Default value is
- *   `true`.
+ * @property splits [ConfigurationKey] that determines the array of [Splits][Split] to be used for formatting.
+ *   [Split.scale] values must be in ascending numerical order. Default value is [longTime].
+ * @property formatter [ConfigurationKey] that determines the delegate [NumberFormatter] to be used for each individual
+ *   split. Must not be [SplittingNumberFormatter]. Default value is [SimpleNumberFormatter].
+ * @property roundSmallest [ConfigurationKey] that determines if the last split should be rounded down to the nearest
+ *   integer. Default value is `true`.
+ * @property useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and [listLastDelimiter] or
+ *   [delimiter] should be used for joining the [splits]. Default value is `true`.
  * @author Lauri "datafox" Heino
  */
 object SplittingNumberFormatter : NumberFormatter {
@@ -98,8 +93,7 @@ object SplittingNumberFormatter : NumberFormatter {
 
     override fun format(number: BigDecimal, configuration: Configuration?): String {
         val original = configuration
-        val configuration =
-            ConfigurationManager[configuration, splits, formatter, roundSmallest, useListDelimiter]
+        val configuration = ConfigurationManager[configuration, splits, formatter, roundSmallest, useListDelimiter]
         val delegate = configuration[formatter]
         val splits = configuration[splits]
         validateConfiguration(delegate, splits)
@@ -113,15 +107,12 @@ object SplittingNumberFormatter : NumberFormatter {
             val split = splits[i]
             if (i == 0 || number > split.scale) {
                 val divided =
-                    if (i != 0)
-                        number.divideToIntegralValue(split.scale).setScale(0, RoundingMode.DOWN)
-                    else if (configuration[roundSmallest]) number.setScale(0, RoundingMode.DOWN)
-                    else number
+                    if (i != 0) number.divideToIntegralValue(split.scale).setScale(0, RoundingMode.DOWN)
+                    else if (configuration[roundSmallest]) number.setScale(0, RoundingMode.DOWN) else number
                 val formatted = delegate.format(divided, original)
                 if (formatted.isZero() && (i != 0 || out.isNotEmpty())) continue
                 number = number.remainder(split.scale)
-                if (formatted.isOne()) out.add(formatted + split.singular)
-                else out.add(formatted + split.plural)
+                if (formatted.isOne()) out.add(formatted + split.singular) else out.add(formatted + split.plural)
             }
         }
         return out.join(useListDelimiter, configuration)

@@ -35,23 +35,22 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
- * A [NumberSuffixFormatter] that formats an exponent in an arbitrary base number where each digit
- * is represented by a character. Scales a number down by powers of ten (or up if the number is
- * lesser than one), `10^`[interval] at a time, until the number is the smallest possible value
- * greater than one. This number will be used as [Output.scaled]. The amount of times the number was
- * scaled down (or up, in which case the amount is negative) is then formatted with [characters],
- * where the amount of characters is the base and each character is a digit. This resulting string
- * will be used as [Output.suffix]. If the exponent is positive and [exponentPlus] is `true`, `+`
- * will be added to the beginning of the suffix.
+ * A [NumberSuffixFormatter] that formats an exponent in an arbitrary base number where each digit is represented by a
+ * character. Scales a number down by powers of ten (or up if the number is lesser than one), `10^`[interval] at a time,
+ * until the number is the smallest possible value greater than one. This number will be used as [Output.scaled]. The
+ * amount of times the number was scaled down (or up, in which case the amount is negative) is then formatted with
+ * [characters], where the amount of characters is the base and each character is a digit. This resulting string will be
+ * used as [Output.suffix]. If the exponent is positive and [exponentPlus] is `true`, `+` will be added to the beginning
+ * of the suffix.
  *
  * @property alphabet Character array that contains the lowercase English alphabet.
- * @property characters [ConfigurationKey] that determines the character array to be used as digits.
- *   The arbitrary base is equivalent to the length of this array. Must not be empty, and all
- *   characters are recommended to be distinct for unambiguity. Default value is [alphabet].
- * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a
- *   positive non-zero integer. Default value is `3`.
- * @property exponentPlus [ConfigurationKey] that determines if a positive exponent should be
- *   prefixed with `+`. Default value is `false`.
+ * @property characters [ConfigurationKey] that determines the character array to be used as digits. The arbitrary base
+ *   is equivalent to the length of this array. Must not be empty, and all characters are recommended to be distinct for
+ *   unambiguity. Default value is [alphabet].
+ * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a positive non-zero integer.
+ *   Default value is `3`.
+ * @property exponentPlus [ConfigurationKey] that determines if a positive exponent should be prefixed with `+`. Default
+ *   value is `false`.
  * @author Lauri "datafox" Heino
  */
 object CharDigitSuffixFormatter : NumberSuffixFormatter {
@@ -117,8 +116,7 @@ object CharDigitSuffixFormatter : NumberSuffixFormatter {
 
     private fun validateConfiguration(interval: Int, characters: Array<Char>) {
         if (interval < 1) logThrow(logger, cdsfInterval(interval)) { IllegalArgumentException(it) }
-        if (characters.isEmpty())
-            logThrow(logger, CDSF_EMPTY_CHARACTERS) { IllegalArgumentException(it) }
+        if (characters.isEmpty()) logThrow(logger, CDSF_EMPTY_CHARACTERS) { IllegalArgumentException(it) }
         if (characters.toSet().size != characters.size) logger.warn { CDSF_NOT_DISTINCT_CHARACTERS }
     }
 }

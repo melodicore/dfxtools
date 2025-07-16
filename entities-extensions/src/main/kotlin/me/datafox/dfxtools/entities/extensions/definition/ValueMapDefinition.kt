@@ -25,7 +25,6 @@ import me.datafox.dfxtools.entities.extensions.type.ValueMapType
 import me.datafox.dfxtools.entities.type.SClass
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.putHandled
-import me.datafox.dfxtools.values.ModifiableValue
 import me.datafox.dfxtools.values.ValueMap
 
 @Serializable
@@ -44,9 +43,7 @@ class ValueMapDefinition(
         data.handle.toString(),
         data.saved,
         data.data.space?.handle?.id,
-        data.data.values.map {
-            ModifiableValueDefinition(it.handle.toString(), data.saved, it.base.toString())
-        },
+        data.data.values.map { ModifiableValueDefinition(it.handle.toString(), data.saved, it.base.toString()) },
     )
 
     override fun create(): ValueMap {
@@ -55,10 +52,10 @@ class ValueMapDefinition(
         return map
     }
 
-    override fun set(existing: ValueMap) {
+    override fun set(value: ValueMap) {
         values.forEach {
             val handle = HandleManager.getOrCreateQualifiedHandle(it.id)
-            if (handle in existing) it.set(existing[handle]!!) else existing.putHandled(it.create())
+            if (handle in value) it.set(value[handle]!!) else value.putHandled(it.create())
         }
     }
 }

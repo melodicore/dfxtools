@@ -46,8 +46,7 @@ sealed interface ModifierParameter {
     }
 
     @Serializable
-    data class Reference(val ref: SingleDataReference<@Contextual ModifiableValue>) :
-        ModifierParameter {
+    data class Reference(val ref: SingleDataReference<@Contextual ModifiableValue>) : ModifierParameter {
         override fun get(component: Component): Value = ref.get(component.entity, component).data
     }
 }

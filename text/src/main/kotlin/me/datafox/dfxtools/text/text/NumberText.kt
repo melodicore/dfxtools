@@ -29,13 +29,11 @@ import java.math.BigDecimal
  */
 class NumberText
 @JvmOverloads
-constructor(override val configuration: Configuration? = null, val number: () -> BigDecimal) :
-    Text {
+constructor(override val configuration: Configuration? = null, val number: () -> BigDecimal) : Text {
     /**
      * Returns the output of [number] formatted with [numberFormatter].
      *
-     * @param configuration Extra [Configuration] for this generation. Will be passed on to
-     *   [numberFormatter].
+     * @param configuration Extra [Configuration] for this generation. Will be passed on to [numberFormatter].
      * @return Output of [number] formatted with [numberFormatter].
      */
     override fun generate(configuration: Configuration?): String {

@@ -67,9 +67,7 @@ sealed interface PluggableSpec<E> {
         internal fun <E, V> convertKey(list: List<(E) -> Unit>): Collection<(E, V) -> Unit> =
             list.map { convertKey(it) }
 
-        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit = { _, v ->
-            lambda(v)
-        }
+        internal fun <K, E> convertValue(lambda: (E) -> Unit): (K, E) -> Unit = { _, v -> lambda(v) }
 
         internal fun <K, E> convertValue(list: List<(E) -> Unit>): Collection<(K, E) -> Unit> =
             list.map { convertValue(it) }

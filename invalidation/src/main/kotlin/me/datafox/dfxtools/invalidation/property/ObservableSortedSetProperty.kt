@@ -23,8 +23,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * Property wrapper for [ObservableSet], may only be owned by [Observer]. The resulting set will be
- * sorted.
+ * Property wrapper for [ObservableSet], may only be owned by [Observer]. The resulting set will be sorted.
  *
  * @param values Values to initialize the set with.
  * @property invalidateOwner If `true`, modifications to the set call [Observer.invalidate].
@@ -33,20 +32,15 @@ import kotlin.reflect.KProperty
  */
 class ObservableSortedSetProperty<E : Observable>
 @JvmOverloads
-constructor(
-    vararg values: E,
-    private val invalidateOwner: Boolean = true,
-    comparator: (E, E) -> Int,
-) : ReadOnlyProperty<Observer, MutableSet<E>> {
+constructor(vararg values: E, private val invalidateOwner: Boolean = true, comparator: (E, E) -> Int) :
+    ReadOnlyProperty<Observer, MutableSet<E>> {
     private val backingSet: MutableSet<E> = values.toSortedSet(comparator)
     private lateinit var set: ObservableSet<E>
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): MutableSet<E> = set
 
-    operator fun provideDelegate(
-        thisRef: Observer,
-        property: KProperty<*>,
-    ): ReadOnlyProperty<Observer, MutableSet<E>> = apply {
-        set = ObservableSet(backingSet, thisRef, invalidateOwner)
-    }
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, MutableSet<E>> =
+        apply {
+            set = ObservableSet(backingSet, thisRef, invalidateOwner)
+        }
 }

@@ -29,19 +29,18 @@ import me.datafox.dfxtools.utils.collection.ListenableSet
 private val logger = KotlinLogging.logger {}
 
 /**
- * A handle is a sortable identification object. It belongs to a [space], contains a string [id]
- * unique to the space, as well as an [index] and a [subindex] that together are also unique to the
- * space. A handle may have an arbitrary number of [subhandles], but subhandles cannot have
- * subhandles of their own. A handle may also have an arbitrary number of [tags], which are handles
- * themselves and contained in [tagSpace]. Tags are mainly used for querying collections that
+ * A handle is a sortable identification object. It belongs to a [space], contains a string [id] unique to the space, as
+ * well as an [index] and a [subindex] that together are also unique to the space. A handle may have an arbitrary number
+ * of [subhandles], but subhandles cannot have subhandles of their own. A handle may also have an arbitrary number of
+ * [tags], which are handles themselves and contained in [tagSpace]. Tags are mainly used for querying collections that
  * contain handles with extension functions such as [Set.getByTag] and [Map.getByTags].
  *
  * @property space [Space] that contains this handle.
  * @property [id] String id of this handle, unique to the [space].
- * @property index Integer index of this handle, reflecting creation order within the [space]. This
- *   is the same for a parent handle and all its subhandles.
- * @property subindex Integer index for subhandles, reflecting creation order within the [parent],
- *   or `-1` if this handle is not a subhandle.
+ * @property index Integer index of this handle, reflecting creation order within the [space]. This is the same for a
+ *   parent handle and all its subhandles.
+ * @property subindex Integer index for subhandles, reflecting creation order within the [parent], or `-1` if this
+ *   handle is not a subhandle.
  * @property parent Parent handle of this subhandle, or `null` if this handle is not a subhandle.
  * @property subhandles Subhandles of this handle, or `null` if this handle is a subhandle.
  * @property tags Mutable set of tags for this handle.
@@ -81,14 +80,12 @@ class Handle : Comparable<Handle> {
     }
 
     /**
-     * Returns a subhandle with [id], or `null` if no subhandle with that id exists or íf this
-     * handle is a subhandle. Id may be provided with or without this handle's id
-     * (`handle:subhandle` and `subhandle` are both valid), but only subhandles of this handle can
-     * be returned.
+     * Returns a subhandle with [id], or `null` if no subhandle with that id exists or íf this handle is a subhandle. Id
+     * may be provided with or without this handle's id (`handle:subhandle` and `subhandle` are both valid), but only
+     * subhandles of this handle can be returned.
      *
      * @param id Id of the subhandle to be returned.
-     * @return Subhandle with [id], or `null` if no subhandle with that id exists or if this handle
-     *   is a subhandle.
+     * @return Subhandle with [id], or `null` if no subhandle with that id exists or if this handle is a subhandle.
      */
     operator fun get(id: String): Handle? {
         val id = if (id.startsWith("${this.id}:")) id else "${this.id}:$id"
@@ -184,10 +181,10 @@ class Handle : Comparable<Handle> {
     operator fun contains(id: String): Boolean = id in tags
 
     /**
-     * Creates a new subhandle with [id]. Specify the id without this handle's id (`subhandle`, not
-     * `handle:subhandle`). Throws an [IllegalArgumentException] if subhandle creation is not
-     * permitted (this handle is in [HandleManager.spaceSpace] or is a subhandle), if the id is not
-     * valid (contains colons or at symbols) or if a subhandle with the id already exists.
+     * Creates a new subhandle with [id]. Specify the id without this handle's id (`subhandle`, not `handle:subhandle`).
+     * Throws an [IllegalArgumentException] if subhandle creation is not permitted (this handle is in
+     * [HandleManager.spaceSpace] or is a subhandle), if the id is not valid (contains colons or at symbols) or if a
+     * subhandle with the id already exists.
      *
      * @param id Id of the subhandle to be created.
      * @return Created subhandle.
@@ -196,19 +193,17 @@ class Handle : Comparable<Handle> {
     fun createSubhandle(id: String): Handle {
         if (!permitExternalSubhandleCreation) {
             val message =
-                if (space == HandleManager.spaceSpace) SPACE_SUBHANDLE_CREATION
-                else SUBHANDLE_SUBHANDLE_CREATION
+                if (space == HandleManager.spaceSpace) SPACE_SUBHANDLE_CREATION else SUBHANDLE_SUBHANDLE_CREATION
             logThrow(logger, message) { IllegalArgumentException(it) }
         }
         return createSubhandleInternal(id)
     }
 
     /**
-     * Creates a new subhandle, or returns an existing subhandle if one with [id] already exists.
-     * Specify the id without this handle's id (`subhandle`, not `handle:subhandle`).Throws an
-     * [IllegalArgumentException] if subhandle creation is not permitted (this handle is in
-     * [HandleManager.spaceSpace] or is a subhandle) or if the id is not valid (contains colons or
-     * at symbols).
+     * Creates a new subhandle, or returns an existing subhandle if one with [id] already exists. Specify the id without
+     * this handle's id (`subhandle`, not `handle:subhandle`).Throws an [IllegalArgumentException] if subhandle creation
+     * is not permitted (this handle is in [HandleManager.spaceSpace] or is a subhandle) or if the id is not valid
+     * (contains colons or at symbols).
      *
      * @param id Id of the subhandle to be created or retrieved.
      * @return Subhandle with [id].

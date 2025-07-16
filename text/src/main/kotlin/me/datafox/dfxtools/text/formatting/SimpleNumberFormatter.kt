@@ -36,21 +36,19 @@ import kotlin.math.abs
 private val logger = KotlinLogging.logger {}
 
 /**
- * A simple [NumberFormatter]. The amount of digits in the output can be configured with
- * [precision]. This value is equivalent to [BigDecimal.precision]. If the number is greater than
- * `10^`[minExponent] or lesser than `10^-`[minExponent], a [NumberSuffixFormatter]'s
- * [Output.scaled] will be formatted instead of the number, and [Output.suffix] is appended to the
- * end. The formatted number's trailing zeros will be stripped if [stripZeros] is `true`.
+ * A simple [NumberFormatter]. The amount of digits in the output can be configured with [precision]. This value is
+ * equivalent to [BigDecimal.precision]. If the number is greater than `10^`[minExponent] or lesser than
+ * `10^-`[minExponent], a [NumberSuffixFormatter]'s [Output.scaled] will be formatted instead of the number, and
+ * [Output.suffix] is appended to the end. The formatted number's trailing zeros will be stripped if [stripZeros] is
+ * `true`.
  *
- * @property precision [ConfigurationKey] for the [BigDecimal.precision] to be used for formatting.
- *   Must be a positive non-zero integer greater than or equal to [minExponent]. Default value is
- *   `6`.
- * @property minExponent [ConfigurationKey] that determines when to use a [NumberSuffixFormatter].
- *   The formatted number must be greater than `10^`[minExponent] or lesser than `10^-`[minExponent]
- *   for a suffix formatter to be used. Must be a positive or zero integer lesser than or equal to
- *   [precision]. Default value is `3`.
- * @property stripZeros [ConfigurationKey] that determines if trailing zeros of the number should be
- *   stripped. Default value is `true`.
+ * @property precision [ConfigurationKey] for the [BigDecimal.precision] to be used for formatting. Must be a positive
+ *   non-zero integer greater than or equal to [minExponent]. Default value is `6`.
+ * @property minExponent [ConfigurationKey] that determines when to use a [NumberSuffixFormatter]. The formatted number
+ *   must be greater than `10^`[minExponent] or lesser than `10^-`[minExponent] for a suffix formatter to be used. Must
+ *   be a positive or zero integer lesser than or equal to [precision]. Default value is `3`.
+ * @property stripZeros [ConfigurationKey] that determines if trailing zeros of the number should be stripped. Default
+ *   value is `true`.
  * @author Lauri "datafox" Heino
  */
 object SimpleNumberFormatter : NumberFormatter {
@@ -61,8 +59,7 @@ object SimpleNumberFormatter : NumberFormatter {
     override fun format(number: BigDecimal, configuration: Configuration?): String {
         val original = configuration
         val configuration =
-            ConfigurationManager[
-                configuration, numberSuffixFormatter, precision, minExponent, stripZeros]
+            ConfigurationManager[configuration, numberSuffixFormatter, precision, minExponent, stripZeros]
         val precision = configuration[precision]
         val minExponent = configuration[minExponent]
         validateConfiguration(precision, minExponent)
@@ -78,14 +75,10 @@ object SimpleNumberFormatter : NumberFormatter {
     }
 
     private fun validateConfiguration(precision: Int, minExponent: Int) {
-        if (precision < 1)
-            logThrow(logger, snfPrecision(precision)) { IllegalArgumentException(it) }
-        if (minExponent < 0)
-            logThrow(logger, snfExponent(minExponent)) { IllegalArgumentException(it) }
+        if (precision < 1) logThrow(logger, snfPrecision(precision)) { IllegalArgumentException(it) }
+        if (minExponent < 0) logThrow(logger, snfExponent(minExponent)) { IllegalArgumentException(it) }
         if (precision < minExponent) {
-            logThrow(logger, snfPrecisionExponent(precision, minExponent)) {
-                IllegalArgumentException(it)
-            }
+            logThrow(logger, snfPrecisionExponent(precision, minExponent)) { IllegalArgumentException(it) }
         }
     }
 }

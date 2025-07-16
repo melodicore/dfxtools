@@ -29,21 +29,16 @@ import java.math.BigDecimal
 
 @Serializable
 @SerialName(ModifiableValueType.ID)
-class ModifiableValueDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    val value: String,
-) : MutableDataDefinition<ModifiableValue> {
+class ModifiableValueDefinition(override val id: String, override val saved: Boolean, val value: String) :
+    MutableDataDefinition<ModifiableValue> {
     override val dataType: SClass<@Contextual ModifiableValue> = ModifiableValue::class
 
-    constructor(
-        data: EntityData<ModifiableValue>
-    ) : this(data.handle.toString(), data.saved, data.data.base.toString())
+    constructor(data: EntityData<ModifiableValue>) : this(data.handle.toString(), data.saved, data.data.base.toString())
 
     override fun create(): ModifiableValue =
         ModifiableValue(HandleManager.getOrCreateQualifiedHandle(id), BigDecimal(value))
 
-    override fun set(existing: ModifiableValue) {
-        existing.base = BigDecimal(this.value)
+    override fun set(value: ModifiableValue) {
+        value.base = BigDecimal(this.value)
     }
 }

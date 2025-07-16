@@ -16,9 +16,9 @@
 
 package me.datafox.dfxtools.text.formatting
 
+import java.math.BigDecimal
 import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationManager
-import java.math.BigDecimal
 
 /**
  * Interface for formatting [BigDecimal] numbers.
@@ -27,12 +27,12 @@ import java.math.BigDecimal
  */
 interface NumberFormatter {
     /**
-     * Formats a [BigDecimal] number. Extra [configuration] may be provided, which will be applied
-     * on top of a copy of [ConfigurationManager.configuration].
+     * Formats a [BigDecimal] number. Extra [configuration] may be provided, which will be applied on top of a copy of
+     * [ConfigurationManager.configuration].
      *
      * @param number [BigDecimal] number to be formatted.
-     * @param configuration Extra [Configuration] for this formatting action, or `null` if none is
-     *   needed. Will override values in [ConfigurationManager.configuration].
+     * @param configuration Extra [Configuration] for this formatting action, or `null` if none is needed. Will override
+     *   values in [ConfigurationManager.configuration].
      * @return Formatted string.
      */
     fun format(number: BigDecimal, configuration: Configuration? = null): String

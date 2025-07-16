@@ -45,8 +45,7 @@ interface ListenableList<E> : MutableList<E> {
 
         override fun addListener(listener: CollectionListener<E>): Boolean = listeners.add(listener)
 
-        override fun removeListener(listener: CollectionListener<E>): Boolean =
-            listeners.remove(listener)
+        override fun removeListener(listener: CollectionListener<E>): Boolean = listeners.remove(listener)
 
         override fun equals(other: Any?): Boolean = delegate == other
 
@@ -57,11 +56,9 @@ interface ListenableList<E> : MutableList<E> {
 
     @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
     class View<out E>(private val owner: ListenableList<E>) : List<E> by owner {
-        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
-            owner.addListener(listener)
+        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.addListener(listener)
 
-        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
-            owner.removeListener(listener)
+        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.removeListener(listener)
 
         override fun equals(other: Any?): Boolean = owner == other
 

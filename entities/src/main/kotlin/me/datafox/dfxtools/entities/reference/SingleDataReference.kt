@@ -40,15 +40,11 @@ data class SingleDataReference<T : Any>(
         val entity: Entity =
             Engine.entities[entity]
                 ?: entityFallback
-                ?: logThrow(logger, "Entity not found and fallback is null") {
-                    IllegalArgumentException(it)
-                }
+                ?: logThrow(logger, "Entity not found and fallback is null") { IllegalArgumentException(it) }
         val component: Component =
             entity.components[component]
                 ?: componentFallback
-                ?: logThrow(logger, "Component not found and fallback is null") {
-                    IllegalArgumentException(it)
-                }
+                ?: logThrow(logger, "Component not found and fallback is null") { IllegalArgumentException(it) }
         return component.getData(dataType, data)!!
     }
 }

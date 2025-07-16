@@ -30,8 +30,7 @@ import kotlin.reflect.KProperty
  */
 class ObservableProperty<T : Observable>
 @JvmOverloads
-constructor(var value: T, private val invalidateOwner: Boolean = true) :
-    ReadWriteProperty<Observer, T> {
+constructor(var value: T, private val invalidateOwner: Boolean = true) : ReadWriteProperty<Observer, T> {
     private val identifier = Any()
 
     override fun getValue(thisRef: Observer, property: KProperty<*>): T = value
@@ -44,10 +43,7 @@ constructor(var value: T, private val invalidateOwner: Boolean = true) :
         if (invalidateOwner) thisRef.invalidate()
     }
 
-    operator fun provideDelegate(
-        thisRef: Observer,
-        property: KProperty<*>,
-    ): ReadWriteProperty<Observer, T> {
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadWriteProperty<Observer, T> {
         value.observers.add(thisRef, identifier)
         if (invalidateOwner) thisRef.invalidate()
         return this

@@ -43,14 +43,12 @@ class MappingModifier(priority: Int = 0, vararg operations: Pair<Operation, List
         val markers: MutableList<BigDecimal> = mutableListOf(value)
         operations.forEach { (op, vals) ->
             val list = vals.map { it.value }.map { if (it is Marker) markers[it.value] else it }
-            markers.add(
-                op.apply(list.first(), *list.subList(1, op.parameterCount + 1).toTypedArray())
-            )
+            markers.add(op.apply(list.first(), *list.subList(1, op.parameterCount + 1).toTypedArray()))
         }
         return markers.last()
     }
 
-    override fun onInvalidated() { }
+    override fun onInvalidated() {}
 
     class Builder internal constructor(private val priority: Int) {
         private val operations: MutableList<Pair<Operation, List<Value>>> = mutableListOf()
@@ -65,18 +63,14 @@ class MappingModifier(priority: Int = 0, vararg operations: Pair<Operation, List
                 .map { it.value }
                 .forEach {
                     if (it is Marker && it.value > operations.size)
-                        logThrow(
-                            logger,
-                            "Reference to operation that is not yet executed at this point",
-                        ) { s ->
+                        logThrow(logger, "Reference to operation that is not yet executed at this point") { s ->
                             IllegalArgumentException(s)
                         }
                 }
             operations.add(operation to list)
         }
 
-        internal fun build(): MappingModifier =
-            MappingModifier(priority, *operations.toTypedArray())
+        internal fun build(): MappingModifier = MappingModifier(priority, *operations.toTypedArray())
     }
 
     companion object {

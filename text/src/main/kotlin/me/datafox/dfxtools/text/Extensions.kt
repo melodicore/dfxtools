@@ -23,31 +23,29 @@ import me.datafox.dfxtools.text.TextManager.listDelimiter
 import me.datafox.dfxtools.text.TextManager.listLastDelimiter
 
 /**
- * Returns `true` if this string represents zero. Specifically, returns `true` if this string is
- * `0`, `0.`, or `0.` followed by any number of zeros.
+ * Returns `true` if this string represents zero. Specifically, returns `true` if this string is `0`, `0.`, or `0.`
+ * followed by any number of zeros.
  *
  * @return `true` if this string represents zero.
  */
 fun String.isZero(): Boolean = matches(Regex("0|0\\.0*"))
 
 /**
- * Returns `true` if this string represents one. Specifically, returns `true` if this string is `1`,
- * `1.`, or `1.` followed by any number of zeros.
+ * Returns `true` if this string represents one. Specifically, returns `true` if this string is `1`, `1.`, or `1.`
+ * followed by any number of zeros.
  *
  * @return `true` if this string represents one.
  */
 fun String.isOne(): Boolean = matches(Regex("1|1\\.0*"))
 
 /**
- * Joins the strings in this collection together. If [useListDelimiter] is `false`, [delimiter] will
- * be used as a delimiter. If it is `true`, [listDelimiter] will be used for all delimiters except
- * the last one, which will be [listLastDelimiter] instead. Values of these
- * [ConfigurationKeys][ConfigurationKey] are received from [configuration].
+ * Joins the strings in this collection together. If [useListDelimiter] is `false`, [delimiter] will be used as a
+ * delimiter. If it is `true`, [listDelimiter] will be used for all delimiters except the last one, which will be
+ * [listLastDelimiter] instead. Values of these [ConfigurationKeys][ConfigurationKey] are received from [configuration].
  *
- * @param useListDelimiter `true` if [listDelimiter] and [listLastDelimiter] should be used, `false`
- *   if [delimiter] should be used.
- * @param configuration [Configuration] to receive values of [ConfigurationKeys][ConfigurationKey]
- *   from.
+ * @param useListDelimiter `true` if [listDelimiter] and [listLastDelimiter] should be used, `false` if [delimiter]
+ *   should be used.
+ * @param configuration [Configuration] to receive values of [ConfigurationKeys][ConfigurationKey] from.
  * @return Elements of this collection joined to a string.
  */
 fun Collection<String>.join(useListDelimiter: Boolean, configuration: Configuration): String {
@@ -79,18 +77,14 @@ fun Collection<String>.join(useListDelimiter: Boolean, configuration: Configurat
 }
 
 /**
- * Joins the strings in this collection together. If [useListDelimiter] is `false`, [delimiter] will
- * be used as a delimiter. If it is `true`, [listDelimiter] will be used for all delimiters except
- * the last one, which will be [listLastDelimiter] instead. Values of these
- * [ConfigurationKeys][ConfigurationKey] are received from [configuration].
+ * Joins the strings in this collection together. If [useListDelimiter] is `false`, [delimiter] will be used as a
+ * delimiter. If it is `true`, [listDelimiter] will be used for all delimiters except the last one, which will be
+ * [listLastDelimiter] instead. Values of these [ConfigurationKeys][ConfigurationKey] are received from [configuration].
  *
- * @param useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and
- *   [listLastDelimiter] or [delimiter] should be used as a delimiter.
- * @param configuration [Configuration] to receive values of [ConfigurationKeys][ConfigurationKey]
- *   from.
+ * @param useListDelimiter [ConfigurationKey] that determines if [listDelimiter] and [listLastDelimiter] or [delimiter]
+ *   should be used as a delimiter.
+ * @param configuration [Configuration] to receive values of [ConfigurationKeys][ConfigurationKey] from.
  * @return Elements of this collection joined to a string.
  */
-fun Collection<String>.join(
-    useListDelimiter: ConfigurationKey<Boolean>,
-    configuration: Configuration,
-) = join(configuration[useListDelimiter], configuration)
+fun Collection<String>.join(useListDelimiter: ConfigurationKey<Boolean>, configuration: Configuration) =
+    join(configuration[useListDelimiter], configuration)

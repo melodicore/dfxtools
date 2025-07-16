@@ -17,8 +17,7 @@
 package me.datafox.dfxtools.utils.collection
 
 /** @author Lauri "datafox" Heino */
-class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: PluggableMapSpec<K, V>) :
-    MutableMap<K, V> {
+class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: PluggableMapSpec<K, V>) : MutableMap<K, V> {
     override val size: Int
         get() = delegate.size
 
@@ -105,15 +104,13 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
     }
 
     fun removeAll(entries: Map<out K, V>): Boolean {
-        val its =
-            delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
+        val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
         if (its.isEmpty()) return false
         return removeAll(its)
     }
 
     fun retainAll(entries: Map<out K, V>): Boolean {
-        val its =
-            delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
+        val its = delegate.filter { it.key in entries && entries[it.key] == it.value }.map { it.key }
         val reverse = delegate.filter { it.key !in its }
         if (reverse.isEmpty()) return false
         return removeAll(reverse)
@@ -131,8 +128,7 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
 
         override fun add(element: K): Boolean = throw UnsupportedOperationException()
 
-        override fun addAll(elements: Collection<K>): Boolean =
-            throw UnsupportedOperationException()
+        override fun addAll(elements: Collection<K>): Boolean = throw UnsupportedOperationException()
 
         override fun remove(element: K): Boolean = parent.remove(element) != null
 
@@ -143,26 +139,22 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
 
         override fun clear() = parent.clear()
 
-        override fun iterator(): MutableIterator<K> =
-            UnsupportedRemoveIterator(parent.delegate.keys.iterator())
+        override fun iterator(): MutableIterator<K> = UnsupportedRemoveIterator(parent.delegate.keys.iterator())
 
         override fun isEmpty(): Boolean = parent.isEmpty()
 
         override fun contains(element: K): Boolean = parent.containsKey(element)
 
-        override fun containsAll(elements: Collection<K>): Boolean =
-            elements.all { parent.containsKey(it) }
+        override fun containsAll(elements: Collection<K>): Boolean = elements.all { parent.containsKey(it) }
     }
 
-    private class PluggableMapValues<K, V>(private val parent: PluggableMap<K, V>) :
-        MutableCollection<V> {
+    private class PluggableMapValues<K, V>(private val parent: PluggableMap<K, V>) : MutableCollection<V> {
         override val size: Int
             get() = parent.size
 
         override fun add(element: V): Boolean = throw UnsupportedOperationException()
 
-        override fun addAll(elements: Collection<V>): Boolean =
-            throw UnsupportedOperationException()
+        override fun addAll(elements: Collection<V>): Boolean = throw UnsupportedOperationException()
 
         override fun remove(element: V): Boolean {
             val entry = parent.delegate.entries.find { it.value == element }
@@ -178,15 +170,13 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
 
         override fun clear() = parent.clear()
 
-        override fun iterator(): MutableIterator<V> =
-            UnsupportedRemoveIterator(parent.delegate.values.iterator())
+        override fun iterator(): MutableIterator<V> = UnsupportedRemoveIterator(parent.delegate.values.iterator())
 
         override fun isEmpty(): Boolean = parent.isEmpty()
 
         override fun contains(element: V): Boolean = parent.containsValue(element)
 
-        override fun containsAll(elements: Collection<V>): Boolean =
-            elements.all { parent.containsValue(it) }
+        override fun containsAll(elements: Collection<V>): Boolean = elements.all { parent.containsValue(it) }
     }
 
     private class PluggableMapEntries<K, V>(private val parent: PluggableMap<K, V>) :
@@ -199,8 +189,7 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
             return true
         }
 
-        override fun remove(element: MutableMap.MutableEntry<K, V>): Boolean =
-            parent.remove(element.key, element.value)
+        override fun remove(element: MutableMap.MutableEntry<K, V>): Boolean = parent.remove(element.key, element.value)
 
         override fun addAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean {
             parent.putAll(elements.associate { it.key to it.value })
@@ -220,8 +209,7 @@ class PluggableMap<K, V>(private val delegate: MutableMap<K, V>, val spec: Plugg
 
         override fun isEmpty(): Boolean = parent.isEmpty()
 
-        override fun contains(element: MutableMap.MutableEntry<K, V>): Boolean =
-            parent.containsKey(element.key)
+        override fun contains(element: MutableMap.MutableEntry<K, V>): Boolean = parent.containsKey(element.key)
 
         override fun containsAll(elements: Collection<MutableMap.MutableEntry<K, V>>): Boolean =
             elements.all { parent.containsKey(it.key) }

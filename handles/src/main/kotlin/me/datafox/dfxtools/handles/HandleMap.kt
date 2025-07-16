@@ -29,28 +29,25 @@ import java.util.*
 private val logger = KotlinLogging.logger {}
 
 /**
- * A sorted mutable map with [Handle] keys that may only contain keys from a single [Space]. This
- * file also contains extension functions for generic maps that have handle keys. This map is
- * implemented with [PluggableMap] and backed by a [TreeMap]. The detection of handles is done with
- * [spec], which can be used to create more complex pluggable maps without this class.
+ * A sorted mutable map with [Handle] keys that may only contain keys from a single [Space]. This file also contains
+ * extension functions for generic maps that have handle keys. This map is implemented with [PluggableMap] and backed by
+ * a [TreeMap]. The detection of handles is done with [spec], which can be used to create more complex pluggable maps
+ * without this class.
  *
  * @property space [Space] of this map.
- * @property immutableView Immutable view of this map.
  * @author Lauri "datafox" Heino
  */
 class HandleMap<V>
 private constructor(
     ignored: Any?,
     private val _space: Space,
-    private val map: ListenableMap<Handle, V> =
-        ListenableMap(beforeSpec = spec(_space), delegate = TreeMap()),
+    private val map: ListenableMap<Handle, V> = ListenableMap(beforeSpec = spec(_space), delegate = TreeMap()),
 ) : ListenableMap<Handle, V> by map {
     val space: Space
         get() = _space
 
     /**
-     * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to
-     * the space.
+     * Creates a new map with [space] and [entries]. Entries must have [Handle] keys that belong to the space.
      *
      * @param space [Space] for this map.
      * @param entries Entries for this map.
@@ -61,8 +58,7 @@ private constructor(
     }
 
     /**
-     * Creates a new map with [entries]. Entries must contain at least one entry to infer [space]
-     * from.
+     * Creates a new map with [entries]. Entries must contain at least one entry to infer [space] from.
      *
      * @param entries Entries for this map, must not be empty.
      */
@@ -78,8 +74,7 @@ private constructor(
 
     companion object {
         /**
-         * Returns a [PluggableMapSpec] which asserts that all added [Handle] keys belong to
-         * [space].
+         * Returns a [PluggableMapSpec] which asserts that all added [Handle] keys belong to [space].
          *
          * @param space [Space] that all [Handle] keys must belong to.
          * @return [PluggableMapSpec] which asserts that all added [Handle] keys belong to [space].
@@ -88,9 +83,7 @@ private constructor(
             PluggableMapSpec(
                 beforeAdd = { k, _ ->
                     if (k.space != space) {
-                        logThrow(logger, mapHandleNotInSpace(space, k)) {
-                            IllegalArgumentException(it)
-                        }
+                        logThrow(logger, mapHandleNotInSpace(space, k)) { IllegalArgumentException(it) }
                     }
                 }
             )
@@ -160,9 +153,7 @@ fun <V> Map<Handle, V>.containsAll(ids: Iterable<String>): Boolean = keys.contai
  * @param tag Tag to be queried.
  * @return All values in this map whose keys have [tag].
  */
-fun <V> Map<Handle, V>.getByTag(tag: Handle): List<V> = mapNotNull {
-    if (it.key.tags.contains(tag)) it.value else null
-}
+fun <V> Map<Handle, V>.getByTag(tag: Handle): List<V> = mapNotNull { if (it.key.tags.contains(tag)) it.value else null }
 
 /**
  * Returns all values in this map whose keys have a tag with [id].
@@ -170,9 +161,7 @@ fun <V> Map<Handle, V>.getByTag(tag: Handle): List<V> = mapNotNull {
  * @param id Id of the tag to be queried.
  * @return All values in this map whose keys have a tag with [id].
  */
-fun <V> Map<Handle, V>.getByTag(id: String): List<V> = mapNotNull {
-    if (it.key.tags.contains(id)) it.value else null
-}
+fun <V> Map<Handle, V>.getByTag(id: String): List<V> = mapNotNull { if (it.key.tags.contains(id)) it.value else null }
 
 /**
  * Returns all values in this map whose keys have all [tags].

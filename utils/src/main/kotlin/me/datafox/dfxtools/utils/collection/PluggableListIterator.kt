@@ -17,10 +17,8 @@
 package me.datafox.dfxtools.utils.collection
 
 /** @author Lauri "datafox" Heino */
-class PluggableListIterator<E>(
-    override val delegate: MutableListIterator<E>,
-    spec: PluggableSpec<E>,
-) : PluggableIterator<E>(delegate, spec), MutableListIterator<E> {
+class PluggableListIterator<E>(override val delegate: MutableListIterator<E>, spec: PluggableSpec<E>) :
+    PluggableIterator<E>(delegate, spec), MutableListIterator<E> {
 
     override fun set(element: E) {
         if (current == null) throw IllegalStateException()

@@ -179,9 +179,7 @@ class PropertyTest {
     }
 
     private class TestObservableSortedSetProperty : AbstractObserver() {
-        val observables: MutableSet<TestComparableObservable> by ObservableSortedSetProperty {
-            e1,
-            e2 ->
+        val observables: MutableSet<TestComparableObservable> by ObservableSortedSetProperty { e1, e2 ->
             e1.compareTo(e2)
         }
         var counter = 0
@@ -191,8 +189,7 @@ class PropertyTest {
         }
     }
 
-    private class TestComparableObservable(val i: Int) :
-        AbstractObservable(), Comparable<TestComparableObservable> {
+    private class TestComparableObservable(val i: Int) : AbstractObservable(), Comparable<TestComparableObservable> {
         override fun compareTo(other: TestComparableObservable): Int = i.compareTo(other.i)
     }
 }

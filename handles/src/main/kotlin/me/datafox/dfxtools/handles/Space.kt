@@ -28,9 +28,9 @@ import me.datafox.dfxtools.utils.collection.ListenableSet
 private val logger = KotlinLogging.logger {}
 
 /**
- * A space is a namespace and container for [Handles][Handle] and [Groups][Group]. A space is also
- * identified by a handle, which are defined in [HandleManager.spaceSpace]. Handles may be created
- * with [createHandle], [getOrCreateHandle] and [getOrCreateHandles].
+ * A space is a namespace and container for [Handles][Handle] and [Groups][Group]. A space is also identified by a
+ * handle, which are defined in [HandleManager.spaceSpace]. Handles may be created with [createHandle],
+ * [getOrCreateHandle] and [getOrCreateHandles].
  *
  * @property handles [Handles][Handle] of this space.
  * @property groups [Groups][Group] of this space.
@@ -72,10 +72,10 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates a new [Handle] with [id]. You may not create subhandles directly with this function,
-     * use [getOrCreateHandle] instead for that. Throws an [IllegalArgumentException] if handle
-     * creation is not permitted (this space in [HandleManager.spaceSpace]), if the id is not valid
-     * (contains colons or at symbols) or if a handle with the id already exists.
+     * Creates a new [Handle] with [id]. You may not create subhandles directly with this function, use
+     * [getOrCreateHandle] instead for that. Throws an [IllegalArgumentException] if handle creation is not permitted
+     * (this space in [HandleManager.spaceSpace]), if the id is not valid (contains colons or at symbols) or if a handle
+     * with the id already exists.
      *
      * @param id Id of the [Handle] to be created.
      * @return Created [Handle].
@@ -89,11 +89,10 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates new [Handles][Handle] with [ids]. You may not create subhandles directly with this
-     * function, use [getOrCreateHandles] instead for that. Throws an [IllegalArgumentException] if
-     * handle creation is not permitted (this space in [HandleManager.spaceSpace]), if any of the
-     * ids is not valid (contains colons or at symbols) or if a handle with any of the ids already
-     * exists.
+     * Creates new [Handles][Handle] with [ids]. You may not create subhandles directly with this function, use
+     * [getOrCreateHandles] instead for that. Throws an [IllegalArgumentException] if handle creation is not permitted
+     * (this space in [HandleManager.spaceSpace]), if any of the ids is not valid (contains colons or at symbols) or if
+     * a handle with any of the ids already exists.
      *
      * @param ids Ids of the [Handles][Handle] to be created.
      * @return Created [Handles][Handle].
@@ -108,11 +107,10 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates a new [Handle], or returns an existing handle if one with [id] already exists. You
-     * may create subhandles directly with this function by specifying its full id
-     * (`handle:subhandle`). Throws an [IllegalArgumentException] if handle creation is not
-     * permitted (this space in [HandleManager.spaceSpace]) or if the id is not valid (contains more
-     * than one colon or at symbols).
+     * Creates a new [Handle], or returns an existing handle if one with [id] already exists. You may create subhandles
+     * directly with this function by specifying its full id (`handle:subhandle`). Throws an [IllegalArgumentException]
+     * if handle creation is not permitted (this space in [HandleManager.spaceSpace]) or if the id is not valid
+     * (contains more than one colon or at symbols).
      *
      * @param id Id of the [Handle] to be created or retrieved.
      * @return [Handle] with [id].
@@ -126,11 +124,10 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates new [Handles][Handle], or returns existing handles if ones with [ids] already exists.
-     * You may create subhandles directly with this function by specifying its full id
-     * (`handle:subhandle`). Throws an [IllegalArgumentException] if handle creation is not
-     * permitted (this space in [HandleManager.spaceSpace]) or if any of the ids is not valid
-     * (contains more than one colon or at symbols).
+     * Creates new [Handles][Handle], or returns existing handles if ones with [ids] already exists. You may create
+     * subhandles directly with this function by specifying its full id (`handle:subhandle`). Throws an
+     * [IllegalArgumentException] if handle creation is not permitted (this space in [HandleManager.spaceSpace]) or if
+     * any of the ids is not valid (contains more than one colon or at symbols).
      *
      * @param ids Ids of the [Handles][Handle] to be created or retrieved.
      * @return [Handles][Handle] with [ids].
@@ -150,8 +147,8 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates a new [Group] with [id]. Throws an [IllegalArgumentException] if the id is not valid
-     * (contains colons or at symbols) or if a group with the id already exists.
+     * Creates a new [Group] with [id]. Throws an [IllegalArgumentException] if the id is not valid (contains colons or
+     * at symbols) or if a group with the id already exists.
      *
      * @param id Id of the [Group] to be created.
      * @return Created [Group].
@@ -165,8 +162,8 @@ class Space : ComparableHandled {
     }
 
     /**
-     * Creates a new [Group], or returns an existing group if one with [id] already exists. Throws
-     * an [IllegalArgumentException] if the id is not valid (contains colons or at symbols).
+     * Creates a new [Group], or returns an existing group if one with [id] already exists. Throws an
+     * [IllegalArgumentException] if the id is not valid (contains colons or at symbols).
      *
      * @param id Id of the [Group] to be created or retrieved.
      * @return [Group] with [id].
@@ -207,9 +204,7 @@ class Space : ComparableHandled {
 
     internal fun purge(spaceSpace: Boolean) {
         if (spaceSpace) {
-            _handles.retainAll(
-                setOf(HandleManager.spaceSpace.handle, HandleManager.tagSpace.handle)
-            )
+            _handles.retainAll(setOf(HandleManager.spaceSpace.handle, HandleManager.tagSpace.handle))
             _handles.forEach { it.purge() }
         } else _handles.clear()
         _groups.clear()

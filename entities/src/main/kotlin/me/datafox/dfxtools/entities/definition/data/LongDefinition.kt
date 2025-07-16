@@ -23,11 +23,8 @@ import me.datafox.dfxtools.entities.type.LongType
 
 @Serializable
 @SerialName(LongType.ID)
-data class LongDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    override val value: Long,
-) : SerializableDataDefinition<Long> {
+data class LongDefinition(override val id: String, override val saved: Boolean, override val value: Long) :
+    SerializableDataDefinition<Long> {
     override val dataType = Long::class
 
     constructor(data: EntityData<Long>) : this(data.handle.toString(), data.saved, data.data)

@@ -23,17 +23,14 @@ import kotlin.reflect.KProperty
 /**
  * A property that can be invalidated and recalculated.
  *
- * @param value Initial value for this property. If `null`, [calculation] will be called for the
- *   initial value.
- * @property calculation Lambda that returns a new [value] for this property. Called when the
- *   property is requested if it has been invalidated. Current [value] is given as a parameter, or
- *   `null` when initialized with a `null` value.
+ * @param value Initial value for this property. If `null`, [calculation] will be called for the initial value.
+ * @property calculation Lambda that returns a new [value] for this property. Called when the property is requested if
+ *   it has been invalidated. Current [value] is given as a parameter, or `null` when initialized with a `null` value.
  * @constructor Creates a new invalidated property.
  * @author Lauri "datafox" Heino
  */
-class InvalidatedProperty<V>
-@JvmOverloads
-constructor(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProperty<Observer, V> {
+class InvalidatedProperty<V> @JvmOverloads constructor(value: V? = null, private val calculation: (V?) -> V) :
+    ReadOnlyProperty<Observer, V> {
     private var value = value ?: calculation(null)
     private var invalidated = false
 
@@ -50,10 +47,9 @@ constructor(value: V? = null, private val calculation: (V?) -> V) : ReadOnlyProp
         return value
     }
 
-    operator fun provideDelegate(
-        thisRef: Observer,
-        property: KProperty<*>,
-    ): ReadOnlyProperty<Observer, V> = apply { thisRef.propertyHandler.add(this) }
+    operator fun provideDelegate(thisRef: Observer, property: KProperty<*>): ReadOnlyProperty<Observer, V> = apply {
+        thisRef.propertyHandler.add(this)
+    }
 
     class Handler() {
         private val invalidatedProperties: MutableSet<InvalidatedProperty<*>> = mutableSetOf()

@@ -86,10 +86,7 @@ constructor(
     }
 
     fun putAll(from: Map<Pair<K1, K2>, V>) {
-        if (
-            from.keys.map { first }.toSet().size != from.size ||
-                from.keys.map { second }.toSet().size != from.size
-        ) {
+        if (from.keys.map { first }.toSet().size != from.size || from.keys.map { second }.toSet().size != from.size) {
             throw IllegalArgumentException("All keys must be unique.")
         }
         from.forEach { (first, second), value -> put(first, second, value) }

@@ -63,8 +63,7 @@ data class ComponentDefinition(
             saveAll: Boolean,
         ): List<DataDefinition<*>> =
             component.getDataMap(type).mapNotNull { (_, data) ->
-                if (saveAll || data.saved) Engine.Serialization.getType(type)?.convert(data)
-                else null
+                if (saveAll || data.saved) Engine.Serialization.getType(type)?.convert(data) else null
             }
     }
 }

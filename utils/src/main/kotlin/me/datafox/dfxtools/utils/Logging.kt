@@ -29,8 +29,7 @@ object Logging {
      *
      * @param logger [KLogger] to be used.
      * @param message message to be logged.
-     * @param throwable lambda that returns a [Throwable] to be thrown. [message] is always given to
-     *   it as a parameter.
+     * @param throwable lambda that returns a [Throwable] to be thrown. [message] is always given to it as a parameter.
      */
     fun logThrow(logger: KLogger, message: String, throwable: (String) -> Throwable): Nothing {
         logger.error { message }

@@ -36,15 +36,13 @@ interface DataFilter {
     @Serializable
     @SerialName("handle")
     data class Handle(val filter: HandleFilter) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
-            filter.matches(data.handle)
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = filter.matches(data.handle)
     }
 
     @Serializable
     @SerialName("saved")
     data class Saved(val saved: Boolean) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
-            saved == data.saved
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = saved == data.saved
     }
 
     @Serializable
@@ -64,7 +62,6 @@ interface DataFilter {
     @Serializable
     @SerialName("not")
     data class Not(val filter: DataFilter) : DataFilter {
-        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean =
-            !filter.matches(type, data)
+        override fun <T : Any> matches(type: KClass<T>, data: EntityData<T>): Boolean = !filter.matches(type, data)
     }
 }

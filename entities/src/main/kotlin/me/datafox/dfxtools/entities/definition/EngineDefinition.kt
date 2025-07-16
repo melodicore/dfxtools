@@ -22,23 +22,16 @@ import me.datafox.dfxtools.handles.HandleManager
 
 /** @author Lauri "datafox" Heino */
 @Serializable
-data class EngineDefinition(
-    val spaces: List<SpaceDefinition>,
-    val entities: List<EntityDefinition>,
-) {
+data class EngineDefinition(val spaces: List<SpaceDefinition>, val entities: List<EntityDefinition>) {
     @JvmOverloads
     constructor(
         saveAll: Boolean = false,
         saveInitializers: Boolean = false,
-    ) : this(
-        getSpaces(),
-        Engine.entities.values.map { EntityDefinition(it, saveAll, saveInitializers) },
-    )
+    ) : this(getSpaces(), Engine.entities.values.map { EntityDefinition(it, saveAll, saveInitializers) })
 
     companion object {
         private fun getSpaces(): List<SpaceDefinition> {
-            return HandleManager.spaces.values
-                .map { SpaceDefinition(it) }.filter { it.handles.isNotEmpty() }
+            return HandleManager.spaces.values.map { SpaceDefinition(it) }.filter { it.handles.isNotEmpty() }
         }
     }
 }

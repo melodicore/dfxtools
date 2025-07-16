@@ -34,24 +34,22 @@ import java.math.BigDecimal
 private val logger = KotlinLogging.logger {}
 
 /**
- * A [NumberSuffixFormatter] that scales a number and selects a suffix from a string array of
- * suffixes. Scales a number down by powers of ten, `10^`[interval] at a time, until the number is
- * the smallest possible value greater than one. This number will be used as [Output.scaled], and
- * [Output.suffix] will be an element of [suffixes] indexed with the amount of times the number was
- * scaled down. If this index would be out of bounds, suffix formatting will be delegated to
- * [TextManager.fallbackNumberSuffixFormatter].
+ * A [NumberSuffixFormatter] that scales a number and selects a suffix from a string array of suffixes. Scales a number
+ * down by powers of ten, `10^`[interval] at a time, until the number is the smallest possible value greater than one.
+ * This number will be used as [Output.scaled], and [Output.suffix] will be an element of [suffixes] indexed with the
+ * amount of times the number was scaled down. If this index would be out of bounds, suffix formatting will be delegated
+ * to [TextManager.fallbackNumberSuffixFormatter].
  *
- * @property si String array of SI suffixes. [interval] must be `3` for this array to work as
+ * @property si String array of SI suffixes. [interval] must be `3` for this array to work as intended.
+ * @property short String array of abbreviated short form suffixes. [interval] must be `3` for this array to work as
  *   intended.
- * @property short String array of abbreviated short form suffixes. [interval] must be `3` for this
- *   array to work as intended.
- * @property long String array of abbreviated long form suffixes. [interval] must be `3` for this
- *   array to work as intended.
- * @property suffixes [ConfigurationKey] that determines the string array of suffixes to be used.
- *   Default value is [short].
- * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a
- *   positive non-zero integer. All preset suffix arrays ([si], [short] and [long]) require this to
- *   be `3` to work as intended. Default value is `3`.
+ * @property long String array of abbreviated long form suffixes. [interval] must be `3` for this array to work as
+ *   intended.
+ * @property suffixes [ConfigurationKey] that determines the string array of suffixes to be used. Default value is
+ *   [short].
+ * @property interval [ConfigurationKey] that determines an interval for exponents. Must be a positive non-zero integer.
+ *   All preset suffix arrays ([si], [short] and [long]) require this to be `3` to work as intended. Default value is
+ *   `3`.
  * @author Lauri "datafox" Heino
  */
 object NamedSuffixFormatter : NumberSuffixFormatter {

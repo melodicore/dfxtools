@@ -33,16 +33,13 @@ interface Text {
      * Generates text based on the implementation and [configuration].
      *
      * @param configuration Extra [Configuration] for this generation.
-     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all
-     *   keys should be included.
+     * @param keys [ConfigurationKeys][ConfigurationKey] to be included in the copy, or empty is all keys should be
+     *   included.
      * @return Generated text.
      */
     fun generate(configuration: Configuration? = null): String
 
-    fun applyConfiguration(
-        funConfiguration: Configuration?,
-        vararg keys: ConfigurationKey<*>,
-    ): Configuration {
+    fun applyConfiguration(funConfiguration: Configuration?, vararg keys: ConfigurationKey<*>): Configuration {
         val final = ConfigurationManager.get(configuration, *keys)
         if (funConfiguration != null) final.append(funConfiguration)
         return final

@@ -37,8 +37,7 @@ constructor(
     override fun generate(configuration: Configuration?): String {
         val configuration = combineNullable(configuration)
         val own = applyConfiguration(configuration, usePlural)
-        return if (own[usePlural]) plural.generate(configuration)
-        else singular.generate(configuration)
+        return if (own[usePlural]) plural.generate(configuration) else singular.generate(configuration)
     }
 
     companion object {

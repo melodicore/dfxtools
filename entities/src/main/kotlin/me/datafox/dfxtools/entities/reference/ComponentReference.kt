@@ -22,6 +22,5 @@ import me.datafox.dfxtools.entities.Component
 /** @author Lauri "datafox" Heino */
 @Serializable
 data class ComponentReference(val entities: EntityReference, val filter: ComponentFilter) {
-    fun get(): List<Component> =
-        entities.get().flatMap { it.components.values }.filter(filter::matches)
+    fun get(): List<Component> = entities.get().flatMap { it.components.values }.filter(filter::matches)
 }

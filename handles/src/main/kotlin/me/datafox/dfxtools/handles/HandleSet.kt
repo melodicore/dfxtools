@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright 2025 Lauri "datafox" Heino
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +29,12 @@ import java.util.*
 private val logger = KotlinLogging.logger {}
 
 /**
- * A sorted mutable set that may only contain [Handles][Handle] from a single [Space]. This file
- * also contains extension functions for generic sets that contain handles. This set is implemented
- * with [PluggableSet] and backed by a [TreeSet]. The detection of handles is done with [spec],
- * which can be used to create more complex pluggable sets without this class.
+ * A sorted mutable set that may only contain [Handles][Handle] from a single [Space]. This file also contains extension
+ * functions for generic sets that contain handles. This set is implemented with [PluggableSet] and backed by a
+ * [TreeSet]. The detection of handles is done with [spec], which can be used to create more complex pluggable sets
+ * without this class.
  *
  * @property space [Space] of this set.
- * @property immutableView Immutable view of this set.
  * @author Lauri "datafox" Heino
  */
 @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
@@ -43,8 +42,7 @@ class HandleSet
 private constructor(
     ignored: Any?,
     private val _space: Space,
-    private val set: ListenableSet<Handle> =
-        ListenableSet(beforeSpec = spec(_space), delegate = TreeSet()),
+    private val set: ListenableSet<Handle> = ListenableSet(beforeSpec = spec(_space), delegate = TreeSet()),
 ) : ListenableSet<Handle> by set {
     val space: Space
         get() = _space
@@ -61,8 +59,7 @@ private constructor(
     }
 
     /**
-     * Creates a new set with [elements]. Elements must contain at least one element to infer
-     * [space].
+     * Creates a new set with [elements]. Elements must contain at least one element to infer [space].
      *
      * @param elements [Handles][Handle] for this set, must not be empty.
      */
@@ -79,8 +76,7 @@ private constructor(
     fun add(id: String): Boolean = add(space.getOrCreateHandle(id))
 
     /**
-     * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and
-     * permitted.
+     * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and permitted.
      *
      * @param ids Ids of the [Handles][Handle] to be added.
      * @return `true` if this set changed as a result of this operation.
@@ -97,8 +93,7 @@ private constructor(
     }
 
     /**
-     * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and
-     * permitted.
+     * Adds [Handles][Handle] with [ids] to this set, creating new handles if necessary and permitted.
      *
      * @param ids Ids of the [Handles][Handle] to be added.
      */
@@ -132,8 +127,7 @@ private constructor(
 
     companion object {
         /**
-         * Returns a [PluggableSpec] which asserts that all added [Handles][Handle] belong to
-         * [space].
+         * Returns a [PluggableSpec] which asserts that all added [Handles][Handle] belong to [space].
          *
          * @param space [Space] that all [Handles][Handle] must belong to.
          * @return [PluggableSpec] which asserts that all added [Handles][Handle] belong to [space].
@@ -142,9 +136,7 @@ private constructor(
             PluggableSpec(
                 beforeAdd = {
                     if (it.space != space) {
-                        logThrow(logger, setHandleNotInSpace(space, it)) { s ->
-                            IllegalArgumentException(s)
-                        }
+                        logThrow(logger, setHandleNotInSpace(space, it)) { s -> IllegalArgumentException(s) }
                     }
                 }
             )
@@ -246,8 +238,7 @@ fun Set<Handle>.containsAll(ids: Iterable<String>): Boolean {
  * @param tag Tag to be queried.
  * @return All [Handles][Handle] in this set that have [tag].
  */
-fun Set<Handle>.getByTag(tag: Handle): Set<Handle> =
-    mapNotNull { if (it.tags.contains(tag)) it else null }.toSet()
+fun Set<Handle>.getByTag(tag: Handle): Set<Handle> = mapNotNull { if (it.tags.contains(tag)) it else null }.toSet()
 
 /**
  * Returns all [Handles][Handle] in this set that have a tag with [id].
@@ -255,8 +246,7 @@ fun Set<Handle>.getByTag(tag: Handle): Set<Handle> =
  * @param id Id of the tag to be queried.
  * @return All [Handles][Handle] in this set that have a tag with [id].
  */
-fun Set<Handle>.getByTag(id: String): Set<Handle> =
-    mapNotNull { if (it.tags.contains(id)) it else null }.toSet()
+fun Set<Handle>.getByTag(id: String): Set<Handle> = mapNotNull { if (it.tags.contains(id)) it else null }.toSet()
 
 /**
  * Returns all [Handles][Handle] in this set that have all [tags].

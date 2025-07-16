@@ -29,12 +29,11 @@ import java.util.*
 private val logger = KotlinLogging.logger {}
 
 /**
- * A map for [ModifiableValues][ModifiableValue]. May be backed with a regular [SortedMap] or a
- * [HandleMap] to limit values to a single [Space]. If any [ModifiableValue] is invalidated, it also
- * invalidates this map and all of its [observers]. [Modifiers][Modifier] can also be added to this
- * map through [modifiers], and all of these modifiers will be added to all values in the map retro-
- * and proactively. Removing a modifier will also remove it from all modifiable values in this map,
- * and removing a value will remove all this map's modifiers from the removed value.
+ * A map for [ModifiableValues][ModifiableValue]. May be backed with a regular [SortedMap] or a [HandleMap] to limit
+ * values to a single [Space]. If any [ModifiableValue] is invalidated, it also invalidates this map and all of its
+ * [observers]. [Modifiers][Modifier] can also be added to this map through [modifiers], and all of these modifiers will
+ * be added to all values in the map retro- and proactively. Removing a modifier will also remove it from all modifiable
+ * values in this map, and removing a value will remove all this map's modifiers from the removed value.
  *
  * @author Lauri "datafox" Heino
  */
@@ -42,10 +41,7 @@ class ValueMap
 private constructor(
     private val map: LateDelegatedMap<Handle, ModifiableValue> = LateDelegatedMap(),
     val space: Space? = null,
-) :
-    AbstractObservableObserver(),
-    ListenableMap<Handle, ModifiableValue>,
-    MutableMap<Handle, ModifiableValue> by map {
+) : AbstractObservableObserver(), ListenableMap<Handle, ModifiableValue>, MutableMap<Handle, ModifiableValue> by map {
     private lateinit var delegate: ListenableMap<Handle, ModifiableValue>
     val modifiers: MutableSet<Modifier> = PluggableSet(sortedSetOf(), modifierSpec { values })
     override val view: ListenableMap.View<Handle, ModifiableValue>
@@ -72,13 +68,12 @@ private constructor(
         map.delegate = delegate
     }
 
-    override fun addListener(listener: MapListener<Handle, ModifiableValue>): Boolean =
-        delegate.addListener(listener)
+    override fun addListener(listener: MapListener<Handle, ModifiableValue>): Boolean = delegate.addListener(listener)
 
     override fun removeListener(listener: MapListener<Handle, ModifiableValue>): Boolean =
         delegate.removeListener(listener)
 
-    override fun onInvalidated() { }
+    override fun onInvalidated() {}
 
     companion object {
         fun spec(modifiers: Set<Modifier>): PluggableMapSpec<Handle, ModifiableValue> =

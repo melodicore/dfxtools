@@ -38,8 +38,7 @@ interface HandleFilter {
     data class Id(val id: String) : HandleFilter {
         @Transient private val hasSpace: Boolean = id.contains('@')
 
-        override fun matches(handle: Handle): Boolean =
-            if (hasSpace) id == handle.toString() else id == handle.id
+        override fun matches(handle: Handle): Boolean = if (hasSpace) id == handle.toString() else id == handle.id
     }
 
     @Serializable

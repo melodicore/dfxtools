@@ -23,9 +23,8 @@ import me.datafox.dfxtools.utils.collection.PluggableMapSpec
 
 /**
  * A mutable map for [Observable] values owned by an [observer] that is added to and removed from
- * [value.observers][Observable.observers] when an entry is added to or removed from this map. It
- * can also optionally invalidate the [observer] when entries are added, determined by
- * [invalidateObserver].
+ * [value.observers][Observable.observers] when an entry is added to or removed from this map. It can also optionally
+ * invalidate the [observer] when entries are added, determined by [invalidateObserver].
  *
  * @param delegate Underlying map implementation.
  * @param observer [Observer] owner of this map.
@@ -42,8 +41,7 @@ constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    private val map: PluggableMap<K, V> =
-        PluggableMap(delegate, spec(observer, invalidateObserver, identifier)),
+    private val map: PluggableMap<K, V> = PluggableMap(delegate, spec(observer, invalidateObserver, identifier)),
 ) : MutableMap<K, V> by map {
     init {
         if (callInitialElements) map.callInitialElements()
@@ -60,7 +58,6 @@ constructor(
             observer: Observer,
             invalidateObserver: Boolean,
             identifier: Any,
-        ): PluggableMapSpec<K, V> =
-            ObservableSet.spec<V>(observer, invalidateObserver, identifier).toMapValueSpec()
+        ): PluggableMapSpec<K, V> = ObservableSet.spec<V>(observer, invalidateObserver, identifier).toMapValueSpec()
     }
 }

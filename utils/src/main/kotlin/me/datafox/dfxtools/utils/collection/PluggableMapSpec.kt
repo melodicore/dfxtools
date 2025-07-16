@@ -59,13 +59,12 @@ sealed interface PluggableMapSpec<K, V> {
             return ConcatenatedPluggableMapSpec(*specs)
         }
 
-        internal fun <K, V> convert(
-            lambda: (K, V) -> Unit
-        ): (MutableMap.MutableEntry<K, V>) -> Unit = { lambda(it.key, it.value) }
+        internal fun <K, V> convert(lambda: (K, V) -> Unit): (MutableMap.MutableEntry<K, V>) -> Unit = {
+            lambda(it.key, it.value)
+        }
 
-        internal fun <K, V> convert(
-            list: List<(K, V) -> Unit>
-        ): Collection<(MutableMap.MutableEntry<K, V>) -> Unit> = list.map { convert(it) }
+        internal fun <K, V> convert(list: List<(K, V) -> Unit>): Collection<(MutableMap.MutableEntry<K, V>) -> Unit> =
+            list.map { convert(it) }
     }
 }
 
@@ -102,8 +101,7 @@ internal class PluggableMapSpecImpl<K, V>(
     }
 }
 
-internal class ConcatenatedPluggableMapSpec<K, V>(vararg specs: PluggableMapSpec<K, V>) :
-    PluggableMapSpec<K, V> {
+internal class ConcatenatedPluggableMapSpec<K, V>(vararg specs: PluggableMapSpec<K, V>) : PluggableMapSpec<K, V> {
     internal val beforeAddList: MutableList<(K, V) -> Unit> = mutableListOf()
     internal val afterAddList: MutableList<(K, V) -> Unit> = mutableListOf()
     internal val beforeRemoveList: MutableList<(K, V) -> Unit> = mutableListOf()

@@ -56,15 +56,13 @@ interface ListenableSet<E> : MutableSet<E> {
         private val beforeSpec: PluggableSpec<E>?,
         private val afterSpec: PluggableSpec<E>?,
         private val listeners: MutableSet<CollectionListener<E>>,
-        private val set: PluggableSet<E> =
-            PluggableSet(delegate, ListenableSet.spec(beforeSpec, afterSpec, listeners)),
+        private val set: PluggableSet<E> = PluggableSet(delegate, ListenableSet.spec(beforeSpec, afterSpec, listeners)),
     ) : ListenableSet<E>, MutableSet<E> by set {
         override val view by lazy { View(this) }
 
         override fun addListener(listener: CollectionListener<E>): Boolean = listeners.add(listener)
 
-        override fun removeListener(listener: CollectionListener<E>): Boolean =
-            listeners.remove(listener)
+        override fun removeListener(listener: CollectionListener<E>): Boolean = listeners.remove(listener)
 
         override fun equals(other: Any?): Boolean = delegate == other
 
@@ -75,11 +73,9 @@ interface ListenableSet<E> : MutableSet<E> {
 
     @Suppress("JavaDefaultMethodsNotOverriddenByDelegation")
     class View<out E>(private val owner: ListenableSet<E>) : Set<E> by owner {
-        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
-            owner.addListener(listener)
+        fun addListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.addListener(listener)
 
-        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean =
-            owner.removeListener(listener)
+        fun removeListener(listener: CollectionListener<@UnsafeVariance E>): Boolean = owner.removeListener(listener)
 
         override fun equals(other: Any?): Boolean = owner == other
 

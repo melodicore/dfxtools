@@ -34,8 +34,7 @@ data class Schema(
         if (handle.space != schemaSpace) throw IllegalArgumentException()
     }
 
-    fun isSchema(component: Component): Boolean =
-        data.values.all { it.all { e -> isSchema(component, e) } }
+    fun isSchema(component: Component): Boolean = data.values.all { it.all { e -> isSchema(component, e) } }
 
     private fun <T : Any> isSchema(component: Component, entry: Entry<T>): Boolean {
         if (componentHandles.isNotEmpty() && component.handle !in componentHandles) return false
@@ -43,11 +42,7 @@ data class Schema(
         return entry.handle in data && entry.predicate(data[entry.handle]!!.data)
     }
 
-    data class Entry<T : Any>(
-        val type: KClass<T>,
-        val handle: Handle,
-        val predicate: (T) -> Boolean = { true },
-    )
+    data class Entry<T : Any>(val type: KClass<T>, val handle: Handle, val predicate: (T) -> Boolean = { true })
 
     class Builder {
         val handles: HandleSet = HandleSet(componentSpace)
@@ -72,9 +67,7 @@ data class Schema(
         @Suppress("UNCHECKED_CAST")
         private fun <T : Any> get(type: KClass<T>): MutableSet<Entry<T>> {
             return entries[type] as? MutableSet<Entry<T>>
-                ?: mutableSetOf<Entry<T>>().apply {
-                    entries.put(type, this as MutableSet<Entry<*>>)
-                }
+                ?: mutableSetOf<Entry<T>>().apply { entries.put(type, this as MutableSet<Entry<*>>) }
         }
     }
 
@@ -82,14 +75,9 @@ data class Schema(
         operator fun invoke(handle: Handle, block: Builder.() -> Unit): Schema {
             val builder = Builder()
             builder.block()
-            return Schema(
-                handle,
-                builder.handles,
-                builder.entries,
-            )
+            return Schema(handle, builder.handles, builder.entries)
         }
 
-        operator fun invoke(id: String, block: Builder.() -> Unit) =
-            Schema(schemaSpace.getOrCreateHandle(id), block)
+        operator fun invoke(id: String, block: Builder.() -> Unit) = Schema(schemaSpace.getOrCreateHandle(id), block)
     }
 }

@@ -23,11 +23,8 @@ import me.datafox.dfxtools.entities.type.DoubleType
 
 @Serializable
 @SerialName(DoubleType.ID)
-data class DoubleDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    override val value: Double,
-) : SerializableDataDefinition<Double> {
+data class DoubleDefinition(override val id: String, override val saved: Boolean, override val value: Double) :
+    SerializableDataDefinition<Double> {
     override val dataType = Double::class
 
     constructor(data: EntityData<Double>) : this(data.handle.toString(), data.saved, data.data)

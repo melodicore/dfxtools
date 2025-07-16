@@ -16,6 +16,7 @@
 
 package me.datafox.dfxtools.values
 
+import java.math.BigDecimal
 import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservableObserver
@@ -27,20 +28,13 @@ import me.datafox.dfxtools.values.operation.DualParameterOperation
 import me.datafox.dfxtools.values.operation.Operation
 import me.datafox.dfxtools.values.operation.SingleParameterOperation
 import me.datafox.dfxtools.values.operation.SourceOperation
-import java.math.BigDecimal
 
 /** @author Lauri "datafox" Heino */
-class ModifiableValue(
-    override val handle: Handle,
-    value: BigDecimal = BigDecimal.ZERO,
-    vararg modifiers: Modifier,
-) : AbstractObservableObserver(), Value, Handled {
+class ModifiableValue(override val handle: Handle, value: BigDecimal = BigDecimal.ZERO, vararg modifiers: Modifier) :
+    AbstractObservableObserver(), Value, Handled {
     var base: BigDecimal by
-        InvalidatorProperty(value) {
-            (this::value.getDelegate() as InvalidatedProperty<*>).invalidate()
-        }
-    val modifiers: MutableSet<Modifier> by
-        ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
+        InvalidatorProperty(value) { (this::value.getDelegate() as InvalidatedProperty<*>).invalidate() }
+    val modifiers: MutableSet<Modifier> by ObservableSortedSetProperty(*modifiers) { a, b -> a.compareTo(b) }
     override val value: BigDecimal by InvalidatedProperty { calculate() }
 
     fun apply(operation: Operation, vararg params: BigDecimal, useValue: Boolean = false) {
@@ -51,11 +45,7 @@ class ModifiableValue(
         base = operation.apply(if (useValue) value else base)
     }
 
-    fun apply(
-        operation: SingleParameterOperation,
-        parameter: BigDecimal,
-        useValue: Boolean = false,
-    ) {
+    fun apply(operation: SingleParameterOperation, parameter: BigDecimal, useValue: Boolean = false) {
         base = operation.apply(if (useValue) value else base, parameter)
     }
 
@@ -74,5 +64,5 @@ class ModifiableValue(
         return base
     }
 
-    override fun onInvalidated() { }
+    override fun onInvalidated() {}
 }

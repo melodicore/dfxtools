@@ -23,15 +23,13 @@ import me.datafox.dfxtools.utils.collection.PluggableSpec
 
 /**
  * A mutable set for [Observable] elements owned by an [observer] that is added to and removed from
- * [element.observers][Observable.observers] when an element is added to or removed from this set.
- * It can also optionally invalidate the [observer] when elements are added, determined by
- * [invalidateObserver].
+ * [element.observers][Observable.observers] when an element is added to or removed from this set. It can also
+ * optionally invalidate the [observer] when elements are added, determined by [invalidateObserver].
  *
  * @param delegate Underlying set implementation.
  * @param observer [Observer] owner of this set.
  * @param invalidateObserver If `true`, modifications to this set call [Observer.invalidate].
- * @param callInitialElements If `true`, [observer] will be added to all initial values of
- *   [delegate].
+ * @param callInitialElements If `true`, [observer] will be added to all initial values of [delegate].
  * @param identifier Identifier for this set to be used with [CyclicAwareCollection].
  * @constructor Creates a new observable set.
  * @author Lauri "datafox" Heino
@@ -44,8 +42,7 @@ constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    private val set: PluggableSet<E> =
-        PluggableSet(delegate, spec(observer, invalidateObserver, identifier)),
+    private val set: PluggableSet<E> = PluggableSet(delegate, spec(observer, invalidateObserver, identifier)),
 ) : MutableSet<E> by set {
     init {
         if (callInitialElements) set.callInitialElements()
@@ -58,11 +55,7 @@ constructor(
     override fun toString(): String = set.toString()
 
     companion object {
-        fun <E : Observable> spec(
-            observer: Observer,
-            invalidateObserver: Boolean,
-            identifier: Any,
-        ): PluggableSpec<E> =
+        fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =
             PluggableSpec(
                 beforeAdd = { it.observers.add(observer, identifier) },
                 beforeRemove = { it.observers.remove(observer, identifier) },

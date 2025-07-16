@@ -26,16 +26,11 @@ import java.math.BigDecimal
 
 @Serializable
 @SerialName(BigDecimalType.ID)
-data class BigDecimalDefinition(
-    override val id: String,
-    override val saved: Boolean,
-    val state: String,
-) : DataDefinition<BigDecimal> {
+data class BigDecimalDefinition(override val id: String, override val saved: Boolean, val state: String) :
+    DataDefinition<BigDecimal> {
     override val dataType: SClass<@Contextual BigDecimal> = BigDecimal::class
 
-    constructor(
-        data: EntityData<BigDecimal>
-    ) : this(data.handle.toString(), data.saved, data.data.toString())
+    constructor(data: EntityData<BigDecimal>) : this(data.handle.toString(), data.saved, data.data.toString())
 
     override fun create() = BigDecimal(state)
 }

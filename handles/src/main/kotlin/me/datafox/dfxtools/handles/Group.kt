@@ -17,17 +17,15 @@
 package me.datafox.dfxtools.handles
 
 /**
- * A group is a container of [Handles][Handle] that is specific to a [Space]. Every space may
- * contain an arbitrary number of groups. Internally, the identifying [handle] of a group is a
- * subhandle of the identifying [handle][Space.handle] of a space. Unlike [HandleSets][HandleSet]
- * which are also a container of handles within a specific space, groups cannot be created with a
- * constructor, and instead you must use [Space.createGroup] or [Space.getOrCreateGroup]. The
- * advantage of this is that you can query groups through [Space.groups]. A group is also backed by
- * a handle set ([handles]), and handles may be added to it like you would to a handle set.
+ * A group is a container of [Handles][Handle] that is specific to a [Space]. Every space may contain an arbitrary
+ * number of groups. Internally, the identifying [handle] of a group is a subhandle of the identifying
+ * [handle][Space.handle] of a space. Unlike [HandleSets][HandleSet] which are also a container of handles within a
+ * specific space, groups cannot be created with a constructor, and instead you must use [Space.createGroup] or
+ * [Space.getOrCreateGroup]. The advantage of this is that you can query groups through [Space.groups]. A group is also
+ * backed by a handle set ([handles]), and handles may be added to it like you would to a handle set.
  *
  * @property space [Space] that this group belongs to.
- * @property handles Backing [HandleSet]. Handles can be added to and removed from this set
- *   normally.
+ * @property handles Backing [HandleSet]. Handles can be added to and removed from this set normally.
  * @author Lauri "datafox" Heino
  */
 class Group : ComparableHandled {
@@ -77,8 +75,7 @@ class Group : ComparableHandled {
     }
 
     /**
-     * Adds [Handles][Handle] with [ids] to this group, creating new handles if necessary and
-     * permitted.
+     * Adds [Handles][Handle] with [ids] to this group, creating new handles if necessary and permitted.
      *
      * @param ids Ids of the [Handles][Handle] to be added.
      */

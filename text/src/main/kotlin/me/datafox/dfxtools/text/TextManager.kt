@@ -33,20 +33,19 @@ import me.datafox.dfxtools.utils.property.ConditionalReadWriteProperty
 private val logger = KotlinLogging.logger {}
 
 /**
- * A singleton object that contains various [ConfigurationKeys][ConfigurationKey] used by other
- * parts of the Text module, as well as a fallback [NumberSuffixFormatter]. The fallback formatter
- * can be changed, but the implementation must have [NumberSuffixFormatter.infinite] be `true`.
+ * A singleton object that contains various [ConfigurationKeys][ConfigurationKey] used by other parts of the Text
+ * module, as well as a fallback [NumberSuffixFormatter]. The fallback formatter can be changed, but the implementation
+ * must have [NumberSuffixFormatter.infinite] be `true`.
  *
  * @property delimiter [ConfigurationKey] for the delimiter used for joining strings.
- * @property listDelimiter [ConfigurationKey] for the delimiter used for joining strings where the
- *   last delimiter should be different.
- * @property listLastDelimiter [ConfigurationKey] for the last delimiter used for joining strings
- *   where the last delimiter should be different.
+ * @property listDelimiter [ConfigurationKey] for the delimiter used for joining strings where the last delimiter should
+ *   be different.
+ * @property listLastDelimiter [ConfigurationKey] for the last delimiter used for joining strings where the last
+ *   delimiter should be different.
  * @property numberFormatter [ConfigurationKey] for the [NumberFormatter] to be used.
  * @property numberSuffixFormatter [ConfigurationKey] for the [NumberSuffixFormatter] to be used.
- * @property fallbackNumberSuffixFormatter fallback [NumberSuffixFormatter] used by other suffix
- *   formatters when the formatted value is beyond their limit. Must have
- *   [NumberSuffixFormatter.infinite] be `true`.
+ * @property fallbackNumberSuffixFormatter fallback [NumberSuffixFormatter] used by other suffix formatters when the
+ *   formatted value is beyond their limit. Must have [NumberSuffixFormatter.infinite] be `true`.
  * @author Lauri "datafox" Heino
  */
 object TextManager {
@@ -54,8 +53,7 @@ object TextManager {
     val listDelimiter: ConfigurationKey<String> = ConfigurationKey(", ")
     val listLastDelimiter: ConfigurationKey<String> = ConfigurationKey(" and ")
     val numberFormatter: ConfigurationKey<NumberFormatter> = ConfigurationKey(SimpleNumberFormatter)
-    val numberSuffixFormatter: ConfigurationKey<NumberSuffixFormatter> =
-        ConfigurationKey(ExponentSuffixFormatter)
+    val numberSuffixFormatter: ConfigurationKey<NumberSuffixFormatter> = ConfigurationKey(ExponentSuffixFormatter)
     var fallbackNumberSuffixFormatter: NumberSuffixFormatter by
         ConditionalReadWriteProperty(value = ExponentSuffixFormatter) { it.infinite }
     var pluralConverter: (String) -> String = { defaultPluralConverter(it) }

@@ -17,10 +17,8 @@
 package me.datafox.dfxtools.utils.collection
 
 /** @author Lauri "datafox" Heino */
-open class PluggableIterator<E>(
-    protected open val delegate: MutableIterator<E>,
-    open val spec: PluggableSpec<E>,
-) : MutableIterator<E> {
+open class PluggableIterator<E>(protected open val delegate: MutableIterator<E>, open val spec: PluggableSpec<E>) :
+    MutableIterator<E> {
     protected var current: E? = null
 
     override fun next(): E {

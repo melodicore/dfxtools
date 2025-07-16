@@ -20,8 +20,7 @@ import me.datafox.dfxtools.configuration.Configuration
 import me.datafox.dfxtools.configuration.ConfigurationKey
 
 /**
- * A [Text] implementation that returns the value of [key] transformed to a string with
- * [transformer].
+ * A [Text] implementation that returns the value of [key] transformed to a string with [transformer].
  *
  * @property key [ConfigurationKey] to be used for generation.
  * @property configuration [Configuration] for this text.
@@ -41,6 +40,5 @@ constructor(
      * @param configuration Extra [Configuration] for this text.
      * @return Value of [key] transformed to a string with [transformer].
      */
-    override fun generate(configuration: Configuration?) =
-        transformer(applyConfiguration(configuration, key)[key])
+    override fun generate(configuration: Configuration?) = transformer(applyConfiguration(configuration, key)[key])
 }

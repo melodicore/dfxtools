@@ -35,8 +35,7 @@ object BigIntegerType : DataType<BigInteger> {
 
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition =
-        BigIntegerDefinition(data)
+    override fun convert(data: EntityData<BigInteger>): BigIntegerDefinition = BigIntegerDefinition(data)
 
     class Serializer : KSerializer<BigInteger> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(ID, PrimitiveKind.STRING)

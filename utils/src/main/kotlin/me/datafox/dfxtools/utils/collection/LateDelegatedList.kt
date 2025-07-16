@@ -32,8 +32,7 @@ class LateDelegatedList<E> : MutableList<E> {
 
     override fun addAll(elements: Collection<E>): Boolean = delegate.addAll(elements)
 
-    override fun addAll(index: Int, elements: Collection<E>): Boolean =
-        delegate.addAll(index, elements)
+    override fun addAll(index: Int, elements: Collection<E>): Boolean = delegate.addAll(index, elements)
 
     override fun remove(element: E): Boolean = delegate.remove(element)
 

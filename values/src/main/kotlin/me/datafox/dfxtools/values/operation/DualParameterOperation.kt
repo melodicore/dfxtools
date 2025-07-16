@@ -17,8 +17,8 @@
 package me.datafox.dfxtools.values.operation
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import java.math.BigDecimal
 import me.datafox.dfxtools.utils.Logging.logThrow
+import java.math.BigDecimal
 
 private val logger = KotlinLogging.logger {}
 
@@ -29,14 +29,10 @@ fun interface DualParameterOperation : Operation {
 
     override fun apply(source: BigDecimal, vararg params: BigDecimal): BigDecimal {
         if (params.size < 2) {
-            logThrow(logger, "Too few parameters given to $this, two are required") {
-                IllegalArgumentException(it)
-            }
+            logThrow(logger, "Too few parameters given to $this, two are required") { IllegalArgumentException(it) }
         }
         if (params.size > 2) {
-            logger.warn {
-                "More than two parameters given to $this, some parameters will be ignored"
-            }
+            logger.warn { "More than two parameters given to $this, some parameters will be ignored" }
         }
         return apply(source, params[0], params[1])
     }

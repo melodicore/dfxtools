@@ -25,8 +25,7 @@ private val logger = KotlinLogging.logger {}
 /** @author Lauri "datafox" Heino */
 class Marker(val value: Int) : BigDecimal(0) {
     init {
-        if (value < 0)
-            logThrow(logger, "Marker value cannot be negative") { IllegalArgumentException(it) }
+        if (value < 0) logThrow(logger, "Marker value cannot be negative") { IllegalArgumentException(it) }
     }
 
     override fun toShort(): Short = 0

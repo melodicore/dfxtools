@@ -39,10 +39,8 @@ object EntitiesExtensions {
         Engine
     }
 
-    private val modifierQueue: MutableList<PolymorphicModuleBuilder<ModifierFactory>.() -> Unit> =
-        mutableListOf()
-    private val operationQueue: MutableList<PolymorphicModuleBuilder<Operation>.() -> Unit> =
-        mutableListOf()
+    private val modifierQueue: MutableList<PolymorphicModuleBuilder<ModifierFactory>.() -> Unit> = mutableListOf()
+    private val operationQueue: MutableList<PolymorphicModuleBuilder<Operation>.() -> Unit> = mutableListOf()
 
     fun register(lastPolymorphic: Boolean = true, lastRegistration: Boolean = true) {
         Engine.Serialization.registerType(ModifiableValueType, ModifiableValueDefinition::class)

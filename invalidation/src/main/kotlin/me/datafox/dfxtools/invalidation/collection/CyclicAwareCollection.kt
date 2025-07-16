@@ -25,13 +25,12 @@ import me.datafox.dfxtools.invalidation.Utils.checkCyclic
 private val logger = KotlinLogging.logger {}
 
 /**
- * A collection for [Observer] values owned by an [Observable] that checks for cyclic dependencies
- * and tracks which object added the observer. The cyclic dependency detection only works for
- * classes that implement both [Observable] and [Observer], preferably by implementing
- * [ObservableObserver]. Tracking is based on an identifier object, usually either the object that
- * added the observer or a unique instance of [Any] if the object could have [equals][Any.equals]
- * conflicts between instances, like with collections. Reference to the observer is only removed if
- * all identifiers associated with it are removed.
+ * A collection for [Observer] values owned by an [Observable] that checks for cyclic dependencies and tracks which
+ * object added the observer. The cyclic dependency detection only works for classes that implement both [Observable]
+ * and [Observer], preferably by implementing [ObservableObserver]. Tracking is based on an identifier object, usually
+ * either the object that added the observer or a unique instance of [Any] if the object could have [equals][Any.equals]
+ * conflicts between instances, like with collections. Reference to the observer is only removed if all identifiers
+ * associated with it are removed.
  *
  * @property owner [Observable] owner of this collection.
  * @property delegate Underlying map implementation, defaults to [mutableMapOf].
@@ -59,8 +58,8 @@ constructor(
     }
 
     /**
-     * Removes an [observer] with [identifier] to this collection. Reference to the observer is only
-     * removed if all identifiers associated with it are removed.
+     * Removes an [observer] with [identifier] to this collection. Reference to the observer is only removed if all
+     * identifiers associated with it are removed.
      *
      * @param observer [Observer] to be removed.
      * @param identifier Identifier for the object that called this function.

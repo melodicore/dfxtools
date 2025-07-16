@@ -63,8 +63,7 @@ interface ListenableMap<K, V> : MutableMap<K, V> {
 
         override fun addListener(listener: MapListener<K, V>): Boolean = listeners.add(listener)
 
-        override fun removeListener(listener: MapListener<K, V>): Boolean =
-            listeners.remove(listener)
+        override fun removeListener(listener: MapListener<K, V>): Boolean = listeners.remove(listener)
 
         override fun equals(other: Any?): Boolean = delegate == other
 
@@ -74,11 +73,9 @@ interface ListenableMap<K, V> : MutableMap<K, V> {
     }
 
     class View<K, out V>(private val owner: ListenableMap<K, V>) : Map<K, V> by owner {
-        fun addListener(listener: MapListener<K, @UnsafeVariance V>): Boolean =
-            owner.addListener(listener)
+        fun addListener(listener: MapListener<K, @UnsafeVariance V>): Boolean = owner.addListener(listener)
 
-        fun removeListener(listener: MapListener<K, @UnsafeVariance V>): Boolean =
-            owner.removeListener(listener)
+        fun removeListener(listener: MapListener<K, @UnsafeVariance V>): Boolean = owner.removeListener(listener)
 
         override fun equals(other: Any?): Boolean = owner == other
 

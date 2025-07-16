@@ -45,16 +45,13 @@ interface ComponentFilter {
     @Serializable
     @SerialName("data")
     data class Data<T : SClass<out Any>>
-    private constructor(
-        val filter: HandleFilter,
-        @Serializable(with = TypeSerializer::class) val dataType: T,
-    ) : ComponentFilter {
+    private constructor(val filter: HandleFilter, @Serializable(with = TypeSerializer::class) val dataType: T) :
+        ComponentFilter {
         override fun matches(component: Component): Boolean =
             component.getDataMap(dataType).keys.any { filter.matches(it) }
 
         companion object {
-            operator fun <T : Any> invoke(type: SClass<T>, filter: HandleFilter): Data<SClass<T>> =
-                Data(filter, type)
+            operator fun <T : Any> invoke(type: SClass<T>, filter: HandleFilter): Data<SClass<T>> = Data(filter, type)
         }
     }
 

@@ -44,15 +44,12 @@ interface ModifierFactory {
     @SerialName("chained")
     data class Chained(
         val priority: Int,
-        val operations:
-            List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
+        val operations: List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
         override fun build(component: Component): Modifier =
             ChainedModifier(
                 priority,
-                *operations
-                    .map { (op, params) -> op to params.map { it.get(component) } }
-                    .toTypedArray(),
+                *operations.map { (op, params) -> op to params.map { it.get(component) } }.toTypedArray(),
             )
     }
 
@@ -60,15 +57,12 @@ interface ModifierFactory {
     @SerialName("mapping")
     data class Mapping(
         val priority: Int,
-        val operations:
-            List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
+        val operations: List<Pair<me.datafox.dfxtools.values.operation.Operation, List<ModifierParameter>>>,
     ) : ModifierFactory {
         override fun build(component: Component): Modifier =
             MappingModifier(
                 priority,
-                *operations
-                    .map { (op, params) -> op to params.map { it.get(component) } }
-                    .toTypedArray(),
+                *operations.map { (op, params) -> op to params.map { it.get(component) } }.toTypedArray(),
             )
     }
 }

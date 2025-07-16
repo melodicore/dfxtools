@@ -27,9 +27,7 @@ data class SpaceDefinition(val id: String, val handles: List<HandleDefinition>) 
 
     fun build() {
         if (id == HandleManager.spaceSpace.handle.id) {
-            handles
-                .map { it to it.buildSpaceHandle() }
-                .forEach { (def, handle) -> def.populate(handle) }
+            handles.map { it to it.buildSpaceHandle() }.forEach { (def, handle) -> def.populate(handle) }
         } else {
             val space = HandleManager.getOrCreateSpace(id)
             handles.map { it to it.build(space) }.forEach { (def, handle) -> def.populate(handle) }

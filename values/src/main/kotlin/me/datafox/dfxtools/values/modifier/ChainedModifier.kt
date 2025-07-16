@@ -41,13 +41,11 @@ class ChainedModifier(priority: Int = 0, vararg operations: Pair<Operation, List
     override fun apply(value: BigDecimal): BigDecimal {
         if (operations.isEmpty()) return value
         var number = value
-        operations.forEach { (op, vals) ->
-            number = op.apply(number, *vals.map { it.value }.toTypedArray())
-        }
+        operations.forEach { (op, vals) -> number = op.apply(number, *vals.map { it.value }.toTypedArray()) }
         return number
     }
 
-    override fun onInvalidated() { }
+    override fun onInvalidated() {}
 
     class Builder internal constructor(private val priority: Int) {
         private val operations: MutableList<Pair<Operation, List<Value>>> = mutableListOf()
@@ -65,8 +63,7 @@ class ChainedModifier(priority: Int = 0, vararg operations: Pair<Operation, List
             operations.add(operation to list)
         }
 
-        internal fun build(): ChainedModifier =
-            ChainedModifier(priority, *operations.toTypedArray())
+        internal fun build(): ChainedModifier = ChainedModifier(priority, *operations.toTypedArray())
     }
 
     companion object {

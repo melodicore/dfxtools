@@ -23,15 +23,13 @@ import me.datafox.dfxtools.utils.collection.PluggableSpec
 
 /**
  * A mutable list for [Observable] elements owned by an [observer] that is added to and removed from
- * [element.observers][Observable.observers] when an element is added to or removed from this list.
- * It can also optionally invalidate the [observer] when elements are added, determined by
- * [invalidateObserver].
+ * [element.observers][Observable.observers] when an element is added to or removed from this list. It can also
+ * optionally invalidate the [observer] when elements are added, determined by [invalidateObserver].
  *
  * @param delegate Underlying list implementation.
  * @param observer [Observer] owner of this list.
  * @param invalidateObserver If `true`, modifications to this list call [Observer.invalidate].
- * @param callInitialElements If `true`, [observer] will be added to all initial values of
- *   [delegate].
+ * @param callInitialElements If `true`, [observer] will be added to all initial values of [delegate].
  * @param identifier Identifier for this list to be used with [CyclicAwareCollection].
  * @constructor Creates a new observable list.
  * @author Lauri "datafox" Heino
@@ -44,8 +42,7 @@ constructor(
     invalidateObserver: Boolean = true,
     callInitialElements: Boolean = true,
     identifier: Any = Any(),
-    private val list: PluggableList<E> =
-        PluggableList(delegate, spec(observer, invalidateObserver, identifier)),
+    private val list: PluggableList<E> = PluggableList(delegate, spec(observer, invalidateObserver, identifier)),
 ) : MutableList<E> by list {
     init {
         if (callInitialElements) list.callInitialElements()
@@ -58,10 +55,7 @@ constructor(
     override fun toString(): String = list.toString()
 
     companion object {
-        fun <E : Observable> spec(
-            observer: Observer,
-            invalidateObserver: Boolean,
-            identifier: Any,
-        ): PluggableSpec<E> = ObservableSet.spec(observer, invalidateObserver, identifier)
+        fun <E : Observable> spec(observer: Observer, invalidateObserver: Boolean, identifier: Any): PluggableSpec<E> =
+            ObservableSet.spec(observer, invalidateObserver, identifier)
     }
 }

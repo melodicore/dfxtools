@@ -51,9 +51,7 @@ object Operations {
 
     @Serializable @SerialName("root") class Root : SingleParameterOperation by Operation.root
 
-    @Serializable
-    @SerialName("rootInv")
-    class RootInv : SingleParameterOperation by Operation.rootInv
+    @Serializable @SerialName("rootInv") class RootInv : SingleParameterOperation by Operation.rootInv
 
     @Serializable @SerialName("log") class Log : SourceOperation by Operation.log
 
@@ -63,9 +61,7 @@ object Operations {
 
     @Serializable @SerialName("logN") class LogN : SingleParameterOperation by Operation.logN
 
-    @Serializable
-    @SerialName("logNInv")
-    class LogNInv : SingleParameterOperation by Operation.logNInv
+    @Serializable @SerialName("logNInv") class LogNInv : SingleParameterOperation by Operation.logNInv
 
     @Serializable @SerialName("lerp") class Lerp : DualParameterOperation by Operation.lerp
 }

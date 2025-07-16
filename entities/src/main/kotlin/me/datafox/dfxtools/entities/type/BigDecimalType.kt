@@ -26,7 +26,6 @@ import me.datafox.dfxtools.entities.Engine
 import me.datafox.dfxtools.entities.EntityData
 import me.datafox.dfxtools.entities.definition.data.BigDecimalDefinition
 import java.math.BigDecimal
-import java.math.BigInteger
 
 /** @author Lauri "datafox" Heino */
 object BigDecimalType : DataType<BigDecimal> {
@@ -36,8 +35,7 @@ object BigDecimalType : DataType<BigDecimal> {
 
     override val handle by lazy { Engine.dataTypeSpace.getOrCreateHandle(ID) }
 
-    override fun convert(data: EntityData<BigDecimal>): BigDecimalDefinition =
-        BigDecimalDefinition(data)
+    override fun convert(data: EntityData<BigDecimal>): BigDecimalDefinition = BigDecimalDefinition(data)
 
     class Serializer : KSerializer<BigDecimal> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(ID, PrimitiveKind.STRING)

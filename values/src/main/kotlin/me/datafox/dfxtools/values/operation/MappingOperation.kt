@@ -28,8 +28,7 @@ class MappingOperation(vararg operations: Operation) : Operation {
     override val parameterCount: Int = operations.sumOf { it.parameterCount + 1 }
 
     init {
-        if (operations.isEmpty())
-            logThrow(logger, "Operations must not be empty") { IllegalArgumentException(it) }
+        if (operations.isEmpty()) logThrow(logger, "Operations must not be empty") { IllegalArgumentException(it) }
     }
 
     override fun apply(source: BigDecimal, vararg params: BigDecimal): BigDecimal {
@@ -39,9 +38,7 @@ class MappingOperation(vararg operations: Operation) : Operation {
             }
         }
         if (params.size > parameterCount) {
-            logger.warn {
-                "More than $parameterCount parameters given to $this, some parameters will be ignored"
-            }
+            logger.warn { "More than $parameterCount parameters given to $this, some parameters will be ignored" }
         }
         var index = 0
         val markers: MutableList<BigDecimal> = mutableListOf(source)

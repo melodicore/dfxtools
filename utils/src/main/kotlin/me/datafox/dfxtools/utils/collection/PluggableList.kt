@@ -73,8 +73,7 @@ class PluggableList<E>(override val delegate: MutableList<E>, spec: PluggableSpe
         return old
     }
 
-    override fun listIterator(): MutableListIterator<E> =
-        PluggableListIterator(delegate.listIterator(), spec)
+    override fun listIterator(): MutableListIterator<E> = PluggableListIterator(delegate.listIterator(), spec)
 
     override fun listIterator(index: Int): MutableListIterator<E> =
         PluggableListIterator(delegate.listIterator(index), spec)
