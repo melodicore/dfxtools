@@ -145,51 +145,92 @@ object Engine {
         }
 
         private val _entitiesByComponent: HandleMap<ListenableSet<Entity>> =
-            HandleMap(Engine.componentSpace)
+            HandleMap(componentSpace)
         val entitiesByComponent: Map<Handle, Set<Entity>> = _entitiesByComponent
         private val _entitiesBySchema: HandleMap<ListenableSet<Entity>> =
-            HandleMap(Engine.schemaSpace)
+            HandleMap(schemaSpace)
         val entitiesBySchema: Map<Handle, Set<Entity>> = _entitiesBySchema
         private val _componentsBySchema: HandleMap<ListenableSet<Component>> =
-            HandleMap(Engine.schemaSpace)
+            HandleMap(schemaSpace)
         val componentsBySchema: Map<Handle, Set<Component>> = _componentsBySchema
+
+        fun addEntityByComponentListener(
+            handle: Handle,
+            listener: CollectionListener<Entity>,
+        ): Boolean {
+            if (handle.space != componentSpace) throw IllegalArgumentException()
+            return get(_entitiesByComponent, handle).addListener(listener)
+        }
 
         fun addEntityByComponentListener(
             id: String,
             listener: CollectionListener<Entity>,
-        ): Boolean =
-            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id))
-                .addListener(listener)
+        ): Boolean = addEntityByComponentListener(componentSpace.getOrCreateHandle(id), listener)
 
         fun removeEntityByComponentListener(
-            id: String,
+            handle: Handle,
             listener: CollectionListener<Entity>,
-        ): Boolean =
-            get(_entitiesByComponent, Engine.componentSpace.getOrCreateHandle(id))
-                .removeListener(listener)
+        ): Boolean {
+            if (handle.space != componentSpace) throw IllegalArgumentException()
+            return get(_entitiesByComponent, handle).removeListener(listener)
+        }
+
+        fun removeEntityByComponentListener(id: String, listener: CollectionListener<Entity>): Boolean =
+            removeEntityByComponentListener(componentSpace.getOrCreateHandle(id), listener)
+
+        fun addEntityBySchemaListener(handle: Handle, listener: CollectionListener<Entity>): Boolean {
+            if (handle.space != schemaSpace) throw IllegalArgumentException()
+            return get(_entitiesBySchema, handle).addListener(listener)
+        }
+
+        fun addEntityBySchemaListener(schema: Schema, listener: CollectionListener<Entity>): Boolean =
+            addEntityBySchemaListener(schema.handle, listener)
 
         fun addEntityBySchemaListener(id: String, listener: CollectionListener<Entity>): Boolean =
-            get(_entitiesBySchema, Engine.schemaSpace.getOrCreateHandle(id)).addListener(listener)
+            addEntityBySchemaListener(schemaSpace.getOrCreateHandle(id), listener)
 
         fun removeEntityBySchemaListener(
-            id: String,
+            handle: Handle,
             listener: CollectionListener<Entity>,
-        ): Boolean =
-            get(_entitiesBySchema, Engine.schemaSpace.getOrCreateHandle(id))
-                .removeListener(listener)
+        ): Boolean {
+            if (handle.space != schemaSpace) throw IllegalArgumentException()
+            return get(_entitiesBySchema, handle).removeListener(listener)
+        }
+
+        fun removeEntityBySchemaListener(schema: Schema, listener: CollectionListener<Entity>): Boolean =
+            removeEntityBySchemaListener(schema.handle, listener)
+
+        fun removeEntityBySchemaListener(id: String, listener: CollectionListener<Entity>): Boolean =
+            removeEntityBySchemaListener(schemaSpace.getOrCreateHandle(id), listener)
 
         fun addComponentBySchemaListener(
-            id: String,
+            handle: Handle,
             listener: CollectionListener<Component>,
-        ): Boolean =
-            get(_componentsBySchema, Engine.schemaSpace.getOrCreateHandle(id)).addListener(listener)
+        ): Boolean {
+            if (handle.space != schemaSpace) throw IllegalArgumentException()
+            return get(_componentsBySchema, handle).addListener(listener)
+        }
+
+        fun addComponentBySchemaListener(schema: Schema, listener: CollectionListener<Component>): Boolean =
+            addComponentBySchemaListener(schema.handle, listener)
+
+        fun addComponentBySchemaListener(id: String, listener: CollectionListener<Component>): Boolean =
+            addComponentBySchemaListener(schemaSpace.getOrCreateHandle(id), listener)
 
         fun removeComponentBySchemaListener(
-            id: String,
+            handle: Handle,
             listener: CollectionListener<Component>,
-        ): Boolean =
-            get(_componentsBySchema, Engine.schemaSpace.getOrCreateHandle(id))
+        ): Boolean {
+            if (handle.space != schemaSpace) throw IllegalArgumentException()
+            return get(_componentsBySchema, handle)
                 .removeListener(listener)
+        }
+
+        fun removeComponentBySchemaListener(schema: Schema, listener: CollectionListener<Component>): Boolean =
+            removeComponentBySchemaListener(schema.handle, listener)
+
+        fun removeComponentBySchemaListener(id: String, listener: CollectionListener<Component>): Boolean =
+            removeComponentBySchemaListener(schemaSpace.getOrCreateHandle(id), listener)
 
         internal fun entityAdded(entity: Entity) =
             entity.components.values.forEach { componentAdded(entity, it) }

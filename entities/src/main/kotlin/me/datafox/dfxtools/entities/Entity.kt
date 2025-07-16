@@ -59,13 +59,35 @@ class Entity(id: String) : Handled {
 
     operator fun get(id: String): Component? = components[id]
 
+    fun getBySchema(handle: Handle): List<Component> = components.values.filter { handle in it.schemas }
+
+    @JvmName("getBySchemaHandles")
+    fun getBySchemas(handles: Iterable<Handle>): List<Component> =
+        components.values.filter { it.schemas.keys.containsAll(handles.toCollection()) }
+
+    fun getBySchema(schema: Schema): List<Component> = getBySchema(schema.handle)
+
+    fun getBySchemas(schemas: Iterable<Schema>): List<Component> = getBySchemas(schemas.map { it.handle })
+
     fun getBySchema(id: String): List<Component> = components.values.filter { id in it.schemas }
 
+    @JvmName("getBySchemaIds")
     fun getBySchemas(ids: Iterable<String>): List<Component> =
         components.values.filter { it.schemas.keys.containsAll(ids.toCollection()) }
 
+    fun hasSchema(handle: Handle): Boolean = components.values.any { handle in it.schemas }
+
+    @JvmName("hasSchemaHandles")
+    fun hasSchemas(handles: Iterable<Handle>): Boolean =
+        components.values.any { it.schemas.keys.containsAll(handles.toCollection()) }
+
+    fun hasSchema(schema: Schema): Boolean = hasSchema(schema.handle)
+
+    fun hasSchemas(schemas: Iterable<Schema>): Boolean = hasSchemas(schemas.map { it.handle })
+
     fun hasSchema(id: String): Boolean = components.values.any { id in it.schemas }
 
+    @JvmName("hasSchemaIds")
     fun hasSchemas(ids: Iterable<String>): Boolean =
         components.values.any { it.schemas.keys.containsAll(ids.toCollection()) }
 
