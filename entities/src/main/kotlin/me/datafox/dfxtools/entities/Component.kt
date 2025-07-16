@@ -44,7 +44,11 @@ class Component internal constructor(val entity: Entity, id: String) :
     val initializers: Set<ComponentInitializer>
         get() = _initializers
 
+    operator fun <T : Any> get(type: KClass<T>, handle: Handle): T? = getDataMap(type)[handle]?.data
+
     operator fun <T : Any> get(type: KClass<T>, id: String): T? = getDataMap(type)[id]?.data
+
+    fun <T : Any> getData(type: KClass<T>, handle: Handle): EntityData<T>? = getDataMap(type)[handle]
 
     fun <T : Any> getData(type: KClass<T>, id: String): EntityData<T>? = getDataMap(type)[id]
 
@@ -53,7 +57,15 @@ class Component internal constructor(val entity: Entity, id: String) :
 
     operator fun contains(type: KClass<*>): Boolean = _data[type]?.isNotEmpty() ?: false
 
+    fun contains(type: KClass<*>, handle: Handle): Boolean = _data[type]?.contains(handle) ?: false
+
     fun contains(type: KClass<*>, id: String): Boolean = _data[type]?.contains(id) ?: false
+
+    @JvmOverloads
+    operator fun <T : Any> set(type: KClass<T>, handle: Handle, saved: Boolean = true, data: T) {
+        putInternal(type, handle, saved, data)
+        refreshSchemas()
+    }
 
     @JvmOverloads
     operator fun <T : Any> set(type: KClass<T>, id: String, saved: Boolean = true, data: T) {
@@ -100,13 +112,17 @@ class Component internal constructor(val entity: Entity, id: String) :
                 _data[type] = this as ListenableMap<Handle, EntityData<*>>
             }
 
-    private fun <T : Any> putInternal(type: KClass<T>, id: String, saved: Boolean, data: T) {
+    private fun <T : Any> putInternal(type: KClass<T>, handle: Handle, saved: Boolean, data: T) {
         val map = getDataMapInternal(type)
-        if (id in map) map[id]!!.data = data
+        if (handle in map) map[handle]!!.data = data
         else
             map.putHandled(
-                EntityData(id, data, saved).apply { observers.add(this@Component, identifier) }
+                EntityData(handle, data, saved).apply { observers.add(this@Component, identifier) }
             )
+    }
+
+    private fun <T : Any> putInternal(type: KClass<T>, id: String, saved: Boolean, data: T) {
+        putInternal(type, HandleManager.getOrCreateQualifiedHandle(id), saved, data)
     }
 
     override fun onInvalidated() { }

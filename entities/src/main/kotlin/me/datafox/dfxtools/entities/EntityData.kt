@@ -16,6 +16,7 @@
 
 package me.datafox.dfxtools.entities
 
+import me.datafox.dfxtools.handles.Handle
 import me.datafox.dfxtools.handles.HandleManager
 import me.datafox.dfxtools.handles.Handled
 import me.datafox.dfxtools.invalidation.AbstractObservable
@@ -24,8 +25,7 @@ import me.datafox.dfxtools.invalidation.property.InvalidatorProperty
 /** @author Lauri "datafox" Heino */
 class EntityData<T : Any>
 @JvmOverloads
-constructor(id: String, data: T, val saved: Boolean = true) : Handled, AbstractObservable() {
-    override val handle = HandleManager.getOrCreateQualifiedHandle(id)
+constructor(override val handle: Handle, data: T, val saved: Boolean = true) : Handled, AbstractObservable() {
     var data: T by InvalidatorProperty(data)
 
     override fun equals(other: Any?): Boolean {
